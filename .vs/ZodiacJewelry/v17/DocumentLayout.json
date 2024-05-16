@@ -1,0 +1,470 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\SWD392\\ZodiacJewelry\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A4708A23-3F9C-44E0-84D4-D17C06B6AC4D}|Application\\Application.csproj|e:\\swd392\\zodiacjewelry\\application\\application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A4708A23-3F9C-44E0-84D4-D17C06B6AC4D}|Application\\Application.csproj|solutionrelative:application\\application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|e:\\swd392\\zodiacjewelry\\domain\\entities\\zodiacproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\zodiacproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|e:\\swd392\\zodiacjewelry\\domain\\entities\\zodiac.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\zodiac.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|e:\\swd392\\zodiacjewelry\\domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|e:\\swd392\\zodiacjewelry\\domain\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|e:\\swd392\\zodiacjewelry\\domain\\entities\\orderdetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\orderdetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|e:\\swd392\\zodiacjewelry\\domain\\entities\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|e:\\swd392\\zodiacjewelry\\domain\\entities\\material.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\material.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|e:\\swd392\\zodiacjewelry\\domain\\entities\\collections.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\collections.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|e:\\swd392\\zodiacjewelry\\domain\\entities\\collectionproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\collectionproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|e:\\swd392\\zodiacjewelry\\domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E67BFB9-99ED-46BE-B2D5-DBA16B70A7A1}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A12885FF-6F09-4BAB-A786-F0AE47421743}|Infrastructure\\Infrastructure.csproj|e:\\swd392\\zodiacjewelry\\infrastructure\\infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A12885FF-6F09-4BAB-A786-F0AE47421743}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A12885FF-6F09-4BAB-A786-F0AE47421743}|Infrastructure\\Infrastructure.csproj|e:\\swd392\\zodiacjewelry\\infrastructure\\mappers\\mapperconfigurationsprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A12885FF-6F09-4BAB-A786-F0AE47421743}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\mappers\\mapperconfigurationsprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4708A23-3F9C-44E0-84D4-D17C06B6AC4D}|Application\\Application.csproj|e:\\swd392\\zodiacjewelry\\application\\iunitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4708A23-3F9C-44E0-84D4-D17C06B6AC4D}|Application\\Application.csproj|solutionrelative:application\\iunitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4708A23-3F9C-44E0-84D4-D17C06B6AC4D}|Application\\Application.csproj|e:\\swd392\\zodiacjewelry\\application\\irepositories\\iproductrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4708A23-3F9C-44E0-84D4-D17C06B6AC4D}|Application\\Application.csproj|solutionrelative:application\\irepositories\\iproductrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4708A23-3F9C-44E0-84D4-D17C06B6AC4D}|Application\\Application.csproj|e:\\swd392\\zodiacjewelry\\application\\serviceresponse\\serviceresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4708A23-3F9C-44E0-84D4-D17C06B6AC4D}|Application\\Application.csproj|solutionrelative:application\\serviceresponse\\serviceresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A12885FF-6F09-4BAB-A786-F0AE47421743}|Infrastructure\\Infrastructure.csproj|e:\\swd392\\zodiacjewelry\\infrastructure\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A12885FF-6F09-4BAB-A786-F0AE47421743}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A12885FF-6F09-4BAB-A786-F0AE47421743}|Infrastructure\\Infrastructure.csproj|e:\\swd392\\zodiacjewelry\\infrastructure\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A12885FF-6F09-4BAB-A786-F0AE47421743}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\migrations\\appdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AFB09B56-0162-4784-A6A7-3BAE189CDD35}|ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj|e:\\swd392\\zodiacjewelry\\zodiacjewelrywebapi\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AFB09B56-0162-4784-A6A7-3BAE189CDD35}|ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj|solutionrelative:zodiacjewelrywebapi\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A12885FF-6F09-4BAB-A786-F0AE47421743}|Infrastructure\\Infrastructure.csproj|e:\\swd392\\zodiacjewelry\\infrastructure\\dependencyinjections.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A12885FF-6F09-4BAB-A786-F0AE47421743}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\dependencyinjections.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AFB09B56-0162-4784-A6A7-3BAE189CDD35}|ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj|e:\\swd392\\zodiacjewelry\\zodiacjewelrywebapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AFB09B56-0162-4784-A6A7-3BAE189CDD35}|ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj|solutionrelative:zodiacjewelrywebapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AFB09B56-0162-4784-A6A7-3BAE189CDD35}|ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj|e:\\swd392\\zodiacjewelry\\zodiacjewelrywebapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AFB09B56-0162-4784-A6A7-3BAE189CDD35}|ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj|solutionrelative:zodiacjewelrywebapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\SWD392\\ZodiacJewelry\\Infrastructure\\Migrations\\20240516163845_NewDb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Infrastructure\\Migrations\\20240516163845_NewDb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AFB09B56-0162-4784-A6A7-3BAE189CDD35}|ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj|e:\\swd392\\zodiacjewelry\\zodiacjewelrywebapi\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AFB09B56-0162-4784-A6A7-3BAE189CDD35}|ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj|solutionrelative:zodiacjewelrywebapi\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AFB09B56-0162-4784-A6A7-3BAE189CDD35}|ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj|e:\\swd392\\zodiacjewelry\\zodiacjewelrywebapi\\zodiacjewelrywebapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{AFB09B56-0162-4784-A6A7-3BAE189CDD35}|ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj|solutionrelative:zodiacjewelrywebapi\\zodiacjewelrywebapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A4708A23-3F9C-44E0-84D4-D17C06B6AC4D}|Application\\Application.csproj|e:\\swd392\\zodiacjewelry\\application\\commons\\appconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A4708A23-3F9C-44E0-84D4-D17C06B6AC4D}|Application\\Application.csproj|solutionrelative:application\\commons\\appconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 11,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CollectionProduct.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\CollectionProduct.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\CollectionProduct.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\CollectionProduct.cs",
+              "RelativeToolTip": "Domain\\Entities\\CollectionProduct.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:30:47.706Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Collections.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Collections.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Collections.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Collections.cs",
+              "RelativeToolTip": "Domain\\Entities\\Collections.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:26:19.546Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Material.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Material.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Material.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Material.cs",
+              "RelativeToolTip": "Domain\\Entities\\Material.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T15:52:08.075Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Order.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Order.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Order.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Order.cs",
+              "RelativeToolTip": "Domain\\Entities\\Order.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T15:57:28.113Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "OrderDetails.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\OrderDetails.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\OrderDetails.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\OrderDetails.cs",
+              "RelativeToolTip": "Domain\\Entities\\OrderDetails.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:07:24.056Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Product.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Product.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Product.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Product.cs",
+              "RelativeToolTip": "Domain\\Entities\\Product.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T14:59:10.839Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "User.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\User.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\User.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\User.cs",
+              "RelativeToolTip": "Domain\\Entities\\User.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T15:53:38.684Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Zodiac.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Zodiac.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Zodiac.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Zodiac.cs",
+              "RelativeToolTip": "Domain\\Entities\\Zodiac.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:23:02.726Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ZodiacProduct.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\ZodiacProduct.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\ZodiacProduct.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\ZodiacProduct.cs",
+              "RelativeToolTip": "Domain\\Entities\\ZodiacProduct.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAkwBAAAAA0AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:24:36.138Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Application",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Application\\Application.csproj",
+              "RelativeDocumentMoniker": "Application\\Application.csproj",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Application\\Application.csproj",
+              "RelativeToolTip": "Application\\Application.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-05-16T16:49:23.899Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Category.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Category.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Category.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Domain\\Entities\\Category.cs",
+              "RelativeToolTip": "Domain\\Entities\\Category.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T15:27:14.256Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Infrastructure",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\Infrastructure.csproj",
+              "RelativeDocumentMoniker": "Infrastructure\\Infrastructure.csproj",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\Infrastructure.csproj",
+              "RelativeToolTip": "Infrastructure\\Infrastructure.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-05-16T14:58:16.654Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "MapperConfigurationsProfile.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\Mappers\\MapperConfigurationsProfile.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Mappers\\MapperConfigurationsProfile.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\Mappers\\MapperConfigurationsProfile.cs",
+              "RelativeToolTip": "Infrastructure\\Mappers\\MapperConfigurationsProfile.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:56:02.482Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "IUnitOfWork.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Application\\IUnitOfWork.cs",
+              "RelativeDocumentMoniker": "Application\\IUnitOfWork.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Application\\IUnitOfWork.cs",
+              "RelativeToolTip": "Application\\IUnitOfWork.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:53:23.849Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "IProductRepo.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Application\\IRepositories\\IProductRepo.cs",
+              "RelativeDocumentMoniker": "Application\\IRepositories\\IProductRepo.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Application\\IRepositories\\IProductRepo.cs",
+              "RelativeToolTip": "Application\\IRepositories\\IProductRepo.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:54:46.225Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ServiceResponse.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Application\\ServiceResponse\\ServiceResponse.cs",
+              "RelativeDocumentMoniker": "Application\\ServiceResponse\\ServiceResponse.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Application\\ServiceResponse\\ServiceResponse.cs",
+              "RelativeToolTip": "Application\\ServiceResponse\\ServiceResponse.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAA0AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:50:54.282Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "20240516163845_NewDb.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\Migrations\\20240516163845_NewDb.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Migrations\\20240516163845_NewDb.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\Migrations\\20240516163845_NewDb.cs",
+              "RelativeToolTip": "Infrastructure\\Migrations\\20240516163845_NewDb.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:38:45.551Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\ZodiacJewelryWebApI\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "ZodiacJewelryWebApI\\appsettings.Development.json",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\ZodiacJewelryWebApI\\appsettings.Development.json",
+              "RelativeToolTip": "ZodiacJewelryWebApI\\appsettings.Development.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-05-16T16:41:56.666Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AppDbContextModelSnapshot.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\Migrations\\AppDbContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Migrations\\AppDbContextModelSnapshot.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\Migrations\\AppDbContextModelSnapshot.cs",
+              "RelativeToolTip": "Infrastructure\\Migrations\\AppDbContextModelSnapshot.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAA5AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:47:24.677Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "WeatherForecast.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\ZodiacJewelryWebApI\\WeatherForecast.cs",
+              "RelativeDocumentMoniker": "ZodiacJewelryWebApI\\WeatherForecast.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\ZodiacJewelryWebApI\\WeatherForecast.cs",
+              "RelativeToolTip": "ZodiacJewelryWebApI\\WeatherForecast.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T16:36:37.142Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\ZodiacJewelryWebApI\\appsettings.json",
+              "RelativeDocumentMoniker": "ZodiacJewelryWebApI\\appsettings.json",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\ZodiacJewelryWebApI\\appsettings.json",
+              "RelativeToolTip": "ZodiacJewelryWebApI\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-05-16T15:01:29.407Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\AppDbContext.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\AppDbContext.cs",
+              "RelativeToolTip": "Infrastructure\\AppDbContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T14:57:00.712Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "DependencyInjections.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\DependencyInjections.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\DependencyInjections.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Infrastructure\\DependencyInjections.cs",
+              "RelativeToolTip": "Infrastructure\\DependencyInjections.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T14:49:41.323Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\ZodiacJewelryWebApI\\Program.cs",
+              "RelativeDocumentMoniker": "ZodiacJewelryWebApI\\Program.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\ZodiacJewelryWebApI\\Program.cs",
+              "RelativeToolTip": "ZodiacJewelryWebApI\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T15:14:05.55Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "ZodiacJewelryWebApI",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj",
+              "RelativeDocumentMoniker": "ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj",
+              "RelativeToolTip": "ZodiacJewelryWebApI\\ZodiacJewelryWebApI.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAABlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-05-16T15:24:47.001Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "AppConfiguration.cs",
+              "DocumentMoniker": "E:\\SWD392\\ZodiacJewelry\\Application\\Commons\\AppConfiguration.cs",
+              "RelativeDocumentMoniker": "Application\\Commons\\AppConfiguration.cs",
+              "ToolTip": "E:\\SWD392\\ZodiacJewelry\\Application\\Commons\\AppConfiguration.cs",
+              "RelativeToolTip": "Application\\Commons\\AppConfiguration.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-16T14:49:09.624Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

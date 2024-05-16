@@ -1,0 +1,11 @@
+E:\SWD392\ZodiacJewelry\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\SWD392\ZodiacJewelry\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+E:\SWD392\ZodiacJewelry\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+E:\SWD392\ZodiacJewelry\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
+E:\SWD392\ZodiacJewelry\Domain\bin\Debug\net8.0\Domain.deps.json
+E:\SWD392\ZodiacJewelry\Domain\bin\Debug\net8.0\Domain.dll
+E:\SWD392\ZodiacJewelry\Domain\bin\Debug\net8.0\Domain.pdb
+E:\SWD392\ZodiacJewelry\Domain\obj\Debug\net8.0\Domain.dll
+E:\SWD392\ZodiacJewelry\Domain\obj\Debug\net8.0\refint\Domain.dll
+E:\SWD392\ZodiacJewelry\Domain\obj\Debug\net8.0\Domain.pdb
+E:\SWD392\ZodiacJewelry\Domain\obj\Debug\net8.0\ref\Domain.dll
