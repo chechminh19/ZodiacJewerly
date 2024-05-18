@@ -15,6 +15,7 @@ namespace Infrastructure
             services.AddScoped<IUserRepo, UserRepo>();          
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<ICurrentTime, CurrentTime>();
             services.AddDbContext<AppDbContext>(option => option.UseSqlServer(databaseConnection));
             return services;
         }

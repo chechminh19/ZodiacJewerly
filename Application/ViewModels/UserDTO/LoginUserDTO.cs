@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Utils
+namespace Application.ViewModels.UserDTO
 {
-    public class EmailAdmin
+    public class LoginUserDTO
     {
-        public string UserName { get; set; }
-        public string EmailFrom { get; set; }
+        public string Email { get; set; }
         public string Password { get; set; }
     }
 }

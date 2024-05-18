@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "ZodiacJewelryWebApI.Controllers.AuthenController",
+    "Method": "LoginAsync",
+    "RelativePath": "api/Authen/Login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "loginObject",
+        "Type": "Application.ViewModels.UserDTO.LoginUserDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ZodiacJewelryWebApI.Controllers.AuthenController",
     "Method": "RegisterAsync",
     "RelativePath": "api/Authen/Register",
     "HttpMethod": "POST",

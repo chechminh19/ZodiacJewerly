@@ -16,6 +16,7 @@ namespace Infrastructure.Mappers
         public MapperConfigurationsProfile()
         {
             CreateMap<User, RegisterDTO>().ReverseMap();
+            CreateMap<User, LoginUserDTO>().ReverseMap();
             //CreateMap<IAuthenticationService, AuthenticationService>();
         }
     }

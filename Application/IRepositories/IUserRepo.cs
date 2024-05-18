@@ -9,7 +9,7 @@ namespace Application.IRepositories
 {
     public interface IUserRepo : IGenericRepo<User>
     {
-        Task<User> GetUserByEmailAddressAndPasswordHash(string username, string passwordHash);
+        Task<User> GetUserByEmailAddressAndPasswordHash(string email, string passwordHash);
         Task<bool> CheckEmailAddressExisted(string emailaddress);
         Task<bool> CheckPhoneNumberExited(string phonenumber);
 

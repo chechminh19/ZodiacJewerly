@@ -21,14 +21,22 @@ namespace Infrastructure.Repositories
         public Task<bool> CheckEmailAddressExisted(string email) => _dbContext.Users.AnyAsync(u => u.Email == email);
         public Task<bool> CheckPhoneNumberExited(string phonenumber) => _dbContext.Users.AnyAsync(x => x.TelephoneNumber == phonenumber);
 
-        public Task<User> GetUserByConfirmationToken(string token)
+        public async Task<User> GetUserByConfirmationToken(string token)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Users.SingleOrDefaultAsync(
+               u => u.ConfirmationToken == token
+               );
         }
 
-        public Task<User> GetUserByEmailAddressAndPasswordHash(string username, string passwordHash)
+        public async Task<User> GetUserByEmailAddressAndPasswordHash(string email, string passwordHash)
         {
-            throw new NotImplementedException();
+            var user = await _dbContext.Users
+                 .FirstOrDefaultAsync(record => record.Email == email && record.Password == passwordHash);
+            if (user is null)
+            {
+                throw new Exception("Email & password is not correct");
+            }
+            return user;
         }
     }
 }
