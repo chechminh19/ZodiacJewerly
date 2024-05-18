@@ -17,3 +17,4 @@ E:\SWD392\ZodiacJewelry\Infrastructure\obj\Debug\net8.0\refint\Infrastructure.dl
 E:\SWD392\ZodiacJewelry\Infrastructure\obj\Debug\net8.0\Infrastructure.pdb
 E:\SWD392\ZodiacJewelry\Infrastructure\obj\Debug\net8.0\Infrastructure.genruntimeconfig.cache
 E:\SWD392\ZodiacJewelry\Infrastructure\obj\Debug\net8.0\ref\Infrastructure.dll
+E:\SWD392\ZodiacJewelry\Infrastructure\obj\Debug\net8.0\Infrastructure.sourcelink.json

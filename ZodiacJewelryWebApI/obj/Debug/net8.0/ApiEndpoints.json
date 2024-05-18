@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "ZodiacJewelryWebApI.Controllers.AuthenController",
+    "Method": "RegisterAsync",
+    "RelativePath": "api/Authen/Register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "registerObject",
+        "Type": "Application.ViewModels.UserDTO.RegisterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ZodiacJewelryWebApI.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",

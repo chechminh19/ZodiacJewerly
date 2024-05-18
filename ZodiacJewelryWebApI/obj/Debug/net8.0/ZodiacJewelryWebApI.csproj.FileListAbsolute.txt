@@ -141,3 +141,9 @@ E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\obj\Debug\net8.0\ZodiacJewelryWebApI
 E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\obj\Debug\net8.0\ref\ZodiacJewelryWebApI.dll
 E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Debug\net8.0\AutoMapper.dll
 E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\obj\Debug\net8.0\ZodiacJewelryWebApI.MvcApplicationPartsAssemblyInfo.cs
+E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\obj\Debug\net8.0\ZodiacJewelryWebApI.sourcelink.json
+E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Debug\net8.0\MailKit.dll
+E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Debug\net8.0\MimeKit.dll
+E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Debug\net8.0\Microsoft.Extensions.Options.dll

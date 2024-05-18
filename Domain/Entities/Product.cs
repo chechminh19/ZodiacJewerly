@@ -22,11 +22,16 @@ namespace Domain.Entities
 
         [ForeignKey("CategoryId")]
         public int CategoryId { get; set; }
-        public virtual Category? Category { get; set; }
+        public virtual Category Category { get; set; }
 
         [ForeignKey("MaterialId")]
         public int MaterialId { get; set; }
-        public virtual Material? Material { get; set; }
+        public virtual Material Material { get; set; }
+
+        [ForeignKey("GenderId")]
+        public int GenderId { get; set; }
+        public virtual Gender Gender { get; set; }
+
         public ICollection<OrderDetails> OrderDetails { get; set; }
         public ICollection<ZodiacProduct> ProductZodiacs { get; set; }
         public ICollection<CollectionProduct> CollectionProducts { get; set; }

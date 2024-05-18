@@ -24,6 +24,7 @@ namespace Infrastructure
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Zodiac> Zodiacs { get; set; }
+        public DbSet<Gender> Genders { get; set; }
         public DbSet<ZodiacProduct> ZodiacProducts { get; set; }
 
     }
