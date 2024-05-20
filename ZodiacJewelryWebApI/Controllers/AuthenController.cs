@@ -27,6 +27,7 @@ namespace ZodiacJewelryWebApI.Controllers
                 return Ok(result);
             }
         }
+        //[Authorize(Roles = "Staff")]
         [HttpPost]
         public async Task<IActionResult> LoginAsync(LoginUserDTO loginObject)
         {
@@ -48,6 +49,5 @@ namespace ZodiacJewelryWebApI.Controllers
                 );
             }
         }
-
     }
 }

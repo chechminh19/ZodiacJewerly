@@ -15,8 +15,7 @@ namespace Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string NameProduct { get; set; }
-        public string DescriptionProduct { get; set; }
-        public string ImageUrl { get; set; }
+        public string DescriptionProduct { get; set; }       
         public double Price { get; set; }
         public int Quantity {  get; set; }
 
@@ -31,6 +30,7 @@ namespace Domain.Entities
         [ForeignKey("GenderId")]
         public int GenderId { get; set; }
         public virtual Gender Gender { get; set; }
+        public ICollection<ProductImage> ProductImages { get; set; }
 
         public ICollection<OrderDetails> OrderDetails { get; set; }
         public ICollection<ZodiacProduct> ProductZodiacs { get; set; }
