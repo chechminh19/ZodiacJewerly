@@ -29,6 +29,12 @@ namespace Application.Services
             _config = configuration;
             _currentTime = curTime;
         }
+
+        public Task<ServiceResponse<string>> ForgotPass(LoginUserDTO userObj)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<ServiceResponse<string>> LoginAsync(LoginUserDTO userObject)
         {
             var response = new ServiceResponse<string>();
