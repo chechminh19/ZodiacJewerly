@@ -18,19 +18,19 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
-        public Task<bool> CheckEmailAddressExisted(string email) => _dbContext.Users.AnyAsync(u => u.Email == email);
-        public Task<bool> CheckPhoneNumberExited(string phonenumber) => _dbContext.Users.AnyAsync(x => x.TelephoneNumber == phonenumber);
+        public Task<bool> CheckEmailAddressExisted(string email) => _dbContext.User.AnyAsync(u => u.Email == email);
+        public Task<bool> CheckPhoneNumberExited(string phonenumber) => _dbContext.User.AnyAsync(x => x.TelephoneNumber == phonenumber);
 
         public async Task<User> GetUserByConfirmationToken(string token)
         {
-            return await _dbContext.Users.SingleOrDefaultAsync(
+            return await _dbContext.User.SingleOrDefaultAsync(
                u => u.ConfirmationToken == token
                );
         }
 
         public async Task<User> GetUserByEmailAddressAndPasswordHash(string email, string passwordHash)
         {
-            var user = await _dbContext.Users
+            var user = await _dbContext.User
                  .FirstOrDefaultAsync(record => record.Email == email && record.Password == passwordHash);
             if (user is null)
             {
