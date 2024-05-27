@@ -148,9 +148,3 @@ E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\obj\Release\net8.0\refint\ZodiacJewe
 E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\obj\Release\net8.0\ZodiacJewelryWebApI.pdb
 E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\obj\Release\net8.0\ZodiacJewelryWebApI.genruntimeconfig.cache
 E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\obj\Release\net8.0\ref\ZodiacJewelryWebApI.dll
-E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Release\net8.0\System.Web.Cors.dll
-E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Release\net8.0\System.Net.Http.Formatting.dll
-E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Release\net8.0\System.Web.Http.dll
-E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Release\net8.0\System.Web.Http.Cors.dll
-E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Release\net8.0\Newtonsoft.Json.dll
-E:\SWD392\ZodiacJewelry\ZodiacJewelryWebApI\bin\Release\net8.0\Newtonsoft.Json.Bson.dll
