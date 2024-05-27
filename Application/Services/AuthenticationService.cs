@@ -96,9 +96,9 @@ namespace Application.Services
                 userAccountRegister.RoleName = "Customer";
                 await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
 
-                var confirmLink = $"https://localhost:7187/swagger/confirm?token={userAccountRegister.ConfirmationToken}";
+                var confirmationLink = $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
                 //SendMail
-                var emailSend = await Utils.SendMail.SendConfirmationEmail(userObjectDTO.Email, confirmLink);
+                var emailSend = await Utils.SendMail.SendConfirmationEmail(userObjectDTO.Email, confirmationLink);
                 if (!emailSend)
                 {
                     response.Success = false;
@@ -116,7 +116,7 @@ namespace Application.Services
                         response.Message = "Register successfully.";                       
                     }
                     else
-                    {
+                    { 
                         response.Success = false;
                         response.Message = "Error when saving ur account";
                     }

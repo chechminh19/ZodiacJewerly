@@ -55,8 +55,8 @@ namespace Application.Utils
             </head>
             <body>
                 <div class='content'>
-                    <p>Please click the button below to confirm your email:</p>
-                    <a class='button' href='"
+                    <p>Please click the button below to confirm your email:</p>                    
+                      <a class='button' href='"
                     + confirmationLink
                     + "'>Confirm Email</a>"
                     + @"
@@ -68,7 +68,6 @@ namespace Application.Utils
             using (var client = new SmtpClient())
             {
                 client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-
                 //authenticate account email
                 client.Authenticate(emailFrom, password);
 
@@ -85,5 +84,9 @@ namespace Application.Utils
                 }
             }
         }
+        //<a class='button' href='"
+        //            + confirmationLink
+        //            + "'>Confirm Email</a>"
+        //            + @"
     }
 }
