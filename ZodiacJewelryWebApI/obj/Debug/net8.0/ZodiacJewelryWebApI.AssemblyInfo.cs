@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZodiacJewelryWebApI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b5bc0dc5a6d72f544f61c15d08330b692650a054")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7467790ede847cae7c5b2dddb709b9206e0f6e54")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZodiacJewelryWebApI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZodiacJewelryWebApI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

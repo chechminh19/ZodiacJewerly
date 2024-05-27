@@ -8,31 +8,42 @@ using ZodiacJewelryWebApI;
 using ZodiacJewelryWebApI.Middlewares;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Builder;
+using Azure.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var configuration = builder.Configuration.Get<AppConfiguration>() ?? new AppConfiguration();
+//var configuration = builder.Configuration.Get<AppConfiguration>();
+//?? new AppConfiguration();
 //builder.Services.Configure<EmailAdmin>(builder.Configuration.GetSection("EmailSettings"));
 //builder.Services.AddTransient<SendMail>();
-builder.Services.AddSingleton(configuration);
-builder.Services.AddInfrastructuresService(configuration.DatabaseConnection);
+builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
+var configuration = builder.Configuration;
+var myConfig = new AppConfiguration();
+configuration.Bind(myConfig);
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"))); // Use connection string directly
+
+
+builder.Services.AddSingleton(myConfig);
+builder.Services.AddInfrastructuresService();
 builder.Services.AddWebAPIService();
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("http://localhost:4200", builder =>
-    {
-        builder.WithOrigins("*")
-               .AllowAnyHeader()
-               .AllowAnyMethod();
-    });
-});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("Allow", builder =>
+//    {
+//        builder.WithOrigins("*")
+//               .AllowAnyHeader()
+//               .AllowAnyMethod();
+//    });
+//});
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -40,19 +51,26 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
+//byte[] keyBytes = Encoding.UTF8.GetBytes(configuration["JWTSection:SecretKey"]);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        IConfiguration config = (IConfiguration)configuration;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = configuration.JWTSection.Issuer,
-            ValidAudience = configuration.JWTSection.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.JWTSection.SecretKey)),
+
+            ValidIssuer = myConfig.JWTSection.Issuer,
+            ValidAudience = myConfig.JWTSection.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(myConfig.JWTSection.SecretKey))
+
+            //ValidIssuer = configuration["JWTSection:Issuer"],
+            //ValidAudience = configuration["JWTSection:Audience"],
+            //IssuerSigningKey = new SymmetricSecurityKey(keyBytes)
+
         };
     });
 
@@ -82,18 +100,14 @@ builder.Services.AddSwaggerGen(setup =>
         { jwtSecurityScheme, Array.Empty<string>() }
     });
 });
+
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
-{
-    /*options.AddPolicy("AllowSpecificOrigin", builder
-        => builder.WithOrigins("*")
-        .AllowAnyHeader()
-        .AllowAnyMethod());*/
-
+{   
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("*")
+            policy.WithOrigins("https://yourazureapp.azurewebsites.net")
             .AllowAnyHeader().AllowAnyMethod();
         });
 });
@@ -103,9 +117,20 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c=>
+    {
+        c.SwaggerEndpoint("swagger/v1/swagger.json", "ZodiacJewelryWebApI v1");
+        c.RoutePrefix = string.Empty;
+    });
+    
 }
-app.UseCors();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("swagger/v1/swagger.json", "ZodiacJewelryWebApI v1");
+    c.RoutePrefix = string.Empty;
+});
+//app.UseCors("Allow");
 app.UseHttpsRedirection();
 app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthorization();

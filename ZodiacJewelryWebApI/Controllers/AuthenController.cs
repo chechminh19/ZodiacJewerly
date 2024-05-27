@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ZodiacJewelryWebApI.Controllers
 {
-    [EnableCors("http://localhost:4200")]
+    
     public class AuthenController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
@@ -27,6 +27,8 @@ namespace ZodiacJewelryWebApI.Controllers
                 return Ok(result);
             }
         }
+
+
         //[Authorize(Roles = "Staff")]
         [HttpPost]
         public async Task<IActionResult> LoginAsync(LoginUserDTO loginObject)

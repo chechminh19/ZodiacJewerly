@@ -1,5 +1,6 @@
 ﻿using Application;
-
+using Azure;
+using System.Text.Json;
 namespace ZodiacJewelryWebApI.Middlewares
 {
     public class ConfirmationTokenMiddleware
@@ -31,7 +32,7 @@ namespace ZodiacJewelryWebApI.Middlewares
                         user.IsConfirmed = true;
                         user.ConfirmationToken = null;
                         await unitOfWork.SaveChangeAsync();
-                        await context.Response.WriteAsync("Email has been confirmed successfully!");
+                        context.Response.Redirect($"https://zodiacjewerly.azurewebsites.net");
                         return;
                     }
                 }
