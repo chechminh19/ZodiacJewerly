@@ -18,7 +18,7 @@ namespace ZodiacJewelryWebApI
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddHealthChecks();
-            services.AddCors();
+            //services.AddCors();
             /*services.AddSingleton<GlobalExceptionMiddleware>();
             services.AddSingleton<PerformanceMiddleware>();*/
             services.AddSingleton<Stopwatch>();

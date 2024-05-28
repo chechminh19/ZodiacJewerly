@@ -1,5 +1,4 @@
 using Application.Commons;
-using Application.Utils;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Infrastructure.Mappers;
@@ -8,9 +7,6 @@ using ZodiacJewelryWebApI;
 using ZodiacJewelryWebApI.Middlewares;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Builder;
-using Azure.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -35,15 +31,15 @@ builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("Allow", builder =>
-//    {
-//        builder.WithOrigins("*")
-//               .AllowAnyHeader()
-//               .AllowAnyMethod();
-//    });
-//});
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("*")
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -84,7 +80,7 @@ builder.Services.AddSwaggerGen(setup =>
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Scheme = JwtBearerDefaults.AuthenticationScheme,
-        Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
+        Description = "Put *_ONLY_* your JWT Bearer token on textbox below!",
 
         Reference = new OpenApiReference
         {
@@ -101,28 +97,18 @@ builder.Services.AddSwaggerGen(setup =>
     });
 });
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-builder.Services.AddCors(options =>
-{   
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-        policy =>
-        {
-            policy.WithOrigins("https://yourazureapp.azurewebsites.net")
-            .AllowAnyHeader().AllowAnyMethod();
-        });
-});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c=>
+    app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("swagger/v1/swagger.json", "ZodiacJewelryWebApI v1");
         c.RoutePrefix = string.Empty;
     });
-    
+
 }
 app.UseSwagger();
 app.UseSwaggerUI(c =>
@@ -132,7 +118,7 @@ app.UseSwaggerUI(c =>
 });
 //app.UseCors("Allow");
 app.UseHttpsRedirection();
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors();
 app.UseAuthorization();
 app.UseMiddleware<ConfirmationTokenMiddleware>();
 app.MapControllers();

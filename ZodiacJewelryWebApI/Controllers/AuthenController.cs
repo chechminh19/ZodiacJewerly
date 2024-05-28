@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ZodiacJewelryWebApI.Controllers
 {
-    
+    [EnableCors("Allow")]
     public class AuthenController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
@@ -13,6 +13,7 @@ namespace ZodiacJewelryWebApI.Controllers
         {
             _authenticationService = authen;
         }
+        
         [HttpPost]
         public async Task<IActionResult> RegisterAsync(RegisterDTO registerObject)
         {
@@ -26,9 +27,7 @@ namespace ZodiacJewelryWebApI.Controllers
             {
                 return Ok(result);
             }
-        }
-
-
+        }   
         //[Authorize(Roles = "Staff")]
         [HttpPost]
         public async Task<IActionResult> LoginAsync(LoginUserDTO loginObject)
