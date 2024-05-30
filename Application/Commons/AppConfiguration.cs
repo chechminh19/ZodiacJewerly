@@ -4,7 +4,9 @@
     {
         public string DatabaseConnection { get; set; }
         public JWTSection JWTSection { get; set; }
-    }
+        
+    }   
+   
     public class JWTSection
     {
         public string SecretKey { get; set; }

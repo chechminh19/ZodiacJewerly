@@ -8,7 +8,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Application.Utils
 {
     public static class GenerateJsonWebTokenString
@@ -32,7 +31,7 @@ namespace Application.Utils
                 issuer: appSettingConfiguration.JWTSection.Issuer,
                 audience: appSettingConfiguration.JWTSection.Audience,
                 claims: claims,
-                expires: now.AddMinutes(15),
+                expires: now.AddHours(3),
                 signingCredentials: credentials);
 
 

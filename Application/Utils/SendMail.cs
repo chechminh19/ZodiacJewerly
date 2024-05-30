@@ -11,6 +11,55 @@ namespace Application.Utils
 {
     public class SendMail
     {
+        private static string GenerateRandomCode()
+        {
+            //Random 6 characs 
+            string chars = "0123456789";
+            Random random = new Random();
+            string code = new string(Enumerable.Repeat(chars, 6).Select(s => s[random.Next(s.Length)]).ToArray());
+            // Add expiration time (2 minutes) to the code
+            DateTime expirationTime = DateTime.UtcNow.AddMinutes(2); // Set expiration time to 2 minutes from now
+            string expirationTimeString = expirationTime.ToString("yyyyMMddHHmmss");
+            code = expirationTimeString + code;
+            return code;
+        }
+        public static async Task<bool> SendResetPass(string toEmail)
+        {
+            var userName = "ZodiacJewelry";
+            var emailFrom = "minhpcse172904@fpt.edu.vn";
+            var password = "lwfr bgex dipf iijf";
+
+            var subjet = "Reset Password Confirmation";
+            var code = GenerateRandomCode();
+            var body = $"Please enter this code to reset your password: {code}";
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(userName, emailFrom));
+            message.To.Add(new MailboxAddress("", toEmail));
+            message.Subject = subjet;
+            message.Body = new TextPart("html")
+            {
+                Text = body   
+            };
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                //authenticate account email
+                client.Authenticate(emailFrom, password);
+
+                try
+                {
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    System.Console.WriteLine(ex.Message);
+                    return false;
+                }
+            }
+        }
         public static async Task<bool> SendConfirmationEmail(
             string toEmail,
             string confirmationLink

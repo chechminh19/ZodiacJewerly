@@ -12,6 +12,7 @@ namespace Application.IService
     {
         public Task<ServiceResponse<RegisterDTO>> RegisterAsync(RegisterDTO userObject);
         public Task<ServiceResponse<string>> LoginAsync(LoginUserDTO userObject);
-        public Task<ServiceResponse<string>> ForgotPass(LoginUserDTO userObj);
+        public Task<ServiceResponse<string>> ForgotPass(ForgotPassDTO userObject);
+        //public Task<ServiceResponse<ResetPassDTO>> ResetPass(ResetPassDTO userObject);
     }
 }
