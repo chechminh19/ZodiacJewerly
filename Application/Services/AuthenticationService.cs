@@ -19,15 +19,15 @@ namespace Application.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly UserManager<User> _user;
+        //private readonly UserManager<User> _user;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ICurrentTime _currentTime;
         private readonly AppConfiguration _config;
         //private IValidator<User> _validator;
-        public AuthenticationService( UserManager<User> user,IUnitOfWork unitOfWork, IMapper mapper,AppConfiguration configuration, ICurrentTime curTime)
+        public AuthenticationService(IUnitOfWork unitOfWork, IMapper mapper,AppConfiguration configuration, ICurrentTime curTime)
         {
-            _user = user;   
+            
             _unitOfWork = unitOfWork;
             _mapper = mapper;        
             _config = configuration;
@@ -125,13 +125,13 @@ namespace Application.Services
             var response = new ServiceResponse<RegisterDTO>();
             try
             {
-                var checkEmailForm = Utils.IsValidEmailForm.IsValidEmail(userObjectDTO.Email);
-                if (checkEmailForm == false)
-                {                   
-                    response.Success = false;
-                    response.Message = "Invalid email form";
-                    return response;
-                }
+                //var checkEmailForm = Utils.IsValidEmailForm.IsValidEmail(userObjectDTO.Email);
+                //if (checkEmailForm == false)
+                //{                   
+                //    response.Success = false;
+                //    response.Message = "Invalid email form";
+                //    return response;
+                //}
 
                 var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(userObjectDTO.Email);
                 if (existEmail)

@@ -32,7 +32,7 @@ namespace ZodiacJewelryWebApI.Middlewares
                         user.IsConfirmed = true;
                         user.ConfirmationToken = null;
                         await unitOfWork.SaveChangeAsync();
-                        context.Response.Redirect($"https://zodiacjewerly.azurewebsites.net/api/Authen/Login");
+                        context.Response.Redirect($"https://zodiacjewerly.azurewebsites.net");
                         return;
                     }
                 }
