@@ -1,5 +1,6 @@
 ﻿using Application.IService;
 using Application.Services;
+using Application.ViewModels.ProductDTO;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
 using Domain.Entities;
@@ -17,6 +18,7 @@ namespace Infrastructure.Mappers
         {
             CreateMap<User, RegisterDTO>().ReverseMap();
             CreateMap<User, LoginUserDTO>().ReverseMap();
+            CreateMap<Product, ProductDTO>().ReverseMap();
             //CreateMap<IAuthenticationService, AuthenticationService>();
         }
     }

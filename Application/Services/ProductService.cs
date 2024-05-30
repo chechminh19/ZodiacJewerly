@@ -6,6 +6,7 @@ using AutoMapper;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,7 +103,19 @@ namespace Application.Services
 
             try
             {
-                // Map ProductDTO to Product entity if needed
+                // Validate the ProductDTO
+                var validationContext = new ValidationContext(product);
+                var validationResults = new List<ValidationResult>();
+                if (!Validator.TryValidateObject(product, validationContext, validationResults, true))
+                {
+                    // If validation fails, set error messages and return
+                    var errorMessages = validationResults.Select(r => r.ErrorMessage);
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = string.Join("; ", errorMessages);
+                    return serviceResponse;
+                }
+
+                // Retrieve existing product from the repository
                 var existingProduct = await _productRepo.GetProductById(product.Id);
                 if (existingProduct == null)
                 {
@@ -111,10 +124,15 @@ namespace Application.Services
                 }
                 else
                 {
-                    // Update existing product entity with new data
-                    // Assuming there's some mapping or updating logic here
+                    // Update existing product entity with new data from the DTO
+                    MapProductDTOToEntity(product, existingProduct);
+
+                    // Save the updated product entity back to the repository
                     await _productRepo.UpdateProduct(existingProduct);
+
+                    // Set success message
                     serviceResponse.Data = "Product updated successfully";
+                    serviceResponse.Success = true;
                 }
             }
             catch (Exception ex)
@@ -125,6 +143,7 @@ namespace Application.Services
 
             return serviceResponse;
         }
+
 
         public async Task<ServiceResponse<string>> DeleteProductAsync(int id)
         {
@@ -166,6 +185,18 @@ namespace Application.Services
         private Product MapToEntity(ProductDTO productDTO)
         {
             return _mapper.Map<Product>(productDTO);
+        }
+
+        private void MapProductDTOToEntity(ProductDTO productDTO, Product existingProduct)
+        {
+            // Map individual properties from the DTO to the existing product entity
+            existingProduct.NameProduct = productDTO.NameProduct;
+            existingProduct.DescriptionProduct = productDTO.DescriptionProduct;
+            existingProduct.Price = productDTO.Price;
+            existingProduct.Quantity = productDTO.Quantity;
+            existingProduct.CategoryId = productDTO.CategoryId;
+            existingProduct.MaterialId = productDTO.MaterialId;
+            existingProduct.GenderId = productDTO.GenderId;
         }
     }
 }
