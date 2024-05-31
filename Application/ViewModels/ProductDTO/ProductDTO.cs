@@ -5,6 +5,7 @@ namespace Application.ViewModels.ProductDTO
 {
     public class ProductDTO
     {
+
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Product name is required")]
@@ -34,7 +35,8 @@ namespace Application.ViewModels.ProductDTO
 
         [Required(ErrorMessage = "Gender ID is required")]
         [ValidateType(typeof(int), ErrorMessage = "Gender ID must be an integer")]
-        public int GenderId { get; set; }
+        public int GenderId { get; set; }   
+        
     }
 
     public class NonNegativeAttribute : ValidationAttribute
