@@ -19,6 +19,7 @@ namespace Infrastructure.Mappers
             CreateMap<User, RegisterDTO>().ReverseMap();
             CreateMap<User, LoginUserDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
+            CreateMap<ZodiacProduct, ZodiacProductDTO>().ReverseMap();
             //CreateMap<IAuthenticationService, AuthenticationService>();
         }
     }

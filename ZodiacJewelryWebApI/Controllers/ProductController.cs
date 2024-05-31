@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZodiacJewelryWebApI.Controllers;
 
-namespace YourNamespace.Controllers
+namespace ZodiacJewelryWebApI.Controllers
 {
     [EnableCors("Allow")]
     public class ProductController : BaseController
