@@ -1,4 +1,6 @@
 ﻿using Application.IService;
+using Application.ServiceResponse;
+using Application.Utils;
 using Application.ViewModels.UserDTO;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +13,7 @@ namespace ZodiacJewelryWebApI.Controllers
     public class AuthenController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
+        private Dictionary<string, (string, DateTime)> emailVerifyCode = new Dictionary<string, (string, DateTime)>();
         public AuthenController(IAuthenticationService authen)
         {
             _authenticationService = authen;
@@ -30,26 +33,36 @@ namespace ZodiacJewelryWebApI.Controllers
                 return Ok(result);
             }
         }
-        [HttpPost("ForgotPassword/{email}")]
-        public async Task<IActionResult> ForgotPassword(ForgotPassDTO user)
+        [HttpPost("{email}")]
+        public async Task<IActionResult> ForgotPassword(string email)
         {
-            try
-            {
-                var result = await _authenticationService.ForgotPass(user);
-                if (!result.Success)
+           var result = await _authenticationService.ForgotPass(email);
+           if(!result.Success)
+           {
+                return BadRequest(result);
+           } return Ok(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> VerifyOTP(VerifyOTPResetDTO request)
+        {           
+                var response = await _authenticationService.VerifyForgotPassCode(request);
+                if (!response.Success)
                 {
-                    return StatusCode(401, result);
+                    return BadRequest(response);
                 }
-                return Ok(result);
-            }
-            catch (Exception ex)
+                return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassWord(ResetPassDTO dto)
+        {
+            var response = await _authenticationService.ResetPass(dto);
+            if (!response.Success)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(response);
             }
+            return Ok(response);
         }
 
-
-        //[Authorize(Roles = "Staff")]
         [HttpPost]
         public async Task<IActionResult> LoginAsync(LoginUserDTO loginObject)
         {
@@ -66,7 +79,8 @@ namespace ZodiacJewelryWebApI.Controllers
                     {
                         success = result.Success,
                         message = result.Message,
-                        token = result.Data
+                        token = result.DataToken,
+                        role = result.Role
                     }
                 );
             }

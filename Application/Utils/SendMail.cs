@@ -6,31 +6,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Application.Utils
 {
     public class SendMail
     {
-        private static string GenerateRandomCode()
+        public static string GenerateRandomCodeWithExpiration(string token, int minutesToExpire)
         {
-            //Random 6 characs 
-            string chars = "0123456789";
             Random random = new Random();
-            string code = new string(Enumerable.Repeat(chars, 6).Select(s => s[random.Next(s.Length)]).ToArray());
-            // Add expiration time (2 minutes) to the code
-            DateTime expirationTime = DateTime.UtcNow.AddMinutes(2); // Set expiration time to 2 minutes from now
-            string expirationTimeString = expirationTime.ToString("yyyyMMddHHmmss");
-            code = expirationTimeString + code;
+            StringBuilder codeWithExpiration = new StringBuilder();
+
+            List<char> digitChars = token.Where(char.IsDigit).ToList();
+
+            for (int i = 0; i < 6; i++)
+            {
+                char randomDigit = digitChars[random.Next(0, digitChars.Count)];
+                codeWithExpiration.Append(randomDigit);
+            }
+
+            DateTime expirationTime = DateTime.Now.AddMinutes(minutesToExpire);
+            string code = codeWithExpiration.ToString();
+            
             return code;
         }
-        public static async Task<bool> SendResetPass(string toEmail)
+        public static async Task<bool> SendResetPass(IMemoryCache cache,string toEmail, string code, bool showExpirationTime)
         {
             var userName = "ZodiacJewelry";
             var emailFrom = "minhpcse172904@fpt.edu.vn";
             var password = "lwfr bgex dipf iijf";
 
             var subjet = "Reset Password Confirmation";
-            var code = GenerateRandomCode();
+
+            if (!showExpirationTime)
+            {
+                code = new string(code.Take(6).ToArray());
+            }
             var body = $"Please enter this code to reset your password: {code}";
 
             var message = new MimeMessage();
@@ -41,6 +52,15 @@ namespace Application.Utils
             {
                 Text = body   
             };
+            // Lưu mã OTP vào cache
+            string key = $"{toEmail}_OTP";
+            cache.Set(key, code, TimeSpan.FromMinutes(1));
+            // Thêm logic xóa key OTP khi hết hạn
+            Task.Delay(TimeSpan.FromMinutes(1)).ContinueWith(_ =>
+            {
+                cache.Remove(key);
+            });
+
             using (var client = new SmtpClient())
             {
                 client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);

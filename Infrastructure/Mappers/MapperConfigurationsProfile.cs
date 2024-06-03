@@ -17,6 +17,9 @@ namespace Infrastructure.Mappers
         {
             CreateMap<User, RegisterDTO>().ReverseMap();
             CreateMap<User, LoginUserDTO>().ReverseMap();
+            CreateMap<ResetPassDTO, User>()
+                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
+
             //CreateMap<IAuthenticationService, AuthenticationService>();
         }
     }

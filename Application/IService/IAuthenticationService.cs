@@ -11,8 +11,10 @@ namespace Application.IService
     public interface IAuthenticationService
     {
         public Task<ServiceResponse<RegisterDTO>> RegisterAsync(RegisterDTO userObject);
-        public Task<ServiceResponse<string>> LoginAsync(LoginUserDTO userObject);
-        public Task<ServiceResponse<string>> ForgotPass(ForgotPassDTO userObject);
-        //public Task<ServiceResponse<ResetPassDTO>> ResetPass(ResetPassDTO userObject);
+        public Task<TokenResponse<string>> LoginAsync(LoginUserDTO userObject);
+        public Task<TokenResponse<string>> ForgotPass(string email);
+        public Task<string> GenerateRandomPasswordResetTokenByEmailAsync(string email);
+        public Task<TokenResponse<string>> VerifyForgotPassCode(VerifyOTPResetDTO dto);
+       public Task<ServiceResponse<ResetPassDTO>> ResetPass(ResetPassDTO dto);
     }
 }

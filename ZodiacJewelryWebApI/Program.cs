@@ -31,6 +31,7 @@ builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMemoryCache();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>

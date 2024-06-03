@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace Application.ViewModels.UserDTO
 {
-    public class ForgotPassDTO
-    {     
+    public class VerifyOTPResetDTO
+    {
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
-        public string Code {  get; set; }
+        [Required]
+        public string CodeOTP { get; set; }
     }
 }
