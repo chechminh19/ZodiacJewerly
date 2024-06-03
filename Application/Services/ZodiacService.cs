@@ -70,26 +70,71 @@ namespace Application.Services
             return serviceResponse;
         }
 
+
+        public async Task<ServiceResponse<ZodiacProductDTO>> GetZodiacProductByProductId(int id)
+        {
+            var serviceResponse = new ServiceResponse<ZodiacProductDTO>();
+
+            try
+            {
+                var zodiacProduct = await _zodiacProductRepo.GetByProductId(id);
+                if (zodiacProduct == null)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Zodiac product not found";
+                }
+                else
+                {
+                    var zodiacProductDTO = _mapper.Map<ZodiacProductDTO>(zodiacProduct);
+                    serviceResponse.Data = zodiacProductDTO;
+                    serviceResponse.Success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<int>> AddZodiacProduct(ZodiacProductDTO zodiacProduct)
         {
             var serviceResponse = new ServiceResponse<int>();
 
             try
             {
+                // Map DTO to entity
                 var zodiacProductEntity = _mapper.Map<ZodiacProduct>(zodiacProduct);
+
+                // Add zodiac product to repository
                 await _zodiacProductRepo.AddZodiacProduct(zodiacProductEntity);
+
+                // Ensure the product ID is set after adding to the repository
+                if (zodiacProductEntity.Id == 0)
+                {
+                    throw new Exception("Failed to generate zodiac product ID.");
+                }
+
+                // Prepare success response
                 serviceResponse.Data = zodiacProductEntity.Id;
                 serviceResponse.Success = true;
                 serviceResponse.Message = "Zodiac product created successfully";
             }
             catch (Exception ex)
             {
+                // Log the exception (assuming a logger is available)
+                
+
+                // Prepare failure response
                 serviceResponse.Success = false;
-                serviceResponse.Message = "Failed to create zodiac product: " + ex.Message;
+                serviceResponse.Message = $"Failed to create zodiac product: {ex.Message}";
             }
 
             return serviceResponse;
         }
+
 
         public async Task<ServiceResponse<string>> UpdateZodiacProduct(ZodiacProductDTO zodiacProduct)
         {
@@ -144,7 +189,15 @@ namespace Application.Services
                 }
                 else
                 {
-                    var productDTOs = _mapper.Map<IEnumerable<ProductDTO>>(products);
+                    var productDTOs = new List<ProductDTO>();
+                    foreach (var product in products)
+                    {
+                        var productDTO = _mapper.Map<ProductDTO>(product);
+                        productDTO.ImageURLs = product.ProductImages.Select(pi => pi.ImageUrl).ToList();
+                        productDTO.ZodiacId = zodiacId;
+                        productDTOs.Add(productDTO);
+                    }
+
                     serviceResponse.Data = productDTOs;
                     serviceResponse.Success = true;
                 }
@@ -157,5 +210,7 @@ namespace Application.Services
 
             return serviceResponse;
         }
+
+
     }
 }

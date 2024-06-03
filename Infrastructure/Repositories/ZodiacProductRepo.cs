@@ -20,6 +20,12 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.ZodiacProduct.FindAsync(id);
         }
+        public async Task<ZodiacProduct> GetByProductId(int id)
+        {
+            return await _dbContext.ZodiacProduct.FirstOrDefaultAsync(p => p.ProductId == id);
+        }
+
+
 
         public async Task<IEnumerable<ZodiacProduct>> GetAllZodiacProduct()
         {
@@ -50,19 +56,31 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<Product>> GetAllProductsByZodiacId(int zodiacId)
         {
-            
+            // Retrieve product IDs associated with the given zodiac ID
             var productIds = await _dbContext.ZodiacProduct
                 .Where(zp => zp.ZodiacId == zodiacId)
                 .Select(zp => zp.ProductId)
                 .ToListAsync();
 
-            
+
+
+            // Retrieve products based on the retrieved product IDs
             var products = await _dbContext.Product
                 .Where(p => productIds.Contains(p.Id))
                 .ToListAsync();
 
+            // Retrieve product images for each product based on its ID and include them
+            foreach (var product in products)
+            {
+                product.ProductImages = await _dbContext.ProductImage
+                    .Where(pi => pi.ProductId == product.Id)
+                    .ToListAsync();
+            }
+
             return products;
         }
+
+
 
     }
 }

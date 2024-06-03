@@ -12,8 +12,8 @@ namespace Application.IService
     {
         Task<ServiceResponse<IEnumerable<ProductDTO>>> GetAllProductsAsync();
         Task<ServiceResponse<ProductDTO>> GetProductByIdAsync(int id);
-        Task<ServiceResponse<int>> CreateProductAsync(ProductDTO product);
-        Task<ServiceResponse<string>> UpdateProductAsync(ProductDTO product);
+        Task<ServiceResponse<int>> CreateProductAsync(CreateProductDTO cproduct, int zodiacId);
+        Task<ServiceResponse<string>> UpdateProductAsync(CreateProductDTO cproduct, int zodiacId);
         Task<ServiceResponse<string>> DeleteProductAsync(int id);
     }
 }

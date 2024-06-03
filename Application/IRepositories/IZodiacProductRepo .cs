@@ -10,6 +10,8 @@ namespace Application.IRepositories
     public interface IZodiacProductRepo : IGenericRepo<ZodiacProduct>
     {
         Task<ZodiacProduct> GetZodiacProductById(int id);
+
+        Task<ZodiacProduct> GetByProductId(int id);
         Task<IEnumerable<ZodiacProduct>> GetAllZodiacProduct();
         Task AddZodiacProduct(ZodiacProduct zproduct);
         Task UpdateZodiacProduct(ZodiacProduct zproduct);

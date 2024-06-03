@@ -1,4 +1,10 @@
-﻿using Application.IRepositories;
+
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
 using Application.ViewModels.ProductDTO;
@@ -10,76 +16,87 @@ namespace Application.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepo _productRepo;
+        private readonly IZodiacProductRepo _zodiacProductRepo;
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepo productRepo, IMapper mapper)
+        public ProductService(IProductRepo productRepo, IZodiacProductRepo zodiacProductRepo, IMapper mapper)
         {
             _productRepo = productRepo ?? throw new ArgumentNullException(nameof(productRepo));
+            _zodiacProductRepo = zodiacProductRepo ?? throw new ArgumentNullException(nameof(zodiacProductRepo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<ServiceResponse<IEnumerable<ProductDTO>>> GetAllProductsAsync()
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<ProductDTO>>();
+            var response = new ServiceResponse<IEnumerable<ProductDTO>>();
 
             try
             {
                 var products = await _productRepo.GetAllProduct();
                 var productDTOs = MapToDTO(products);
-                serviceResponse.Data = productDTOs;
+                response.Data = productDTOs;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve products: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
 
         public async Task<ServiceResponse<ProductDTO>> GetProductByIdAsync(int id)
         {
-            var serviceResponse = new ServiceResponse<ProductDTO>();
+            var response = new ServiceResponse<ProductDTO>();
 
             try
             {
                 var product = await _productRepo.GetProductById(id);
                 if (product == null)
                 {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = "Product not found";
+                    response.Success = false;
+                    response.Message = "Product not found";
                 }
                 else
                 {
                     var productDTO = MapToDTO(product);
-                    serviceResponse.Data = productDTO;
+                    response.Data = productDTO;
+                    response.Success = true;
                 }
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve product: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
 
-        public async Task<ServiceResponse<int>> CreateProductAsync(ProductDTO product)
+        public async Task<ServiceResponse<int>> CreateProductAsync(CreateProductDTO product, int zodiacId)
         {
-            var serviceResponse = new ServiceResponse<int>();
+            var response = new ServiceResponse<int>();
 
             try
             {
-                var newProduct = MapToEntity(product);
-                newProduct.Id = 0; // Or whatever default value indicates it's a new entity
+                var newProduct = MapToEntityCreate(product);
+                newProduct.Id = 0;
 
                 await _productRepo.AddProduct(newProduct);
-                // Assuming Id is the generated identifier
-                serviceResponse.Data = newProduct.Id;
+                response.Data = newProduct.Id;
+                response.Success = true;
+                response.Message = "Product created successfully";
 
-                // If the product was added successfully, set success to true
-                serviceResponse.Success = true;
-                serviceResponse.Message = "Product created successfully";
+                // Create the ZodiacProduct entity
+                var newZodiacProduct = new ZodiacProduct
+                {
+                    ProductId = newProduct.Id,
+                    ZodiacId = zodiacId
+                };
+
+                // Add the ZodiacProduct entity to the repository
+                await _zodiacProductRepo.AddZodiacProduct(newZodiacProduct);
             }
             catch (Exception ex)
             {
@@ -87,87 +104,118 @@ namespace Application.Services
                 response.Message = $"Failed to create product: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
 
-        public async Task<ServiceResponse<string>> UpdateProductAsync(ProductDTO product)
+
+        public async Task<ServiceResponse<string>> UpdateProductAsync(CreateProductDTO product, int zodiacId)
         {
-            var serviceResponse = new ServiceResponse<string>();
+            var response = new ServiceResponse<string>();
 
             try
             {
+                // Validate the product DTO
                 var validationContext = new ValidationContext(product);
                 var validationResults = new List<ValidationResult>();
                 if (!Validator.TryValidateObject(product, validationContext, validationResults, true))
                 {
                     var errorMessages = validationResults.Select(r => r.ErrorMessage);
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = string.Join("; ", errorMessages);
-                    return serviceResponse;
+                    response.Success = false;
+                    response.Message = string.Join("; ", errorMessages);
+                    return response;
                 }
 
+                // Retrieve the existing product from the repository
                 var existingProduct = await _productRepo.GetProductById(product.Id);
                 if (existingProduct == null)
                 {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = "Product not found";
+                    response.Success = false;
+                    response.Message = "Product not found";
+                    return response;
                 }
-                else
-                {
-                    MapProductDTOToEntity(product, existingProduct);
-                    await _productRepo.UpdateProduct(existingProduct);
 
-                    // Set success message
-                    serviceResponse.Data = "Product updated successfully";
-                    serviceResponse.Success = true;
+                // Map updated values from DTO to the existing entity
+                MapCreateProductDTOToEntity(product, existingProduct);
+
+                // Update the product in the repository
+                await _productRepo.UpdateProduct(existingProduct);
+
+                // Retrieve the existing ZodiacProduct entity
+                var existingZodiacProduct = await _zodiacProductRepo.GetByProductId(product.Id);
+                if (existingZodiacProduct == null)
+                {
+                    response.Success = false;
+                    response.Message = "Associated ZodiacProduct not found";
+                    return response;
                 }
+
+                // Update the ZodiacProduct entity with the new zodiacId
+                existingZodiacProduct.ZodiacId = zodiacId;
+                await _zodiacProductRepo.UpdateZodiacProduct(existingZodiacProduct);
+
+                response.Data = "Product and associated ZodiacProduct updated successfully";
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                // Log the exception
+                
+
+                response.Success = false;
+                response.Message = $"Failed to update product: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
+
 
         public async Task<ServiceResponse<string>> DeleteProductAsync(int id)
         {
-            var serviceResponse = new ServiceResponse<string>();
+            var response = new ServiceResponse<string>();
 
             try
             {
                 var existingProduct = await _productRepo.GetProductById(id);
                 if (existingProduct == null)
                 {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = "Product not found";
+                    response.Success = false;
+                    response.Message = "Product not found";
                 }
                 else
                 {
                     await _productRepo.DeleteProduct(id);
-                    serviceResponse.Data = "Product deleted successfully";
+                    response.Data = "Product deleted successfully";
+                    response.Success = true;
                 }
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to delete product: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
 
         private ProductDTO MapToDTO(Product product)
         {
             var productDTO = _mapper.Map<ProductDTO>(product);
             productDTO.ImageURLs = product.ProductImages?.Select(pi => pi.ImageUrl).ToList();
+            productDTO.ZodiacId = (int)(product.ProductZodiacs?.Select(pi => pi.ZodiacId).FirstOrDefault());
+
+
+
             return productDTO;
         }
+        private CreateProductDTO MapToDTOCreate(Product product)
+        {
+            var productDTO = _mapper.Map<CreateProductDTO>(product);
 
+            return productDTO;
+        }
         private IEnumerable<ProductDTO> MapToDTO(IEnumerable<Product> products)
         {
-            return _mapper.Map<IEnumerable<ProductDTO>>(products);
+            return products.Select(MapToDTO);
         }
 
         private Product MapToEntity(ProductDTO productDTO)
@@ -175,7 +223,12 @@ namespace Application.Services
             return _mapper.Map<Product>(productDTO);
         }
 
-        private void MapProductDTOToEntity(ProductDTO productDTO, Product existingProduct)
+        private Product MapToEntityCreate(CreateProductDTO CreateProductDTO)
+        {
+            return _mapper.Map<Product>(CreateProductDTO);
+        }
+
+        private void MapCreateProductDTOToEntity(CreateProductDTO productDTO, Product existingProduct)
         {
             existingProduct.NameProduct = productDTO.NameProduct;
             existingProduct.DescriptionProduct = productDTO.DescriptionProduct;
@@ -187,3 +240,4 @@ namespace Application.Services
         }
     }
 }
+
