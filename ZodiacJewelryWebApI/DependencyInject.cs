@@ -27,7 +27,14 @@ namespace ZodiacJewelryWebApI
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             //services.AddSingleton<ICurrentTime, CurrentTime>();
             //services.AddScoped<IClaimsService, ClaimsService>();
+
+            services.AddScoped<IProductRepo, ProductRepo>();
+            services.AddScoped<IProductService, ProductService>();
             services.AddHttpContextAccessor();
+
+
+            services.AddScoped<IZodiacProductRepo, ZodiacProductRepo>();
+            services.AddScoped<IZodiacProductService, ZodiacService>();
             return services;
         }
     }
