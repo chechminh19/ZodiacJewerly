@@ -12,8 +12,6 @@ namespace Application.ViewModels.ProductDTO
 
         public int Id { get; set; }
         public int ProductId { get; set; }
-        
-
         public int ZodiacId { get; set; }
        
     }
