@@ -14,9 +14,11 @@ namespace Infrastructure.Repositories
 {
     public class GenericRepo<T> : IGenericRepo<T> where T : class
     {
-        protected DbSet<T> _dbSet;    
+        protected DbSet<T> _dbSet; 
+        protected readonly AppDbContext context;
         public GenericRepo(AppDbContext context)
         {
+            this.context = context;
             _dbSet = context.Set<T>();                   
         }
         public Task<List<T>> GetAllAsync()
@@ -34,9 +36,16 @@ namespace Infrastructure.Repositories
             await _dbSet.AddAsync(entity);
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
-            _dbSet.Update(entity);
+            _ = _dbSet.Update(entity);
+            _ = await context.SaveChangesAsync();
+        }
+
+        public async Task Remove(T entity)
+        {
+            _ = _dbSet.Remove(entity);
+            _ = await context.SaveChangesAsync();
         }
     }
 }

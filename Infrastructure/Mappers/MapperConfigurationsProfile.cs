@@ -24,8 +24,9 @@ namespace Infrastructure.Mappers
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Product, CreateProductDTO>().ReverseMap();
             CreateMap<ZodiacProduct, ZodiacProductDTO>().ReverseMap();
+            CreateMap<Category, CategoryReqDTO>().ReverseMap();
+            CreateMap<Category, CategoryResDTO>().ReverseMap();
             //CreateMap<IAuthenticationService, AuthenticationService>();
         }
     }
 }
-﻿
