@@ -1,4 +1,4 @@
-﻿using Application;
+using Application;
 using Application.IRepositories;
 using Application.IService;
 using Application.Services;
@@ -16,12 +16,6 @@ namespace Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ICurrentTime, CurrentTime>();
-
-            services.AddScoped<ICategoryRepo, CategoryRepo>();
-            services.AddScoped<ICategoryService, CategoryService>();
-
-            services.AddScoped<IMaterialRepo, MaterialRepo>();
-            services.AddScoped<IMaterialService, MaterialService>();
             //services.AddDbContext<AppDbContext>(option => option.UseSqlServer(databaseConnection));
             return services;
         }

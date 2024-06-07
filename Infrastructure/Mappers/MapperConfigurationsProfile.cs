@@ -1,5 +1,6 @@
 ﻿using Application.IService;
 using Application.Services;
+using Application.ViewModels.ProductDTO;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
 using Domain.Entities;
@@ -17,6 +18,12 @@ namespace Infrastructure.Mappers
         {
             CreateMap<User, RegisterDTO>().ReverseMap();
             CreateMap<User, LoginUserDTO>().ReverseMap();
+            CreateMap<ResetPassDTO, User>()
+                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
+            CreateMap<User, ResetPassDTO>();
+            CreateMap<Product, ProductDTO>().ReverseMap();
+            CreateMap<Product, CreateProductDTO>().ReverseMap();
+            CreateMap<ZodiacProduct, ZodiacProductDTO>().ReverseMap();
             CreateMap<Category, CategoryReqDTO>().ReverseMap();
             CreateMap<Category, CategoryResDTO>().ReverseMap();
             //CreateMap<IAuthenticationService, AuthenticationService>();

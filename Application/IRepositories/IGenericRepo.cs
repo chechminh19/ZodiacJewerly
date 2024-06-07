@@ -13,9 +13,5 @@ namespace Application.IRepositories
         Task AddAsync(T entity);
         Task Update(T entity);
         Task Remove(T entity);
-        //void UpdateRange(List<T> entities);
-        //void SoftRemove(T entity);
-        //Task AddRangeAsync(List<T> entities);
-        //void SoftRemoveRange(List<T> entities);
     }
 }
