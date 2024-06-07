@@ -1,5 +1,6 @@
 ﻿using Application.IService;
 using Application.Services;
+using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
@@ -21,6 +22,7 @@ namespace Infrastructure.Mappers
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Product, CreateProductDTO>().ReverseMap();
             CreateMap<ZodiacProduct, ZodiacProductDTO>().ReverseMap();
+            CreateMap<Order, OrderDTO>().ReverseMap();
             //CreateMap<IAuthenticationService, AuthenticationService>();
         }
     }

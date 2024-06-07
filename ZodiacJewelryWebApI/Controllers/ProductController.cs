@@ -23,7 +23,7 @@ namespace ZodiacJewelryWebApI.Controllers
             _zodiacService = zodiacService;
         }
 
-        [HttpGet("get-all-products")]
+        [HttpGet("all-products")]
         public async Task<IActionResult> GetAllProductsAsync()
         {
             var result = await _productService.GetAllProductsAsync();
@@ -34,7 +34,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("get-product/{id}")]
+        [HttpGet("product-by-id/{id}")]
         public async Task<IActionResult> GetProductByIdAsync(int id)
         {
             var result = await _productService.GetProductByIdAsync(id);
@@ -44,7 +44,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-        [HttpPost("create-product")]
+        [HttpPost("product-new")]
         public async Task<IActionResult> CreateProductAsync(CreateProductDTO product, int zodiacId)
         {
             var result = await _productService.CreateProductAsync(product, zodiacId);
@@ -56,7 +56,7 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
 
-        [HttpPut("update-product/{id}")]
+        [HttpPut("product-update/{id}")]
         public async Task<IActionResult> UpdateProductAsync(int id, CreateProductDTO product, int zodiacId)
         {
             if (id != product.Id)
@@ -72,7 +72,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("delete-product/{id}")]
+        [HttpDelete("product-remove/{id}")]
         public async Task<IActionResult> DeleteProductAsync(int id)
         {
             var result = await _productService.DeleteProductAsync(id);
