@@ -12,7 +12,7 @@ namespace ZodiacJewelryWebApI
     {
         public static IServiceCollection AddWebAPIService(this IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions (option=> option.JsonSerializerOptions.PropertyNamingPolicy=System.Text.Json.JsonNamingPolicy.KebabCaseLower);
             /*services.AddFluentValidation();*/ 
             
             services.AddEndpointsApiExplorer();

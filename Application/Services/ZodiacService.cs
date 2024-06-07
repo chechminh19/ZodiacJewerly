@@ -193,7 +193,7 @@ namespace Application.Services
                     foreach (var product in products)
                     {
                         var productDTO = _mapper.Map<ProductDTO>(product);
-                        productDTO.ImageURLs = product.ProductImages.Select(pi => pi.ImageUrl).ToList();
+                        productDTO.ImageUrls = product.ProductImages.Select(pi => pi.ImageUrl).ToList();
                         productDTO.ZodiacId = zodiacId;
                         productDTOs.Add(productDTO);
                     }
