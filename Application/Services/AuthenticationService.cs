@@ -188,6 +188,8 @@ namespace Application.Services
                 await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
 
                 var confirmationLink = $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
+                //var confirmationLink = $"https://your-api-domain/confirm?token={userAccountRegister.ConfirmationToken}&redirectUrl=https://your-frontend-domain/login";
+
                 //SendMail
                 var emailSend = await Utils.SendMail.SendConfirmationEmail(userObjectDTO.Email, confirmationLink);
                 if (!emailSend)
@@ -231,9 +233,10 @@ namespace Application.Services
         public async Task<ServiceResponse<ResetPassDTO>> ResetPass(ResetPassDTO dto)
         {
             var response = new ServiceResponse<ResetPassDTO>();
-            try { 
-                var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(dto.Email);
-                if (existEmail == false)
+            try {
+
+                var userAccount = await _unitOfWork.UserRepository.GetUserByEmailAsync(dto.Email);
+                if (userAccount == null)
                 {
                     response.Success = false;
                     response.Message = "Email not found";
@@ -245,20 +248,85 @@ namespace Application.Services
                     response.Message = "Password and Confirm Password do not match.";
                     return response;
                 }
-                var userAccount = _mapper.Map<User>(dto);
-                userAccount.Password = Utils.HashPass.HashWithSHA256(dto.Password);
-                
-                await _unitOfWork.UserRepository.UpdatePropertyAsync(userAccount, u=>u.Password);
+                userAccount.Password = Utils.HashPass.HashWithSHA256(dto.Password);            
+                 _unitOfWork.UserRepository.Update(userAccount);
                  var success = await _unitOfWork.SaveChangeAsync() > 0;
-                if(success)
+                if (success)
                 {
                     var accountRegistedDTO = _mapper.Map<ResetPassDTO>(userAccount);
-                    response.Success = true;
-                    response.Data = accountRegistedDTO;
+                    response.Success = true;                    
                     response.Message = "Password reset successfully.";
                 }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "An error occurred while saving changes.";
+                    return response;
+                }
+            }
+            catch (DbException e)
+            {
                 response.Success = false;
-                response.Message = "Error do not know";
+                response.Message = "Database error occurred.";
+                response.ErrorMessages = new List<string> { e.Message };
+            }
+            catch (Exception e)
+            {
+                response.Success = false;
+                response.Message = "Error";
+                response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
+            }
+            return response;
+        }
+
+        public async Task<ServiceResponse<RegisterDTO>> CreateStaff(RegisterDTO userObject)
+        {
+            var response = new ServiceResponse<RegisterDTO>();
+            try
+            {
+                var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(userObject.Email);
+                if (existEmail)
+                {
+                    response.Success = false;
+                    response.Message = "Email is already existed";
+                    return response;
+                }
+                var userAccountRegister = _mapper.Map<User>(userObject);
+                userAccountRegister.Password = Utils.HashPass.HashWithSHA256(userObject.Password);
+                //Create Token
+                userAccountRegister.ConfirmationToken = Guid.NewGuid().ToString();
+
+                userAccountRegister.Status = 1;
+                userAccountRegister.RoleName = "Customer";
+                await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
+
+                var confirmationLink = $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
+                //var confirmationLink = $"https://your-api-domain/confirm?token={userAccountRegister.ConfirmationToken}&redirectUrl=https://your-frontend-domain/login";
+
+                //SendMail
+                var emailSend = await Utils.SendMail.SendConfirmationEmail(userObject.Email, confirmationLink);
+                if (!emailSend)
+                {
+                    response.Success = false;
+                    response.Message = "Error when send mail";
+                    return response;
+                }
+                else
+                {
+                    var success = await _unitOfWork.SaveChangeAsync() > 0;
+                    if (success)
+                    {
+                        var accountRegistedDTO = _mapper.Map<RegisterDTO>(userAccountRegister);
+                        response.Success = true;
+                        response.Data = accountRegistedDTO;
+                        response.Message = "Register successfully.";
+                    }
+                    else
+                    {
+                        response.Success = false;
+                        response.Message = "Error when saving ur account";
+                    }
+                }
             }
             catch (DbException e)
             {

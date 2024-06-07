@@ -12,7 +12,6 @@ namespace Application.IRepositories
         Task<List<T>> GetAllAsync();
         Task<T?> GetByIdAsync(Guid id);
         Task AddAsync(T entity);
-        void Update(T entity);
-        Task UpdatePropertyAsync(T entity, Expression<Func<T, object>> propertyExpression);
+        void Update(T entity);        
     }
 }

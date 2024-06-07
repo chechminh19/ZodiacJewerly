@@ -2,6 +2,9 @@
 using Application.ServiceResponse;
 using Application.Utils;
 using Application.ViewModels.UserDTO;
+using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
@@ -13,14 +16,14 @@ namespace ZodiacJewelryWebApI.Controllers
     public class AuthenController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
-        private Dictionary<string, (string, DateTime)> emailVerifyCode = new Dictionary<string, (string, DateTime)>();
+        //private Dictionary<string, (string, DateTime)> emailVerifyCode = new Dictionary<string, (string, DateTime)>();
         public AuthenController(IAuthenticationService authen)
         {
             _authenticationService = authen;
         }
         
         [HttpPost]
-        public async Task<IActionResult> RegisterAsync(RegisterDTO registerObject)
+        public async Task<IActionResult> Register(RegisterDTO registerObject)
         {
             var result = await _authenticationService.RegisterAsync(registerObject);
 
@@ -33,7 +36,30 @@ namespace ZodiacJewelryWebApI.Controllers
                 return Ok(result);
             }
         }
-        [HttpPost("{email}")]
+        [HttpPost]//Admin
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  
+        public async Task<IActionResult> NewAccountStaff(RegisterDTO registerObject)
+        {
+            var isAdmin = User.IsInRole("Admin");
+            if (!isAdmin)
+            {
+                return Unauthorized(new { message = "You do not have permission to do this" });
+            }
+            var result = await _authenticationService.CreateStaff(registerObject);
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+
+
+
+        [HttpPost("{email-customer}")]
         public async Task<IActionResult> ForgotPassword(string email)
         {
            var result = await _authenticationService.ForgotPass(email);
@@ -52,7 +78,7 @@ namespace ZodiacJewelryWebApI.Controllers
                 }
                 return Ok(response);
         }
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> ResetPassWord(ResetPassDTO dto)
         {
             var response = await _authenticationService.ResetPass(dto);

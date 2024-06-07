@@ -153,9 +153,63 @@ namespace Application.Utils
                 }
             }
         }
-        //<a class='button' href='"
-        //            + confirmationLink
-        //            + "'>Confirm Email</a>"
-        //            + @"
+        public static async Task<bool> SendRegistrationSuccessEmail(string toEmail)
+        {
+            var userName = "ZodiacJewerly";
+            var emailFrom = "minhpcse172904@fpt.edu.vn";
+            var password = "lwfr bgex dipf iijf";
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(userName, emailFrom));
+            message.To.Add(new MailboxAddress("", toEmail));
+            message.Subject = "Registration Successful";
+            message.Body = new TextPart("html")
+            {
+                Text =
+                    @"
+    <html>
+        <head>
+            <style>
+                body {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                    font-family: Arial, sans-serif;
+                }
+                .content {
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <div class='content'>
+                <p>Your registration has been confirmed successfully. Welcome to Zodiac Jewelry!</p>
+            </div>
+        </body>
+    </html>
+"
+            };
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                //authenticate account email
+                client.Authenticate(emailFrom, password);
+
+                try
+                {
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    System.Console.WriteLine(ex.Message);
+                    return false;
+                }
+            }
+        }
+
     }
 }

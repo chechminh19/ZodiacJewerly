@@ -34,25 +34,9 @@ namespace Infrastructure.Repositories
             await _dbSet.AddAsync(entity);
         }
 
-        public  void UpdateAsync(T entity)
+        public void Update(T entity)
         {
-            _dbSet.Update(entity);            
-        }       
-        public Task UpdatePropertyAsync(T entity, Expression<Func<T, object>> propertyExpression)
-        {
-            _dbSet.Attach(entity);
-            _dbSet.Entry(entity).Property(propertyExpression).IsModified = true;
-            return Task.CompletedTask;
-        }
-
-        public Task Update(T entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IGenericRepo<T>.Update(T entity)
-        {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
         }
     }
 }
