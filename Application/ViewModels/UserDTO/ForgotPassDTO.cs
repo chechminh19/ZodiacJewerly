@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 namespace Application.ViewModels.UserDTO
 {
     public class ForgotPassDTO
-    {
-        [Required]
-        [EmailAddress]
+    {     
         public string Email { get; set; }
+        public string Code {  get; set; }
     }
 }

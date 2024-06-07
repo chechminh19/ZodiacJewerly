@@ -12,18 +12,11 @@ namespace Application.ViewModels.UserDTO
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-
         [Required]
         [StringLength(15, ErrorMessage = "{0} to {2} from {1} character.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        public string Password { get; set; }
-
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm Password")]
-        [Compare("Password", ErrorMessage = "Password must be the same.")]
+        public string Password { get; set; }       
         public string ConfirmPassword { get; set; }
-
-        public string Code { get; set; }
     }
 }
