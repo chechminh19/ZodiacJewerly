@@ -11,7 +11,8 @@ namespace Application.IRepositories
         Task<List<T>> GetAllAsync();
         Task<T?> GetByIdAsync(Guid id);
         Task AddAsync(T entity);
-        void Update(T entity);
+        Task Update(T entity);
+        Task Remove(T entity);
         //void UpdateRange(List<T> entities);
         //void SoftRemove(T entity);
         //Task AddRangeAsync(List<T> entities);

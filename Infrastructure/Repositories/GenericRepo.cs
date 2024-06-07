@@ -13,13 +13,15 @@ namespace Infrastructure.Repositories
     public class GenericRepo<T> : IGenericRepo<T> where T : class
     {
         protected DbSet<T> _dbSet;
-        //private readonly ICurrentTime _timeService;
+
+        protected readonly AppDbContext context;
+//private readonly ICurrentTime _timeService;
         //private readonly IClamService _clamService;
 
         public GenericRepo(AppDbContext context)
         {
-            _dbSet = context.Set<T>();        
-            
+            _dbSet = context.Set<T>();
+            this.context = context;
         }
 
         public Task<List<T>> GetAllAsync()
@@ -37,9 +39,16 @@ namespace Infrastructure.Repositories
             await _dbSet.AddAsync(entity);
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
-            throw new NotImplementedException();
+            _ = _dbSet.Update(entity);
+            _ = await context.SaveChangesAsync();
+        }
+
+        public async Task Remove(T entity)
+        {
+            _ = _dbSet.Remove(entity);
+            _ = await context.SaveChangesAsync();
         }
         //public Task<List<T>> GetAllAsync() => _dbSet.ToListAsync();
 
