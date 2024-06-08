@@ -22,45 +22,18 @@ namespace Application.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<ServiceResponse<IEnumerable<ZodiacProductDTO>>> GetAllZodiacProduct()
-        {
-            var serviceResponse = new ServiceResponse<IEnumerable<ZodiacProductDTO>>();
 
             try
             {
-                var zodiacProducts = await _zodiacProductRepo.GetAllZodiacProduct();
-                var zodiacProductDTOs = _mapper.Map<IEnumerable<ZodiacProductDTO>>(zodiacProducts);
-                serviceResponse.Data = zodiacProductDTOs;
-                serviceResponse.Success = true;
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
-            }
-
-            return serviceResponse;
-        }
-
-        public async Task<ServiceResponse<ZodiacProductDTO>> GetZodiacProductById(int id)
-        {
-            var serviceResponse = new ServiceResponse<ZodiacProductDTO>();
+            var serviceResponse = new ServiceResponse<IEnumerable<ZodiacDTO>>();
 
             try
             {
-                var zodiacProduct = await _zodiacProductRepo.GetZodiacProductById(id);
-                if (zodiacProduct == null)
-                {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = "Zodiac product not found";
-                }
-                else
-                {
-                    var zodiacProductDTO = _mapper.Map<ZodiacProductDTO>(zodiacProduct);
-                    serviceResponse.Data = zodiacProductDTO;
+                var zodiac = await _zodiacRepo.GetAllZodiacs();
+                var zodiacDTOs = _mapper.Map<IEnumerable<ZodiacDTO>>(zodiac);
+                serviceResponse.Data = zodiacDTOs;
                     serviceResponse.Success = true;
                 }
-            }
             catch (Exception ex)
             {
                 serviceResponse.Success = false;
@@ -70,8 +43,7 @@ namespace Application.Services
             return serviceResponse;
         }
 
-
-        public async Task<ServiceResponse<ZodiacProductDTO>> GetZodiacProductByProductId(int id)
+        public async Task<ServiceResponse<OrderDTO>> GetOrderById(int id)
         {
             var serviceResponse = new ServiceResponse<ZodiacProductDTO>();
 
@@ -210,7 +182,5 @@ namespace Application.Services
 
             return serviceResponse;
         }
-
-
     }
 }
