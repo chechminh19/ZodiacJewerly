@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ZodiacJewelryWebApI.Controllers
 {
     [EnableCors("Allow")]
+    [Route("api/orders")]
+    [ApiController]
     public class OrderController : BaseController
     {
         private readonly IOrderService _orderService;

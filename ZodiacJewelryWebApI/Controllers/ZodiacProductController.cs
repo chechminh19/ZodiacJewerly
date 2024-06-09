@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 namespace ZodiacJewelryWebApI.Controllers
 {
     [EnableCors("Allow")]
+    [Route("api/zodiacproducts")]
+    [ApiController]
     public class ZodiacProductController : BaseController
     {
         private readonly IZodiacProductService _zodiacService;

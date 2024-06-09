@@ -13,6 +13,8 @@ using System.Text;
 namespace ZodiacJewelryWebApI.Controllers
 {
     [EnableCors("Allow")]
+    [Route("api/authentication")]
+    [ApiController]
     public class AuthenController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
@@ -22,7 +24,7 @@ namespace ZodiacJewelryWebApI.Controllers
             _authenticationService = authen;
         }
         
-        [HttpPost]
+        [HttpPost("customer-new")]
         public async Task<IActionResult> Register(RegisterDTO registerObject)
         {
             var result = await _authenticationService.RegisterAsync(registerObject);
@@ -36,7 +38,7 @@ namespace ZodiacJewelryWebApI.Controllers
                 return Ok(result);
             }
         }
-        [HttpPost]//Admin
+        [HttpPost("staff-new")]//Admin
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  
         public async Task<IActionResult> NewAccountStaff(RegisterDTO registerObject)
         {
@@ -59,7 +61,7 @@ namespace ZodiacJewelryWebApI.Controllers
 
 
 
-        [HttpPost("{email-customer}")]
+        [HttpPost("email-pass")]
         public async Task<IActionResult> ForgotPassword(string email)
         {
            var result = await _authenticationService.ForgotPass(email);
@@ -68,7 +70,7 @@ namespace ZodiacJewelryWebApI.Controllers
                 return BadRequest(result);
            } return Ok(result);
         }
-        [HttpPost]
+        [HttpPost("email-otp-pass")]
         public async Task<IActionResult> VerifyOTP(VerifyOTPResetDTO request)
         {           
                 var response = await _authenticationService.VerifyForgotPassCode(request);
@@ -78,7 +80,7 @@ namespace ZodiacJewelryWebApI.Controllers
                 }
                 return Ok(response);
         }
-        [HttpPut]
+        [HttpPut("pass-new")]
         public async Task<IActionResult> ResetPassWord(ResetPassDTO dto)
         {
             var response = await _authenticationService.ResetPass(dto);
@@ -89,7 +91,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpPost("users")]
         public async Task<IActionResult> LoginAsync(LoginUserDTO loginObject)
         {
             var result = await _authenticationService.LoginAsync(loginObject);

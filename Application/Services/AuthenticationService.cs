@@ -297,7 +297,7 @@ namespace Application.Services
                 userAccountRegister.ConfirmationToken = Guid.NewGuid().ToString();
 
                 userAccountRegister.Status = 1;
-                userAccountRegister.RoleName = "Customer";
+                userAccountRegister.RoleName = "Staff";
                 await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
 
                 var confirmationLink = $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";

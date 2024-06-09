@@ -8,7 +8,7 @@ using ZodiacJewelryWebApI.Middlewares;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-
+using Application.ViewModels.Cloud;
 
 var builder = WebApplication.CreateBuilder(args);
 

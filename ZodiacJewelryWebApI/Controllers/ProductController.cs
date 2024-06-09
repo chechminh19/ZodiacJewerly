@@ -11,6 +11,8 @@ using ZodiacJewelryWebApI.Controllers;
 namespace ZodiacJewelryWebApI.Controllers
 {
     [EnableCors("Allow")]
+    [Route("api/products")]
+    [ApiController]
     public class ProductController : BaseController
     {
         private readonly IProductService _productService;

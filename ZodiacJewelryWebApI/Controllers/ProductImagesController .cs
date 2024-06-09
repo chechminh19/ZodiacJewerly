@@ -12,7 +12,7 @@ using Application.ViewModels.Cloud;
 
 namespace ZodiacJewelryWebApI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/productimage")]
     [ApiController]
     public class ProductImagesController : ControllerBase
     {
