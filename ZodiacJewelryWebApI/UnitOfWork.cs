@@ -21,9 +21,13 @@ namespace Infrastructure
 
         public IUserRepo UserRepository => _userRepository;
 
-        public async Task<int> SaveChangeAsync()
+        public Task<int> SaveChangeAsync()
         {
-            return await _dbContext.SaveChangesAsync();
-        }       
+            return _dbContext.SaveChangesAsync();
+        }
+        //public async Task<int> SaveChangeAsync()
+        //{
+        //    return await _dbContext.SaveChangesAsync();
+        //}
     }
 }

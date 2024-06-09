@@ -34,13 +34,21 @@ namespace ZodiacJewelryWebApI
 
 
             services.AddScoped<IZodiacProductRepo, ZodiacProductRepo>();
+
             services.AddScoped<IZodiacProductService, ZodiacProductService>();
 
+            services.AddScoped<ICategoryRepo, CategoryRepo>();
+            services.AddScoped<ICategoryService, CategoryService>();
+
+            services.AddScoped<IMaterialRepo, MaterialRepo>();
+            services.AddScoped<IMaterialService, MaterialService>();
+          
             services.AddScoped<IOrderRepo, OrderRepo>();
             services.AddScoped<IOrderService, OrderService>();
 
             services.AddScoped<IZodiacRepo, ZodiacRepo>();
             services.AddScoped<IZodiacService, ZodiacService>();
+          
 
             return services;
         }

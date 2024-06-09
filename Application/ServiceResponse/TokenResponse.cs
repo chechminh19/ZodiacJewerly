@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace Application.ServiceResponse
 {
-    public class ServiceResponse<T>
+    public class TokenResponse<T>
     {
-        public T Data { get; set; }
+        public T DataToken { get; set; }
+        public string? Role { get; set; } = null;
         public bool Success { get; set; } = true;
         public string? Message { get; set; } = null;
         public string? Error { get; set; } = null;
         public string? Hint { get; set; } = null;
+        public string? Code {  get; set; } = null;  
         public List<string>? ErrorMessages { get; set; } = null;
+
     }
 }

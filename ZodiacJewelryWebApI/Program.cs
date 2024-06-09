@@ -8,8 +8,6 @@ using ZodiacJewelryWebApI.Middlewares;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Application.ViewModels.Cloud;
-using Microsoft.Extensions.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,9 +24,6 @@ configuration.Bind(myConfig);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"))); // Use connection string directly
 
 
-
-
-builder.Services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
 builder.Services.AddSingleton(myConfig);
 builder.Services.AddInfrastructuresService();
 builder.Services.AddWebAPIService();
@@ -36,6 +31,7 @@ builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMemoryCache();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
@@ -44,6 +40,12 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader()
                .AllowAnyMethod();
     });
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("Staff", policy => policy.RequireRole("Staff"));
+    options.AddPolicy("Customer", policy => policy.RequireRole("Customer"));
 });
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -64,9 +66,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
 
-            ValidIssuer = myConfig.JWTSection.Issuer,
-            ValidAudience = myConfig.JWTSection.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(myConfig.JWTSection.SecretKey))
+            ValidIssuer = configuration["JWTSection:Issuer"],
+            ValidAudience = configuration["JWTSection:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWTSection:SecretKey"]))
 
             //ValidIssuer = configuration["JWTSection:Issuer"],
             //ValidAudience = configuration["JWTSection:Audience"],
@@ -124,8 +126,10 @@ app.UseSwaggerUI(c =>
 //app.UseCors("Allow");
 app.UseHttpsRedirection();
 app.UseCors();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ConfirmationTokenMiddleware>();
+//app.UseMiddleware<AdminAuthorizationMiddleware>();
 app.MapControllers();
 
 app.Run();

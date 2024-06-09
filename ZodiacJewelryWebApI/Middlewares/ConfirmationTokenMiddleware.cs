@@ -32,7 +32,15 @@ namespace ZodiacJewelryWebApI.Middlewares
                         user.IsConfirmed = true;
                         user.ConfirmationToken = null;
                         await unitOfWork.SaveChangeAsync();
-                        context.Response.Redirect($"https://zodiacjewerly.azurewebsites.net");
+                        //// Send registration success email
+                        //var emailSent = await Utils.SendMail.SendRegistrationSuccessEmail(user.Email);
+                        //if (!emailSent)
+                        //{
+                        //    // Log or handle the error as needed
+                        //    System.Console.WriteLine($"Failed to send registration success email to {user.Email}");
+                        //}
+                        //context.Response.Redirect($"https://zodiacjewerly.azurewebsites.net");
+                        context.Response.Redirect("https://swd-392.vercel.app/login");
                         return;
                     }
                 }

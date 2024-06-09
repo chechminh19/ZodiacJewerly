@@ -18,8 +18,8 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
-        public Task<bool> CheckEmailAddressExisted(string email) => _dbContext.User.AnyAsync(u => u.Email == email);
-        public Task<bool> CheckPhoneNumberExited(string phonenumber) => _dbContext.User.AnyAsync(x => x.TelephoneNumber == phonenumber);
+        public async Task<bool> CheckEmailAddressExisted(string email) => await _dbContext.User.AnyAsync(u => u.Email == email);
+        public async Task<bool> CheckPhoneNumberExited(string phonenumber) => await _dbContext.User.AnyAsync(x => x.TelephoneNumber == phonenumber);
 
         public async Task<User> GetUserByConfirmationToken(string token)
         {
@@ -37,6 +37,11 @@ namespace Infrastructure.Repositories
                 throw new Exception("Email & password is not correct");
             }
             return user;
+        }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }
