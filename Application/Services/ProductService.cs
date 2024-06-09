@@ -200,7 +200,7 @@ namespace Application.Services
         private ProductDTO MapToDTO(Product product)
         {
             var productDTO = _mapper.Map<ProductDTO>(product);
-            productDTO.ImageURLs = product.ProductImages?.Select(pi => pi.ImageUrl).ToList();
+            productDTO.ImageUrls = product.ProductImages?.Select(pi => pi.ImageUrl).ToList();
             productDTO.ZodiacId = (int)(product.ProductZodiacs?.Select(pi => pi.ZodiacId).FirstOrDefault());
 
 

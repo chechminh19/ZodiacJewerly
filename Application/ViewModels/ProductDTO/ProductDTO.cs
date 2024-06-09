@@ -37,7 +37,7 @@ namespace Application.ViewModels.ProductDTO
         [Required(ErrorMessage = "Gender ID is required")]
         [ValidateType(typeof(int), ErrorMessage = "Gender ID must be an integer")]
         public int GenderId { get; set; }
-        public List<string> ImageURLs { get; set; }
+        public List<string> ImageUrls { get; set; }
         public int ZodiacId { get; set; }
 
 
