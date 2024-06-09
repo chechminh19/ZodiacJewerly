@@ -19,7 +19,7 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("all-orders")]
         public async Task<IActionResult> GetAllOrders()
         {
             var result = await _orderService.GetAllOrder();
@@ -30,7 +30,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("order-by-id/{id}")]
         public async Task<IActionResult> GetOrderById(int id)
         {
             var result = await _orderService.GetOrderById(id);
@@ -41,7 +41,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("order-new")]
         public async Task<IActionResult> AddOrder([FromBody] OrderDTO orderDTO)
         {
             var result = await _orderService.AddOrder(orderDTO);
@@ -52,13 +52,10 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrder(int id, [FromBody] OrderDTO orderDTO)
+        [HttpPut("order-update")]
+        public async Task<IActionResult> UpdateOrder( [FromBody] OrderDTO orderDTO)
         {
-            if (id != orderDTO.Id)
-            {
-                return BadRequest("Order ID mismatch");
-            }
+         
 
             var result = await _orderService.UpdateOrder(orderDTO);
             if (!result.Success)
@@ -68,7 +65,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("order-remove/{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var result = await _orderService.DeleteOrder(id);

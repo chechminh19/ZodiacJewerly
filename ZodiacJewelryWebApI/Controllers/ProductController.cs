@@ -56,13 +56,10 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
 
-        [HttpPut("product-update/{id}")]
+        [HttpPut("product-update")]
         public async Task<IActionResult> UpdateProductAsync(int id, CreateProductDTO product, int zodiacId)
         {
-            if (id != product.Id)
-            {
-                return BadRequest("Product ID mismatch");
-            }
+         
 
             var result = await _productService.UpdateProductAsync(product, zodiacId);
             if (!result.Success)
