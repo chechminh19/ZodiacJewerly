@@ -12,7 +12,7 @@ using Application.ViewModels.Cloud;
 
 namespace ZodiacJewelryWebApI.Controllers
 {
-    [Route("api/productimage")]
+    [Route("api/products")]
     [ApiController]
     public class ProductImagesController : ControllerBase
     {
@@ -31,7 +31,7 @@ namespace ZodiacJewelryWebApI.Controllers
             _context = context;
         }
 
-        [HttpPost("{productId}/upload")]
+        [HttpPost("{productId}/images")]
         public async Task<IActionResult> UploadProductImages(int productId, [FromForm] List<IFormFile> files)
         {
             var product = await _context.Product.FindAsync(productId);
@@ -74,7 +74,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(new { imageUrls = uploadedImageUrls });
         }
 
-        [HttpPut("{productId}/updateImage/{imageId}")]
+        [HttpPut("{productId}/images/{imageId}")]
         public async Task<IActionResult> UpdateProductImage(int productId, int imageId, IFormFile file)
         {
             var product = await _context.Product.FindAsync(productId);
