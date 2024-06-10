@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ZodiacJewelryWebApI.Controllers
 {
     [EnableCors("Allow")]
-    [Route("api/zodiacproducts")]
+    [Route("api")]
     [ApiController]
     public class ZodiacProductController : BaseController
     {
@@ -19,7 +19,7 @@ namespace ZodiacJewelryWebApI.Controllers
             _zodiacService = zodiacService;
         }
 
-        [HttpGet("all-zodiacProduct")]
+        [HttpGet("products/zodiac")]
         public async Task<IActionResult> GetAllZodiacProducts()
         {
             var result = await _zodiacService.GetAllZodiacProduct();
@@ -30,7 +30,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("zodiacProduct-by-id/{id}")]
+        [HttpGet("products/zodiac/{id}")]
         public async Task<IActionResult> GetZodiacProductById(int id)
         {
             var result = await _zodiacService.GetZodiacProductById(id);
@@ -41,7 +41,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpPost("zodiacProduct-new")]
+        [HttpPost("products/zodiac")]
         public async Task<IActionResult> AddZodiacProduct([FromBody] ZodiacProductDTO zodiacProductDTO)
         {
             var result = await _zodiacService.AddZodiacProduct(zodiacProductDTO);
@@ -52,7 +52,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("zodiacProduct-update")]
+        [HttpPut("products/zodiac")]
         public async Task<IActionResult> UpdateZodiacProduct( [FromBody] ZodiacProductDTO zodiacProductDTO)
         {
           
@@ -65,7 +65,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("order-remove/{id}")]
+        [HttpDelete("products/zodiac/{id}")]
         public async Task<IActionResult> DeleteZodiacProduct(int id)
         {
             var result = await _zodiacService.DeleteZodiacProduct(id);
@@ -76,7 +76,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("zodiac/{zodiacId}")]
+        [HttpGet("zodiac/{zodiacId}/products")]
         public async Task<IActionResult> GetAllProductsByZodiacId(int zodiacId)
         {
             var result = await _zodiacService.GetAllProductsByZodiacId(zodiacId);
