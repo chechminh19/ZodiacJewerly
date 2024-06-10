@@ -3,15 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Infrastructure;
-using Application.ViewModels.Cloud;
 using Microsoft.EntityFrameworkCore;
+using Application.ViewModels.Cloud;
 
 namespace ZodiacJewelryWebApI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/productimage")]
     [ApiController]
     public class ProductImagesController : ControllerBase
     {
@@ -31,40 +32,46 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpPost("{productId}/upload")]
-        public async Task<IActionResult> UploadProductImage(int productId, IFormFile file)
+        public async Task<IActionResult> UploadProductImages(int productId, [FromForm] List<IFormFile> files)
         {
             var product = await _context.Product.FindAsync(productId);
             if (product == null)
                 return NotFound("Product not found");
 
-            var uploadResult = new ImageUploadResult();
+            var uploadedImageUrls = new List<string>();
 
-            if (file.Length > 0)
+            foreach (var file in files)
             {
-                using (var stream = file.OpenReadStream())
+                if (file.Length > 0)
                 {
-                    var uploadParams = new ImageUploadParams()
+                    using (var stream = file.OpenReadStream())
                     {
-                        File = new FileDescription(file.FileName, stream),
-                        Transformation = new Transformation().Crop("fill").Gravity("face")
-                    };
-                    uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                        var uploadParams = new ImageUploadParams()
+                        {
+                            File = new FileDescription(file.FileName, stream),
+                            Transformation = new Transformation().Crop("fill").Gravity("face")
+                        };
+                        var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                        if (uploadResult.Url != null)
+                        {
+                            uploadedImageUrls.Add(uploadResult.Url.ToString());
+
+                            var productImage = new ProductImage
+                            {
+                                ProductId = productId,
+                                ImageUrl = uploadResult.Url.ToString()
+                            };
+
+                            _context.ProductImage.Add(productImage);
+                        }
+                    }
                 }
             }
 
-            if (uploadResult.Url == null)
-                return BadRequest("Could not upload image");
-
-            var productImage = new ProductImage
-            {
-                ProductId = productId,
-                ImageUrl = uploadResult.Url.ToString()
-            };
-
-            _context.ProductImage.Add(productImage);
             await _context.SaveChangesAsync();
 
-            return Ok(new { imageUrl = productImage.ImageUrl });
+            return Ok(new { imageUrls = uploadedImageUrls });
         }
 
         [HttpPut("{productId}/updateImage/{imageId}")]

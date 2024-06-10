@@ -12,7 +12,7 @@ namespace ZodiacJewelryWebApI
     {
         public static IServiceCollection AddWebAPIService(this IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions (option=> option.JsonSerializerOptions.PropertyNamingPolicy=System.Text.Json.JsonNamingPolicy.KebabCaseLower);
             /*services.AddFluentValidation();*/ 
             
             services.AddEndpointsApiExplorer();
@@ -34,13 +34,22 @@ namespace ZodiacJewelryWebApI
 
 
             services.AddScoped<IZodiacProductRepo, ZodiacProductRepo>();
-            services.AddScoped<IZodiacProductService, ZodiacService>();
+
+            services.AddScoped<IZodiacProductService, ZodiacProductService>();
 
             services.AddScoped<ICategoryRepo, CategoryRepo>();
             services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddScoped<IMaterialRepo, MaterialRepo>();
             services.AddScoped<IMaterialService, MaterialService>();
+          
+            services.AddScoped<IOrderRepo, OrderRepo>();
+            services.AddScoped<IOrderService, OrderService>();
+
+            services.AddScoped<IZodiacRepo, ZodiacRepo>();
+            services.AddScoped<IZodiacService, ZodiacService>();
+          
+
             return services;
         }
     }
