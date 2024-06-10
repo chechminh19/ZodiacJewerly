@@ -80,7 +80,7 @@ namespace ZodiacJewelryWebApI.Controllers
                 }
                 return Ok(response);
         }
-        [HttpPut("pass-new")]
+        [HttpPost("pass-new")]
         public async Task<IActionResult> ResetPassWord(ResetPassDTO dto)
         {
             var response = await _authenticationService.ResetPass(dto);

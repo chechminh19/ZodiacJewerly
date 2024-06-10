@@ -249,7 +249,7 @@ namespace Application.Services
                     return response;
                 }
                 userAccount.Password = Utils.HashPass.HashWithSHA256(dto.Password);            
-                 _unitOfWork.UserRepository.Update(userAccount);
+                 _unitOfWork.UserRepository.UpdateE(userAccount);
                  var success = await _unitOfWork.SaveChangeAsync() > 0;
                 if (success)
                 {
