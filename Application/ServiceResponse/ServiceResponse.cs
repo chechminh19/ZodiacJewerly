@@ -15,4 +15,12 @@ namespace Application.ServiceResponse
         public string? Hint { get; set; } = null;
         public List<string>? ErrorMessages { get; set; } = null;
     }
+
+    public class PaginationModel<T>
+    {
+        public int Page { get; set; }
+        public int TotalPage { get; set; }
+        public int TotalRecords { get; set; }
+        public List<T> ListData { get; set; }
+    }
 }
