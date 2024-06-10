@@ -21,7 +21,7 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
 
-        [HttpGet("all-zodiacs")]
+        [HttpGet]
         public async Task<IActionResult> GetAllZodiacs()
         {
             var result = await _zodiacService.GetAllZodiacs();
@@ -32,7 +32,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("zodiac-by-id/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetZodiacById(int id)
         {
             var result = await _zodiacService.GetZodiacById(id);
