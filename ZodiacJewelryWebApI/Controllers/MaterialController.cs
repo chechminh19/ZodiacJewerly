@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ZodiacJewelryWebApI.Controllers;
 
-[Route("api/material-management")]
+[Route("api/materials")]
 [ApiController]
 public class MaterialController : ControllerBase
 {
@@ -17,7 +17,7 @@ public class MaterialController : ControllerBase
     }
 
     [Authorize(Roles = "Staff")]
-    [HttpGet("materials")]
+    [HttpGet]
     public async Task<IActionResult> GetMaterials()
     {
         var result = await _materialService.GetAllMaterials();
@@ -25,7 +25,7 @@ public class MaterialController : ControllerBase
     }
 
     [Authorize(Roles = "Staff")]
-    [HttpPost("material")]
+    [HttpPost]
     public async Task<IActionResult> CreateMaterial([FromBody] MaterialReqDTO form)
     {
         var createForm = new MaterialReqDTO()
@@ -38,7 +38,7 @@ public class MaterialController : ControllerBase
     }
 
     [Authorize(Roles = "Staff")]
-    [HttpGet("materials/{id}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetMaterialById(int id)
     {
         var result = await _materialService.GetMaterialById(id);
@@ -46,7 +46,7 @@ public class MaterialController : ControllerBase
     }
 
     [Authorize(Roles = "Staff")]
-    [HttpPut("materials/{id}")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> EditMaterial(int id, [FromBody] MaterialReqDTO form)
     {
         var result = await _materialService.UpdateMaterial(form, id);
@@ -54,7 +54,7 @@ public class MaterialController : ControllerBase
     }
 
     [Authorize(Roles = "Staff")]
-    [HttpDelete("materials/{id}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteMaterial(int id)
     {
         var result = await _materialService.DeleteMaterial(id);

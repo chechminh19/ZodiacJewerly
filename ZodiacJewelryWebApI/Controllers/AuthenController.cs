@@ -13,16 +13,19 @@ using System.Text;
 namespace ZodiacJewelryWebApI.Controllers
 {
     [EnableCors("Allow")]
+    [Route("api/authentication")]
+    [ApiController]
     public class AuthenController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
+
         //private Dictionary<string, (string, DateTime)> emailVerifyCode = new Dictionary<string, (string, DateTime)>();
         public AuthenController(IAuthenticationService authen)
         {
             _authenticationService = authen;
         }
-        
-        [HttpPost]
+
+        [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO registerObject)
         {
             var result = await _authenticationService.RegisterAsync(registerObject);
@@ -36,8 +39,9 @@ namespace ZodiacJewelryWebApI.Controllers
                 return Ok(result);
             }
         }
-        [HttpPost]//Admin
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  
+
+        [HttpPost("staff")] //Admin
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> NewAccountStaff(RegisterDTO registerObject)
         {
             var isAdmin = User.IsInRole("Admin");
@@ -45,6 +49,7 @@ namespace ZodiacJewelryWebApI.Controllers
             {
                 return Unauthorized(new { message = "You do not have permission to do this" });
             }
+
             var result = await _authenticationService.CreateStaff(registerObject);
 
             if (!result.Success)
@@ -58,27 +63,30 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
 
-
-        [HttpPost("{email-customer}")]
+        [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(string email)
         {
-           var result = await _authenticationService.ForgotPass(email);
-           if(!result.Success)
-           {
+            var result = await _authenticationService.ForgotPass(email);
+            if (!result.Success)
+            {
                 return BadRequest(result);
-           } return Ok(result);
+            }
+
+            return Ok(result);
         }
-        [HttpPost]
+
+        [HttpPost("verify-otp")]
         public async Task<IActionResult> VerifyOTP(VerifyOTPResetDTO request)
-        {           
-                var response = await _authenticationService.VerifyForgotPassCode(request);
-                if (!response.Success)
-                {
-                    return BadRequest(response);
-                }
-                return Ok(response);
+        {
+            var response = await _authenticationService.VerifyForgotPassCode(request);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
-        [HttpPut]
+        [HttpPost("pass-new")]
         public async Task<IActionResult> ResetPassWord(ResetPassDTO dto)
         {
             var response = await _authenticationService.ResetPass(dto);
@@ -86,10 +94,11 @@ namespace ZodiacJewelryWebApI.Controllers
             {
                 return BadRequest(response);
             }
+
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> LoginAsync(LoginUserDTO loginObject)
         {
             var result = await _authenticationService.LoginAsync(loginObject);

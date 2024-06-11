@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ZodiacJewelryWebApI.Controllers
 {
     [EnableCors("Allow")]
+    [Route("api/zodiacs")]
+    [ApiController]
     public class ZodiacController : BaseController
     {
         private readonly IZodiacService _zodiacService;
@@ -19,7 +21,7 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
 
-        [HttpGet("all-zodiacs")]
+        [HttpGet]
         public async Task<IActionResult> GetAllZodiacs()
         {
             var result = await _zodiacService.GetAllZodiacs();
@@ -30,7 +32,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("zodiac-by-id/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetZodiacById(int id)
         {
             var result = await _zodiacService.GetZodiacById(id);

@@ -249,7 +249,7 @@ namespace Application.Services
                     return response;
                 }
                 userAccount.Password = Utils.HashPass.HashWithSHA256(dto.Password);            
-                 _unitOfWork.UserRepository.Update(userAccount);
+                 _unitOfWork.UserRepository.UpdateE(userAccount);
                  var success = await _unitOfWork.SaveChangeAsync() > 0;
                 if (success)
                 {
@@ -297,7 +297,7 @@ namespace Application.Services
                 userAccountRegister.ConfirmationToken = Guid.NewGuid().ToString();
 
                 userAccountRegister.Status = 1;
-                userAccountRegister.RoleName = "Customer";
+                userAccountRegister.RoleName = "Staff";
                 await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
 
                 var confirmationLink = $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";

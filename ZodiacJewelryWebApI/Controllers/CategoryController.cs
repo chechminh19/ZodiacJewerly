@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ZodiacJewelryWebApI.Controllers;
 
-[Route("api/category-management")]
+[Route("api/categories")]
 [ApiController]
 public class CategoryController : ControllerBase
 {
@@ -17,7 +17,7 @@ public class CategoryController : ControllerBase
     }
 
     [Authorize(Roles = "Staff")]
-    [HttpGet("categories")]
+    [HttpGet]
     public async Task<IActionResult> GetCategories()
     {
         var result = await _categoryService.GetListCategory();
@@ -25,7 +25,7 @@ public class CategoryController : ControllerBase
     }
 
     [Authorize(Roles = "Staff")]
-    [HttpPost("categories")]
+    [HttpPost]
     public async Task<IActionResult> CreateCategory([FromBody] CategoryReqDTO form)
     {
         var createForm = new CategoryReqDTO()
@@ -37,7 +37,7 @@ public class CategoryController : ControllerBase
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet("categories/{id}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetCategoryById(int id)
     {
         var result = await _categoryService.GetCategoryById(id);
@@ -45,7 +45,7 @@ public class CategoryController : ControllerBase
     }
 
     [Authorize(Roles = "Staff")]
-    [HttpPut("categories/{id}")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> EditCategory(int id, [FromBody] CategoryReqDTO form)
     {
         var result = await _categoryService.UpdateCategory(form, id);
@@ -53,7 +53,7 @@ public class CategoryController : ControllerBase
     }
 
     [Authorize(Roles = "Staff")]
-    [HttpDelete("categories/{id}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var result = await _categoryService.DeleteCategory(id);

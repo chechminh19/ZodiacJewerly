@@ -8,7 +8,7 @@ using ZodiacJewelryWebApI.Middlewares;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-
+using Application.ViewModels.Cloud;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +23,7 @@ var myConfig = new AppConfiguration();
 configuration.Bind(myConfig);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"))); // Use connection string directly
 
-
+builder.Services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
 builder.Services.AddSingleton(myConfig);
 builder.Services.AddInfrastructuresService();
 builder.Services.AddWebAPIService();
@@ -129,7 +129,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ConfirmationTokenMiddleware>();
-//app.UseMiddleware<AdminAuthorizationMiddleware>();
+
 app.MapControllers();
 
 app.Run();

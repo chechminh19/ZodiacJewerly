@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ZodiacJewelryWebApI.Controllers
 {
     [EnableCors("Allow")]
+    [Route("api/orders")]
+    [ApiController]
     public class OrderController : BaseController
     {
         private readonly IOrderService _orderService;
@@ -19,7 +21,7 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
 
-        [HttpGet("all-orders")]
+        [HttpGet]
         public async Task<IActionResult> GetAllOrders()
         {
             var result = await _orderService.GetAllOrder();
@@ -30,7 +32,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("order-by-id/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderById(int id)
         {
             var result = await _orderService.GetOrderById(id);
@@ -40,8 +42,8 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-
-        [HttpPost("order-new")]
+                 
+        [HttpPost]
         public async Task<IActionResult> AddOrder([FromBody] OrderDTO orderDTO)
         {
             var result = await _orderService.AddOrder(orderDTO);
@@ -52,7 +54,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("order-update")]
+        [HttpPut]
         public async Task<IActionResult> UpdateOrder( [FromBody] OrderDTO orderDTO)
         {
          
@@ -65,7 +67,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("order-remove/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var result = await _orderService.DeleteOrder(id);

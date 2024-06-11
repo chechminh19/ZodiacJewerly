@@ -13,5 +13,6 @@ namespace Application.IRepositories
         Task AddAsync(T entity);
         Task Update(T entity);
         Task Remove(T entity);
+        void UpdateE(T entity);
     }
 }
