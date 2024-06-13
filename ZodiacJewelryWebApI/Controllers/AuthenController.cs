@@ -115,7 +115,8 @@ namespace ZodiacJewelryWebApI.Controllers
                         success = result.Success,
                         message = result.Message,
                         token = result.DataToken,
-                        role = result.Role
+                        role = result.Role,
+                        hint = result.HintId,
                     }
                 );
             }

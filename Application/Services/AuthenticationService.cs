@@ -145,11 +145,14 @@ namespace Application.Services
                     return response;
                 }
                 var auth = userLogin.RoleName;
+                var userId = userLogin.Id;
                 var token = userLogin.GenerateJsonWebToken(_config, _config.JWTSection.SecretKey, DateTime.Now);
                 response.Success = true;
                 response.Message = "Login successfully";
                 response.DataToken = token;
                 response.Role = auth;
+                response.HintId = userId;
+
 
             }
             catch (DbException ex)
