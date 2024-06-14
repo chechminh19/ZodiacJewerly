@@ -86,8 +86,7 @@ namespace ZodiacJewelryWebApI.Controllers
 
             return Ok(response);
         }
-
-        [HttpPut("reset-password")]
+        [HttpPost("pass-new")]
         public async Task<IActionResult> ResetPassWord(ResetPassDTO dto)
         {
             var response = await _authenticationService.ResetPass(dto);
@@ -116,7 +115,8 @@ namespace ZodiacJewelryWebApI.Controllers
                         success = result.Success,
                         message = result.Message,
                         token = result.DataToken,
-                        role = result.Role
+                        role = result.Role,
+                        hint = result.HintId,
                     }
                 );
             }

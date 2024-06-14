@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.ViewModels.ProductImageDTO;
 
 namespace Infrastructure.Mappers
 {
@@ -31,6 +32,7 @@ namespace Infrastructure.Mappers
             CreateMap<Category, CategoryResDTO>().ReverseMap();
             CreateMap<Order, OrderDTO>().ReverseMap();
             CreateMap<Zodiac, ZodiacDTO>().ReverseMap();
+            CreateMap<ProductImage, ProductImageDTO>().ReverseMap();
             //CreateMap<IAuthenticationService, AuthenticationService>();
         }
     }
