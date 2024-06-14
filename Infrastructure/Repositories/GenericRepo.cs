@@ -47,5 +47,10 @@ namespace Infrastructure.Repositories
             _ = _dbSet.Remove(entity);
             _ = await context.SaveChangesAsync();
         }
+
+        public void UpdateE(T entity)
+        {
+            _dbSet.Update(entity);
+        }
     }
 }

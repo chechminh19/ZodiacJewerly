@@ -129,7 +129,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ConfirmationTokenMiddleware>();
-//app.UseMiddleware<AdminAuthorizationMiddleware>();
+
 app.MapControllers();
 
 app.Run();
