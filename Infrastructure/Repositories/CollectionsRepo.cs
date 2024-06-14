@@ -18,13 +18,13 @@ public class CollectionsRepo : GenericRepo<Collections>, ICollectionRepo
         return await _collections.Where(c => c.Status.Equals(Status.Active)).ToListAsync();
     }
 
-    public async Task<Collections?> GetCollectionById(int id)
+    public async Task<Collections?> GetCollectionById(int collectionId)
     {
-        throw new NotImplementedException();
+        return await _collections.FirstOrDefaultAsync(c => c.Id == collectionId);
     }
 
     public async Task<Collections?> GetCollectionByName(string collectionName)
     {
-        throw new NotImplementedException();
+        return await _collections.FirstOrDefaultAsync(c => c.NameCollection == collectionName);
     }
 }

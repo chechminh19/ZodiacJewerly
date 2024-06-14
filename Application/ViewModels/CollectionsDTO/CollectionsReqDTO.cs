@@ -1,6 +1,6 @@
 namespace Application.ViewModels.CollectionsDTO;
 
-public class CollectionsReq
+public class CollectionsReqDTO
 {
     public string NameCollection { get; set; }
     public string ImageCollection { get; set; }

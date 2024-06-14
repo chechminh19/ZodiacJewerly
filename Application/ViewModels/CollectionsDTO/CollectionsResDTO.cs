@@ -1,6 +1,6 @@
 namespace Application.ViewModels.CollectionsDTO;
 
-public class CollectionsRes
+public class CollectionsResDTO
 {
     public int Id { get; set; }
     public string NameCollection { get; set; }
