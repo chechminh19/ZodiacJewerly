@@ -54,8 +54,11 @@ public class CategoryService : ICategoryService
         {
             var category = await _categoryRepo.GetListCategory();
             List<CategoryResDTO> categoryList = [];
-            categoryList.AddRange(
-                category.Select(c => new CategoryResDTO() { Id = c.Id, NameCategory = c.NameCategory }));
+            foreach (var c in category)
+            {
+                CategoryResDTO crd = new() { Id = c.Id, NameCategory = c.NameCategory };
+                categoryList.Add(crd);
+            }
             result.Data = new CategoryResDTO();
             result.Success = true;
         }

@@ -1,6 +1,6 @@
 namespace Application.ViewModels.CollectionsDTO;
 
-public class CollectionsRes
+public class CollectionsResDTO
 {
     public int Id { get; set; }
     public string NameCollection { get; set; }
@@ -10,7 +10,7 @@ public class CollectionsRes
     public byte Status { get; set; }
 }
 
-public class CollectionDetailsRes
+public class CollectionDetailRes
 {
     public int Id { get; set; }
     public string NameCollection { get; set; }
