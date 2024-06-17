@@ -1,5 +1,7 @@
 ﻿using Application.IService;
+using Application.ServiceResponse;
 using Application.Services;
+using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using Domain.Entities;
 using Microsoft.AspNetCore.Cors;
@@ -24,6 +26,7 @@ namespace ZodiacJewelryWebApI.Controllers
             _productService = productService;
             _zodiacService = zodiacService;
         }
+        
 
         [HttpGet]
         public async Task<IActionResult> GetAllProductsAsync()

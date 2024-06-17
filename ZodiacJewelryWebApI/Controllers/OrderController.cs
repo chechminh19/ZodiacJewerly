@@ -19,8 +19,26 @@ namespace ZodiacJewelryWebApI.Controllers
         {
             _orderService = orderService;
         }
-
-
+        [HttpPost("{userid}/{productid}")]
+        public async Task<IActionResult> AddProductToOrder(int userid, int productid)
+        {
+            var result = await _orderService.AddProductToOrderAsync(userid, productid);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+        [HttpGet("customer/{userid}")]
+        public async Task<IActionResult> GetAllOrderCartCustomer(int userid)
+        {
+            var result = await _orderService.GetAllOrderCustomerCart(userid);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
         [HttpGet]
         public async Task<IActionResult> GetAllOrders()
         {

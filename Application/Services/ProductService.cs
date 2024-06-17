@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using AutoMapper;
 using Domain.Entities;
@@ -25,7 +26,7 @@ namespace Application.Services
             _zodiacProductRepo = zodiacProductRepo ?? throw new ArgumentNullException(nameof(zodiacProductRepo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-
+        
         public async Task<ServiceResponse<IEnumerable<ProductDTO>>> GetAllProductsAsync()
         {
             var response = new ServiceResponse<IEnumerable<ProductDTO>>();

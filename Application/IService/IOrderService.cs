@@ -16,5 +16,7 @@ namespace Application.IService
         Task<ServiceResponse<int>> AddOrder(OrderDTO order);
         Task<ServiceResponse<string>> UpdateOrder(OrderDTO order);
         Task<ServiceResponse<string>> DeleteOrder(int id);
+        Task<ServiceResponse<string>> AddProductToOrderAsync(int userId, int productId);
+        Task<ServiceResponse<CreateOrderDTO>> GetAllOrderCustomerCart(int userId);
     }
 }
