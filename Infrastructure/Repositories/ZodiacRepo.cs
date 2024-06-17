@@ -25,5 +25,22 @@ namespace Infrastructure.Repositories
             var zodiacs = await _dbContext.Zodiac.ToListAsync();
             return zodiacs ?? new List<Zodiac>();
         }
+        public async Task UpdateZodiac(Zodiac zodiac)
+        {
+            try
+            {
+                if (zodiac == null)
+                {
+                    throw new ArgumentNullException(nameof(zodiac));
+                }
+
+                _dbContext.Entry(zodiac).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while updating the zodiac.", ex);
+            }
+        }
     }
 }

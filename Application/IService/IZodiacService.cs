@@ -14,6 +14,6 @@ namespace Application.IService
     {
         Task<ServiceResponse<IEnumerable<ZodiacDTO>>> GetAllZodiacs();
         Task<ServiceResponse<ZodiacDTO>> GetZodiacById(int id);
-
+        Task<ServiceResponse<string>> UpdateZodiac(ZodiacUpdateDTO zodiac);
     }
 }

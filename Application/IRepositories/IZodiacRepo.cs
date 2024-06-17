@@ -10,6 +10,8 @@ namespace Application.IRepositories
         Task<Zodiac?> GetZodiacById(int id);
         Task<IEnumerable<Zodiac>> GetAllZodiacs();
 
-       
+        Task UpdateZodiac(Zodiac zodiac);
+
+
     }
 }
