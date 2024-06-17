@@ -16,7 +16,7 @@ namespace Application.IRepositories
         Task AddZodiacProduct(ZodiacProduct zproduct);
         Task UpdateZodiacProduct(ZodiacProduct zproduct);
         Task DeleteZodiacProduct(int id);
-
+        string GetZodiacNameForProduct(int productId);
         Task<IEnumerable<Product>> GetAllProductsByZodiacId(int zodiacId);
 
 

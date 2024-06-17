@@ -46,5 +46,42 @@ namespace Infrastructure.Repositories
                 await _dbContext.SaveChangesAsync();
             }
         }
+
+        public async Task<Order> CheckUserWithOrder(int userId)
+        {
+            var order = await _dbContext.Order.Include(p => p.OrderDetails).FirstOrDefaultAsync(p=>p.UserId == userId);
+            return order;
+        }
+
+        public async Task AddOrderDetail(OrderDetails orderDetail)
+        {
+            _dbContext.OrderDetail.Add(orderDetail);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<OrderDetails>> GetAllOrderCart(int userId)
+        {
+            const int defaultOrderStatus = 1;
+            return _dbContext.Order
+                .Where(o => o.UserId == userId && o.Status == defaultOrderStatus)
+                    .SelectMany(o => o.OrderDetails)
+                    .Include(od => od.Product)
+                        .ThenInclude(p => p.Category)
+                    .Include(od => od.Product)
+                        .ThenInclude(p => p.Material)
+                    .Include(od => od.Product)
+                        .ThenInclude(p => p.Gender)
+                    .Include(od => od.Product)
+                        .ThenInclude(p => p.ProductImages)
+                    .Include(od => od.Product)
+                        .ThenInclude(p => p.ProductZodiacs)
+                            .ThenInclude(pz => pz.Zodiac)
+                    .ToList();      
+        }
+        public async Task UpdateOrderDetail(OrderDetails orderDetail)
+        {
+            _dbContext.OrderDetail.Update(orderDetail);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

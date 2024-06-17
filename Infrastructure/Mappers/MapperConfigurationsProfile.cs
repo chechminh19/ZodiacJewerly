@@ -16,10 +16,13 @@ using Application.ViewModels.ProductImageDTO;
 
 namespace Infrastructure.Mappers
 {
+    
     public class MapperConfigurationsProfile : Profile
     {
+      
         public MapperConfigurationsProfile()
         {
+            
             CreateMap<User, RegisterDTO>().ReverseMap();
             CreateMap<User, LoginUserDTO>().ReverseMap();
             CreateMap<ResetPassDTO, User>()
@@ -33,7 +36,8 @@ namespace Infrastructure.Mappers
             CreateMap<Order, OrderDTO>().ReverseMap();
             CreateMap<Zodiac, ZodiacDTO>().ReverseMap();
             CreateMap<ProductImage, ProductImageDTO>().ReverseMap();
-            //CreateMap<IAuthenticationService, AuthenticationService>();
+
+            
         }
     }
 }

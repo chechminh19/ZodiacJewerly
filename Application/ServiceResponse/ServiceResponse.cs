@@ -13,6 +13,7 @@ namespace Application.ServiceResponse
         public string? Message { get; set; } = null;
         public string? Error { get; set; } = null;
         public string? Hint { get; set; } = null;
+        public double? PriceTotal { get; set; } = null;
         public List<string>? ErrorMessages { get; set; } = null;
     }
 

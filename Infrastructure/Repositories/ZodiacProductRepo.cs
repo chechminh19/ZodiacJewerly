@@ -80,7 +80,17 @@ namespace Infrastructure.Repositories
             return products;
         }
 
+        public string GetZodiacNameForProduct(int productId)
+        {
+            var zodiacProduct = _dbContext.ZodiacProduct
+                            .Include(zp => zp.Zodiac)
+                            .FirstOrDefault(zp => zp.ProductId == productId);
 
-
+            if (zodiacProduct != null)
+            {
+                return zodiacProduct.Zodiac.NameZodiac;
+            }
+            return "Zodiac not found for this Product";
+        }
     }
 }
