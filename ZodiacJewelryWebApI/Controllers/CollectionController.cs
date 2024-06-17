@@ -24,4 +24,36 @@ public class CollectionController : ControllerBase
         var result = await _collectionService.GetListCollections(page);
         return result.Success ? Ok(result) : BadRequest(result);
     }
+
+    [Authorize(Roles = "Staff")]
+    [HttpPost]
+    public async Task<IActionResult> CreateCollection([FromForm] CollectionsReqDTO form)
+    {
+        var result = await _collectionService.CreateCollection(form);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
+    [Authorize(Roles = "Staff")]
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCollection(int id, [FromForm] CollectionsReqDTO form)
+    {
+        var result = await _collectionService.UpdateCollection(form, id);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
+    [Authorize(Roles = "Staff")]
+    [HttpPatch("{id}/status")]
+    public async Task<IActionResult> ChangeStatus(int id, [FromBody] CollectionStatusReqDTO statusReqDto)
+    {
+        var result = await _collectionService.ChangeStatusCollection(id , statusReqDto);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
+    [Authorize(Roles = "Staff")]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCollection(int id)
+    {
+        var result = await _collectionService.DeleteCollection(id);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
 }

@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Application.ViewModels.Cloud;
+using CloudinaryDotNet;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,14 @@ configuration.Bind(myConfig);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"))); // Use connection string directly
 
 builder.Services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
+builder.Services.AddSingleton(provider =>
+{
+    var config = provider.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+    return new Cloudinary(new Account(
+        config.CloudName,
+        config.ApiKey,
+        config.ApiSecret));
+});
 builder.Services.AddSingleton(myConfig);
 builder.Services.AddInfrastructuresService();
 builder.Services.AddWebAPIService();
