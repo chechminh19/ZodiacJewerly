@@ -35,6 +35,7 @@ namespace Infrastructure.Mappers
             CreateMap<Category, CategoryResDTO>().ReverseMap();
             CreateMap<Order, OrderDTO>().ReverseMap();
             CreateMap<Zodiac, ZodiacDTO>().ReverseMap();
+            CreateMap<Zodiac, ZodiacUpdateDTO>().ReverseMap();
             CreateMap<ProductImage, ProductImageDTO>().ReverseMap();
 
             
