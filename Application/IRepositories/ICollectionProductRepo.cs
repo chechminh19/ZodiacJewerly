@@ -6,8 +6,6 @@ namespace Application.IRepositories;
 
 public interface ICollectionProductRepo: IGenericRepo<CollectionProduct>
 {
-    Task<List<CollectionProductReq>> GetProductsByCollectionId(int collectionId);
-    Task<List<CollectionProduct>> GetCollectionProductByCollectionId(int collectionId);
-    Task<List<CollectionProduct>> GetCollectionProductByProductId(int productId);
+    Task AddProductToCollectionAsync(int collectionId, int productId);
 
 }

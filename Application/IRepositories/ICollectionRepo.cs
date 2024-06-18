@@ -7,5 +7,6 @@ public interface ICollectionRepo: IGenericRepo<Collections>
     Task<List<Collections>> GetCollections();
     Task<Collections?> GetCollectionById(int collectionId);
     Task<Collections?> GetCollectionByName(string collectionName);
+    Task<Collections?> GetCollectionWithProduct(int collectionId);
 
 }

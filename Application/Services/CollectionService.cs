@@ -3,7 +3,6 @@ using Application.IService;
 using Application.ServiceResponse;
 using Application.Ultilities;
 using Application.ViewModels.CollectionsDTO;
-using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Domain.Entities;
@@ -14,14 +13,15 @@ namespace Application.Services;
 public class CollectionService : ICollectionService
 {
     private readonly ICollectionRepo _collectionRepo;
-    private readonly IMapper _mapper;
+    private readonly ICollectionProductRepo _collectionProduct;
     private readonly Cloudinary _cloudinary;
 
-    public CollectionService(ICollectionRepo collectionRepo, IMapper mapper, Cloudinary cloudinary)
+    public CollectionService(ICollectionRepo collectionRepo, Cloudinary cloudinary,
+        ICollectionProductRepo collectionProduct)
     {
         _collectionRepo = collectionRepo;
-        _mapper = mapper;
         _cloudinary = cloudinary;
+        _collectionProduct = collectionProduct;
     }
 
     public async Task<ServiceResponse<PaginationModel<CollectionsResDTO>>> GetListCollections(int page)
@@ -66,24 +66,21 @@ public class CollectionService : ICollectionService
         return result;
     }
 
-    public async Task<ServiceResponse<CollectionsResDTO>> GetCollectionById(int collectionId)
+    public async Task<ServiceResponse<Collections>> GetCollectionDetails(int collectionId)
     {
-        var result = new ServiceResponse<CollectionsResDTO>();
+        var result = new ServiceResponse<Collections>();
         try
         {
-            var collection = await _collectionRepo.GetCollectionById(collectionId);
+            var collection = await _collectionRepo.GetCollectionWithProduct(collectionId);
             if (collection is null)
             {
                 result.Success = false;
                 result.Message = "Collection not found";
+                return result;
             }
-            else
-            {
-                var resCollection = _mapper.Map<Collections, CollectionsResDTO>(collection);
 
-                result.Data = resCollection;
-                result.Success = true;
-            }
+            result.Data = collection;
+            result.Success = true;
         }
         catch (Exception e)
         {
@@ -113,26 +110,46 @@ public class CollectionService : ICollectionService
 
                 var collection = new Collections
                 {
-                  NameCollection = createForm.NameCollection,
-                  ImageCollection = imageURl,
-                  DateOpen = DateTime.Now,
-                  DateClose = createForm.DateClose,
-                  Status  = 1
+                    NameCollection = createForm.NameCollection,
+                    ImageCollection = imageURl,
+                    DateOpen = DateTime.Now,
+                    DateClose = createForm.DateClose,
+                    Status = 1
                 };
-                 await _collectionRepo.AddAsync(collection);
+                await _collectionRepo.AddAsync(collection);
 
-                 result.Data = new CollectionsResDTO
-                 {
-                     Id = collection.Id,
-                     NameCollection = collection.NameCollection,
-                     ImageCollection = collection.ImageCollection,
-                     DateOpen = collection.DateOpen,
-                     DateClose = collection.DateClose,
-                     Status = collection.Status
-                 };
-                 result.Success = true;
-                 result.Message = "Create Collection successfully!";
+                result.Data = new CollectionsResDTO
+                {
+                    Id = collection.Id,
+                    NameCollection = collection.NameCollection,
+                    ImageCollection = collection.ImageCollection,
+                    DateOpen = collection.DateOpen,
+                    DateClose = collection.DateClose,
+                    Status = collection.Status
+                };
+                result.Success = true;
+                result.Message = "Create Collection successfully!";
             }
+        }
+        catch (Exception e)
+        {
+            result.Success = false;
+            result.Message = e.InnerException != null
+                ? e.InnerException.Message + "\n" + e.StackTrace
+                : e.Message + "\n" + e.StackTrace;
+        }
+
+        return result;
+    }
+
+    public async Task<ServiceResponse<object>> AddProductToCollection(int collectionId, int productId)
+    {
+        var result = new ServiceResponse<object>();
+        try
+        {
+            await _collectionProduct.AddProductToCollectionAsync(collectionId, productId);
+            result.Success = true;
+            result.Message = "Product added to Collection successfully";
         }
         catch (Exception e)
         {
@@ -169,12 +186,12 @@ public class CollectionService : ICollectionService
         throw new Exception("Failed to upload image");
     }
 
-    public async Task<ServiceResponse<CollectionsResDTO>> UpdateCollection(CollectionsReqDTO updateForm, int collectionId)
+    public async Task<ServiceResponse<CollectionsResDTO>> UpdateCollection(CollectionsReqDTO updateForm,
+        int collectionId)
     {
         var result = new ServiceResponse<CollectionsResDTO>();
         try
         {
-
             var collectionUpdate = await _collectionRepo.GetCollectionById(collectionId) ??
                                    throw new ArgumentException("Given Collection Id does not exist");
             collectionUpdate.NameCollection = updateForm.NameCollection;
@@ -211,7 +228,8 @@ public class CollectionService : ICollectionService
         return result;
     }
 
-    public async Task<ServiceResponse<CollectionsResDTO>> ChangeStatusCollection(int collectionId, CollectionStatusReqDTO statusReq)
+    public async Task<ServiceResponse<CollectionsResDTO>> ChangeStatusCollection(int collectionId,
+        CollectionStatusReqDTO statusReq)
     {
         var result = new ServiceResponse<CollectionsResDTO>();
         try
@@ -246,6 +264,7 @@ public class CollectionService : ICollectionService
                 ? e.InnerException.Message + "\n" + e.StackTrace
                 : e.Message + "\n" + e.StackTrace;
         }
+
         return result;
     }
 

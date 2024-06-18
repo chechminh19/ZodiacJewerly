@@ -34,6 +34,22 @@ public class CollectionController : ControllerBase
     }
 
     [Authorize(Roles = "Staff")]
+    [HttpPost("{collectionId}/products/{productId}")]
+    public async Task<IActionResult> AddProductToCollection(int collectionId, int productId)
+    {
+        var result = await _collectionService.AddProductToCollection(collectionId, productId);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
+    [Authorize(Roles = "Staff")]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCollectionDetails(int id)
+    {
+        var result = await _collectionService.GetCollectionDetails(id);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
+    [Authorize(Roles = "Staff")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCollection(int id, [FromForm] CollectionsReqDTO form)
     {
