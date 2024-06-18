@@ -2,6 +2,7 @@
 using Application.Services;
 using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
+using Application.ViewModels.ZodiacDTO;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,19 @@ namespace ZodiacJewelryWebApI.Controllers
         public async Task<IActionResult> GetZodiacById(int id)
         {
             var result = await _zodiacService.GetZodiacById(id);
+            if (!result.Success)
+            {
+                return NotFound(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateZodiac([FromBody] ZodiacUpdateDTO zodiac)
+        {
+
+
+            var result = await _zodiacService.UpdateZodiac(zodiac);
             if (!result.Success)
             {
                 return NotFound(result);
