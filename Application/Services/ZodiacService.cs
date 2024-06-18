@@ -8,6 +8,7 @@ using AutoMapper;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,5 +75,49 @@ namespace Application.Services
 
             return serviceResponse;
         }
-    }    
+
+
+        public async Task<ServiceResponse<string>> UpdateZodiac(ZodiacUpdateDTO zodiacUpdateDTO)
+        {
+            var serviceResponse = new ServiceResponse<string>();
+
+            try
+            {
+                // Validate the input
+                if (zodiacUpdateDTO == null || string.IsNullOrEmpty(zodiacUpdateDTO.DesZodiac))
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Invalid Zodiac data";
+                    return serviceResponse;
+                }
+
+                // Retrieve the existing zodiac entity
+                var existingZodiac = await _zodiacRepo.GetZodiacById(zodiacUpdateDTO.Id);
+                if (existingZodiac == null)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Zodiac not found";
+                    return serviceResponse;
+                }
+
+                // Map the updated data to the existing entity
+                _mapper.Map(zodiacUpdateDTO, existingZodiac);
+
+                // Save the updated entity to the database
+                await _zodiacRepo.UpdateZodiac(existingZodiac);
+
+                serviceResponse.Success = true;
+                serviceResponse.Message = "Zodiac updated successfully";
+            }
+            catch (Exception ex)
+            {
+                // Consider logging the exception here
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Failed to update zodiac: " + ex.Message;
+            }
+
+            return serviceResponse;
+        }
+
+    }
 }
