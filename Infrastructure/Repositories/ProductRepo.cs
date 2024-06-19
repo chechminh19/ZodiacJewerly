@@ -1,4 +1,5 @@
 ﻿using Application.IRepositories;
+using Application.ViewModels.OrderDTO;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -96,6 +97,28 @@ namespace Infrastructure.Repositories
             {
                 throw new Exception("An error occurred while deleting the product.", ex);
             }
+        }
+
+        public async Task<Product> GetProductByIdToOrder(int id)
+        {
+            var product = await _dbContext.Product
+           .Include(p => p.Category)
+           .Include(p => p.Material)
+           .Include(p => p.Gender)
+           .Include(p => p.ProductImages)
+           .Include(p => p.ProductZodiacs)
+           .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+            {
+                throw new KeyNotFoundException($"Product with id {id} not found.");
+            }
+            return product;         
+        }
+
+        public double GetProductPriceById(int productId)
+        {
+            return _dbContext.Product.FirstOrDefault(p => p.Id == productId)?.Price ?? 0;
         }
     }
 }

@@ -14,5 +14,7 @@ namespace Application.IRepositories
         Task AddProduct(Product product);
         Task UpdateProduct(Product product);
         Task DeleteProduct(int id);
+        Task<Product> GetProductByIdToOrder(int id);
+        double GetProductPriceById(int productId);
     }
 }

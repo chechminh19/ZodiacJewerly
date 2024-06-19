@@ -52,6 +52,11 @@ namespace ZodiacJewelryWebApI
             services.AddScoped<IImageRepo, ImageRepo>();
             services.AddScoped<IImageService, ImageService>();
 
+            services.AddScoped<ICollectionRepo, CollectionsRepo>();
+            services.AddScoped<ICollectionService, CollectionService>();
+
+            services.AddScoped<ICollectionProductRepo, CollectionProductRepo>();
+
 
             return services;
         }
