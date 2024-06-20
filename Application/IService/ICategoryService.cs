@@ -5,7 +5,7 @@ namespace Application.IService;
 
 public interface ICategoryService
 {
-    public Task<ServiceResponse<CategoryResDTO>> GetListCategory();
+    public Task<ServiceResponse<PaginationModel<CategoryResDTO>>> GetListCategory(int page);
     public Task<ServiceResponse<CategoryResDTO>> GetCategoryById(int categoryId);
     public Task<ServiceResponse<int>> CreateCategory(CategoryReqDTO createForm);
     public Task<ServiceResponse<string>> UpdateCategory(CategoryReqDTO updateCategoryReq, int categoryId);
