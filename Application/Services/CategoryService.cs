@@ -1,6 +1,7 @@
 using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.Ultilities;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
 using Domain.Entities;
@@ -44,22 +45,35 @@ public class CategoryService : ICategoryService
                 ? e.InnerException.Message + "\n" + e.StackTrace
                 : e.Message + "\n" + e.StackTrace;
         }
+
         return result;
     }
 
-    public async Task<ServiceResponse<CategoryResDTO>> GetListCategory()
+    public async Task<ServiceResponse<PaginationModel<CategoryResDTO>>> GetListCategory(int page)
     {
-        var result = new ServiceResponse<CategoryResDTO>();
+        var result = new ServiceResponse<PaginationModel<CategoryResDTO>>();
         try
         {
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
             var category = await _categoryRepo.GetListCategory();
-            List<CategoryResDTO> categoryList = [];
+            List<CategoryResDTO> categoryList = new List<CategoryResDTO>();
             foreach (var c in category)
             {
-                CategoryResDTO crd = new() { Id = c.Id, NameCategory = c.NameCategory };
+                CategoryResDTO crd = new()
+                {
+                    Id = c.Id,
+                    NameCategory = c.NameCategory
+                };
                 categoryList.Add(crd);
             }
-            result.Data = new CategoryResDTO();
+
+            var resultList = await Pagination.GetPagination(categoryList, page, 5);
+
+            result.Data = resultList;
             result.Success = true;
         }
         catch (Exception e)

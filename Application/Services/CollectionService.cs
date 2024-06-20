@@ -66,18 +66,12 @@ public class CollectionService : ICollectionService
         return result;
     }
 
-    public async Task<ServiceResponse<Collections>> GetCollectionDetails(int collectionId)
+    public async Task<ServiceResponse<CollectionDetailResDTO>> GetCollectionDetails(int collectionId)
     {
-        var result = new ServiceResponse<Collections>();
+        var result = new ServiceResponse<CollectionDetailResDTO>();
         try
         {
-            var collection = await _collectionRepo.GetCollectionWithProduct(collectionId);
-            if (collection is null)
-            {
-                result.Success = false;
-                result.Message = "Collection not found";
-                return result;
-            }
+            var collection = await _collectionRepo.GetCollectionDetails(collectionId);
 
             result.Data = collection;
             result.Success = true;
