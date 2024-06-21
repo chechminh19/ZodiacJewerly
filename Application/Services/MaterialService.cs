@@ -1,8 +1,10 @@
 using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.Ultilities;
 using Application.ViewModels.MaterialDTO;
 using AutoMapper;
+using CloudinaryDotNet.Actions;
 using Domain.Entities;
 
 namespace Application.Services;
@@ -18,17 +20,22 @@ public class MaterialService : IMaterialService
         _materialRepo = materialRepo;
     }
 
-    public async Task<ServiceResponse<MaterialResDTO>> GetAllMaterials()
+    public async Task<ServiceResponse<PaginationModel<MaterialResDTO>>> GetAllMaterials(int page)
     {
-        var result = new ServiceResponse<MaterialResDTO>();
+        var result = new ServiceResponse<PaginationModel<MaterialResDTO>>();
         try
         {
+            if (page <= 0)
+            {
+                page = 1;
+            }
             var material = await _materialRepo.GetAllMaterials();
-            List<MaterialResDTO> materialList = [];
+            List<MaterialResDTO> materialList = new List<MaterialResDTO>();
             materialList.AddRange(material.Select(m => new MaterialResDTO()
                 { Id = m.Id, NameMaterial = m.NameMaterial }));
 
-            result.Data = new MaterialResDTO();
+            var resultList = await Pagination.GetPagination(materialList, page, 5);
+            result.Data = resultList;
             result.Success = true;
         }
         catch (Exception e)

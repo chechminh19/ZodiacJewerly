@@ -14,5 +14,14 @@ namespace Application.IRepositories
         Task<bool> CheckPhoneNumberExited(string phonenumber);
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserByConfirmationToken(string token);
+        Task<User> GetUserById(int id);
+        Task<IEnumerable<User>> GetAllUsers();
+        Task<IEnumerable<User>> GetAllUsersByRole(string role);
+        Task<IEnumerable<User>> GetAllUsersAdmin();
+        Task<IEnumerable<User>> GetAllUsersStaff();
+        Task<IEnumerable<User>> GetAllUsersCustomer();
+        Task AddUser(User user);
+        Task UpdateUser(User user);
+        Task DeleteUser(int id);
     }
 }

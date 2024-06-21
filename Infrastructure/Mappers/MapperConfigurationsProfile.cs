@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.ViewModels.CollectionsDTO;
+using Application.ViewModels.MaterialDTO;
 using Application.ViewModels.ProductImageDTO;
 
 namespace Infrastructure.Mappers
@@ -28,6 +30,7 @@ namespace Infrastructure.Mappers
             CreateMap<ResetPassDTO, User>()
                  .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
             CreateMap<User, ResetPassDTO>();
+            CreateMap<User, UserDTO>();
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Product, CreateProductDTO>().ReverseMap();
             CreateMap<ZodiacProduct, ZodiacProductDTO>().ReverseMap();
@@ -37,8 +40,14 @@ namespace Infrastructure.Mappers
             CreateMap<Zodiac, ZodiacDTO>().ReverseMap();
             CreateMap<Zodiac, ZodiacUpdateDTO>().ReverseMap();
             CreateMap<ProductImage, ProductImageDTO>().ReverseMap();
+            CreateMap<Collections, CollectionsResDTO>().ReverseMap();
+            CreateMap<Collections, CollectionsReqDTO>().ReverseMap();
+            CreateMap<Material, MaterialResDTO>().ReverseMap();
+            CreateMap<Material, MaterialReqDTO>().ReverseMap();
 
-            
+
+
+
         }
     }
 }

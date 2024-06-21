@@ -1,7 +1,7 @@
 namespace Application.Enums;
 
-public enum Status
+public enum Status : byte
 {
-    Active,
-    Inactive
+    Active = 1,
+    Inactive = 0
 }

@@ -58,6 +58,9 @@ namespace ZodiacJewelryWebApI
             services.AddScoped<ICollectionProductRepo, CollectionProductRepo>();
 
 
+            services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<IUserService, UserService>();
+
             return services;
         }
     }

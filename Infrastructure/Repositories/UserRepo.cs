@@ -43,5 +43,64 @@ namespace Infrastructure.Repositories
         {
             return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<User> GetUserById(int id)
+        {
+            return await _dbContext.User.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsers()
+        {
+            return _dbContext.User.ToList();
+        }
+        public async Task<IEnumerable<User>> GetAllUsersByRole(string roleName)
+        {
+            return await _dbContext.User
+                .Where(u => u.RoleName == roleName)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<User>> GetAllUsersAdmin()
+        {
+            return await _dbContext.User
+                .Where(u => u.RoleName == "Admin")
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersStaff()
+        {
+            return await _dbContext.User
+                .Where(u => u.RoleName == "Staff")
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersCustomer()
+        {
+            return await _dbContext.User
+                .Where(u => u.RoleName == "Customer")
+                .ToListAsync();
+        }
+
+
+        public async Task AddUser(User user)
+        {
+            _dbContext.User.Add(user);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateUser(User user)
+        {
+            _dbContext.User.Update(user);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteUser(int id)
+        {
+            var user = await _dbContext.User.FindAsync(id);
+            if (user != null)
+            {
+                _dbContext.User.Remove(user);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
     }
 }
