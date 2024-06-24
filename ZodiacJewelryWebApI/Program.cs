@@ -24,7 +24,7 @@ var configuration = builder.Configuration;
 var myConfig = new AppConfiguration();
 configuration.Bind(myConfig);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"))); // Use connection string directly
-
+builder.Services.Configure<PayPalSettings>(configuration.GetSection("PayPal"));
 builder.Services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
 builder.Services.AddSingleton(provider =>
 {
