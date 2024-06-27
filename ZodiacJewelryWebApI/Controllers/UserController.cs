@@ -22,9 +22,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
        
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers(int page)
         {
-            var result = await _userService.GetAllUsers();
+            var result = await _userService.GetAllUsers(page);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -33,9 +33,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet("customers")]
-        public async Task<IActionResult> GetAllUsersCustomer()
+        public async Task<IActionResult> GetAllUsersCustomer(int page)
         {
-            var result = await _userService.GetAllUsersByCustomer();
+            var result = await _userService.GetAllUsersByCustomer( page);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -44,9 +44,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet("admin")]
-        public async Task<IActionResult> GetAllUsersAdmin()
+        public async Task<IActionResult> GetAllUsersAdmin(int page)
         {
-            var result = await _userService.GetAllUsersByAdmin();
+            var result = await _userService.GetAllUsersByAdmin(page);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -54,9 +54,9 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
         [HttpGet("staff")]
-        public async Task<IActionResult> GetAllUsersStaff()
+        public async Task<IActionResult> GetAllUsersStaff(int page)
         {
-            var result = await _userService.GetAllUsersByStaff();
+            var result = await _userService.GetAllUsersByStaff(page);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -65,9 +65,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet("role/{role}")]
-        public async Task<IActionResult> GetAllUsersByRole(string role)
+        public async Task<IActionResult> GetAllUsersByRole(string role,int page)
         {
-            var result = await _userService.GetAllUsersByRole(role);
+            var result = await _userService.GetAllUsersByRole(role,page);
             if (!result.Success)
             {
                 return NotFound(result);

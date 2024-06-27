@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.Ultilities;
 using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using AutoMapper;
@@ -26,16 +27,20 @@ namespace Application.Services
             _zodiacProductRepo = zodiacProductRepo ?? throw new ArgumentNullException(nameof(zodiacProductRepo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        
-        public async Task<ServiceResponse<IEnumerable<ProductDTO>>> GetAllProductsAsync()
+
+        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsAsync(int page)
         {
-            var response = new ServiceResponse<IEnumerable<ProductDTO>>();
+            var response = new ServiceResponse<PaginationModel<ProductDTO>>();
 
             try
             {
                 var products = await _productRepo.GetAllProduct();
-                var productDTOs = MapToDTO(products);
-                response.Data = productDTOs;
+                var productDTOs = MapToDTO(products); // Map products to ProductDTO
+
+                // Apply pagination
+                var paginationModel = await Pagination.GetPaginationIENUM(productDTOs, page, 5);
+
+                response.Data = paginationModel;
                 response.Success = true;
             }
             catch (Exception ex)
@@ -46,6 +51,7 @@ namespace Application.Services
 
             return response;
         }
+
 
         public async Task<ServiceResponse<ProductDTO>> GetProductByIdAsync(int id)
         {
