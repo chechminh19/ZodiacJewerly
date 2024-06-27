@@ -20,9 +20,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet("products/zodiac")]
-        public async Task<IActionResult> GetAllZodiacProducts(int page)
+        public async Task<IActionResult> GetAllZodiacProducts([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = await _zodiacService.GetAllZodiacProduct(page);
+            var result = await _zodiacService.GetAllZodiacProduct(page, pageSize);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -77,9 +77,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet("zodiac/{zodiacId}/products")]
-        public async Task<IActionResult> GetAllProductsByZodiacId(int zodiacId, int page)
+        public async Task<IActionResult> GetAllProductsByZodiacId(int zodiacId, [FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string search, [FromQuery] Dictionary<string, string> filters, [FromQuery] string sort = "id")
         {
-            var result = await _zodiacService.GetAllProductsByZodiacId(zodiacId, page);
+            var result = await _zodiacService.GetAllProductsByZodiacId(zodiacId, page, pageSize, search, filters, sort);
             if (!result.Success)
             {
                 return BadRequest(result);

@@ -25,7 +25,8 @@ public class CollectionService : ICollectionService
         _collectionProduct = collectionProduct;
     }
 
-    public async Task<ServiceResponse<PaginationModel<CollectionsResDTO>>> GetListCollections(int page, int pageSize, string search, string filter, string sort)
+    public async Task<ServiceResponse<PaginationModel<CollectionsResDTO>>> GetListCollections(int page, int pageSize,
+        string search, string filter, string sort)
     {
         var result = new ServiceResponse<PaginationModel<CollectionsResDTO>>();
         try
@@ -42,11 +43,9 @@ public class CollectionService : ICollectionService
                     .Where(c => c.NameCollection.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
+            if (byte.TryParse(filter, out byte status))
             {
-                if (byte.TryParse(filter, out byte status))
-                {
-                    collections = collections.Where(c => c.Status == status).ToList();
-                }
+                collections = collections.Where(c => c.Status == status).ToList();
             }
 
             collections = sort.ToLower() switch

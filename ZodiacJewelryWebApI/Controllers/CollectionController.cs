@@ -17,11 +17,11 @@ public class CollectionController : ControllerBase
         _collectionService = collectionService;
     }
 
-    [Authorize(Roles = "Staff, Customer")]
+    [Authorize(Roles = "Admin, Staff, Customer")]
     [HttpGet]
     public async Task<IActionResult> GetListCollection([FromQuery] int page = 1 ,[FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string filter = "",  [FromQuery] string sort = "id")
     {
-        var result = await _collectionService.GetListCollections(page,pageSize, search, filter, sort );
+        var result = await _collectionService.GetListCollections(page, pageSize, search, filter, sort);
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
@@ -41,7 +41,7 @@ public class CollectionController : ControllerBase
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
-    [Authorize(Roles = "Staff")]
+    [Authorize(Roles = "Admin, Staff, Customer")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCollectionDetails(int id)
     {

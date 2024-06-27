@@ -1,5 +1,4 @@
-
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -28,17 +27,60 @@ namespace Application.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsAsync(int page)
+        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsAsync(int page, int pageSize,
+            string search, Dictionary<string, string> filters, string sort)
         {
             var response = new ServiceResponse<PaginationModel<ProductDTO>>();
 
             try
             {
                 var products = await _productRepo.GetAllProduct();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    products = products.Where(p => p.NameProduct.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                                   p.DescriptionProduct.Contains(search,
+                                                       StringComparison.OrdinalIgnoreCase));
+                }
+
+                foreach (var filter in filters)
+                {
+                    switch (filter.Key.ToLower())
+                    {
+                        case "categoryid":
+                            if (int.TryParse(filter.Value, out int categoryId))
+                            {
+                                products = products.Where(p => p.CategoryId == categoryId);
+                            }
+                            break;
+                        case "materialid":
+                            if (int.TryParse(filter.Value, out int materialId))
+                            {
+                                products = products.Where(p => p.MaterialId == materialId);
+                            }
+                            break;
+                        case "genderid":
+                            if (int.TryParse(filter.Value, out int genderId))
+                            {
+                                products = products.Where(p => p.GenderId == genderId);
+                            }
+                            break;
+                    }
+                }
+
+                products = sort.ToLower() switch
+                {
+                    "name" => products.OrderBy(p => p.NameProduct),
+                    "price" => products.OrderBy(p => p.Price),
+                    "quantity" => products.OrderBy(p => p.Quantity),
+                    "category" => products.OrderBy(p => p.CategoryId),
+                    "material" => products.OrderBy(p => p.MaterialId),
+                    "gender" => products.OrderBy(p => p.GenderId),
+                    _ => products.OrderBy(p => p.Id) 
+                };
                 var productDTOs = MapToDTO(products); // Map products to ProductDTO
 
                 // Apply pagination
-                var paginationModel = await Pagination.GetPaginationIENUM(productDTOs, page, 5);
+                var paginationModel = await Pagination.GetPaginationIENUM(productDTOs, page, pageSize);
 
                 response.Data = paginationModel;
                 response.Success = true;
@@ -166,7 +208,7 @@ namespace Application.Services
             catch (Exception ex)
             {
                 // Log the exception
-                
+
 
                 response.Success = false;
                 response.Message = $"Failed to update product: {ex.Message}";
@@ -211,15 +253,16 @@ namespace Application.Services
             productDTO.ZodiacId = (int)(product.ProductZodiacs?.Select(pi => pi.ZodiacId).FirstOrDefault());
 
 
-
             return productDTO;
         }
+
         private CreateProductDTO MapToDTOCreate(Product product)
         {
             var productDTO = _mapper.Map<CreateProductDTO>(product);
 
             return productDTO;
         }
+
         private IEnumerable<ProductDTO> MapToDTO(IEnumerable<Product> products)
         {
             return products.Select(MapToDTO);
@@ -247,4 +290,3 @@ namespace Application.Services
         }
     }
 }
-

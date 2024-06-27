@@ -28,17 +28,35 @@ namespace Application.Services
         }
 
 
-        public  async Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page)
+        public  async Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page, int pageSize, string search, string sort, int? productId)
         {
-            var response = new ServiceResponse<PaginationModel<ProductImageDTO>>();
+            var response = new ServiceResponse<PaginationModel<ProductImageDTO>>();                                                     
 
             try
             {
-                var images = await _imageRepo.GetAllImageInfors(); 
+                var images = await _imageRepo.GetAllImageInfors();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    images = images.Where(p =>
+                        p is { PublicId: not null, ImageUrl: not null } && (p.ImageUrl.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                                                            p.PublicId.Contains(search, StringComparison.OrdinalIgnoreCase)));
+                }
+
+                if (productId.HasValue)
+                {
+                    images = images.Where(p => p.ProductId == productId.Value);
+                }
+                images = sort.ToLower() switch
+                {
+                    "imageurl" => images.OrderBy(p => p.ImageUrl),
+                    "publicid" => images.OrderBy(p => p.PublicId),
+                    "productid" => images.OrderBy(p => p.ProductId),
+                    _ => images.OrderBy(p => p.Id) 
+                };
                 var imageDTOs = _mapper.Map<IEnumerable<ProductImageDTO>>(images); // Map images to ProductImageDTO
 
                 // Apply pagination
-                var paginationModel = await Pagination.GetPaginationIENUM(imageDTOs, page, 5); 
+                var paginationModel = await Pagination.GetPaginationIENUM(imageDTOs, page, pageSize); 
 
                 response.Data = paginationModel;
                 response.Success = true;
