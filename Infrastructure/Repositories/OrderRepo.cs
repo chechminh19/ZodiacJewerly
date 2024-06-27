@@ -60,10 +60,9 @@ namespace Infrastructure.Repositories
         }
 
         public async Task<List<OrderDetails>> GetAllOrderCart(int userId)
-        {
-            const int defaultOrderStatus = 1;
+        {            
             return _dbContext.Order
-                .Where(o => o.UserId == userId && o.Status == defaultOrderStatus)
+                .Where(o => o.UserId == userId)
                     .SelectMany(o => o.OrderDetails)
                     .Include(od => od.Product)
                         .ThenInclude(p => p.Category)

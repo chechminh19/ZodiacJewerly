@@ -17,7 +17,7 @@ public class CollectionController : ControllerBase
         _collectionService = collectionService;
     }
 
-    [Authorize(Roles = "Staff")]
+    [Authorize(Roles = "Staff, Customer")]
     [HttpGet]
     public async Task<IActionResult> GetListCollection(int page)
     {
