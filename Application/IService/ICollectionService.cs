@@ -7,7 +7,7 @@ namespace Application.IService;
 
 public interface ICollectionService
 {
-    public Task<ServiceResponse<PaginationModel<CollectionsResDTO>>> GetListCollections(int page);
+    public Task<ServiceResponse<PaginationModel<CollectionsResDTO>>> GetListCollections(int page, string search, string filter, string sort);
     public Task<ServiceResponse<CollectionDetailResDTO>> GetCollectionDetails(int collectionId);
     public Task<ServiceResponse<CollectionsResDTO>> CreateCollection(CollectionsReqDTO createForm);
     public Task<ServiceResponse<object>> AddProductToCollection(int collectionId, int productId);

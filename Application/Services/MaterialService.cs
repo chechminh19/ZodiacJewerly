@@ -20,7 +20,7 @@ public class MaterialService : IMaterialService
         _materialRepo = materialRepo;
     }
 
-    public async Task<ServiceResponse<PaginationModel<MaterialResDTO>>> GetAllMaterials(int page)
+    public async Task<ServiceResponse<PaginationModel<MaterialResDTO>>> GetAllMaterials(int page, string search, string sort)
     {
         var result = new ServiceResponse<PaginationModel<MaterialResDTO>>();
         try
@@ -30,9 +30,23 @@ public class MaterialService : IMaterialService
                 page = 1;
             }
             var material = await _materialRepo.GetAllMaterials();
-            List<MaterialResDTO> materialList = new List<MaterialResDTO>();
-            materialList.AddRange(material.Select(m => new MaterialResDTO()
-                { Id = m.Id, NameMaterial = m.NameMaterial }));
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                material = material.Where(c => c.NameMaterial.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            
+            material = sort.ToLower() switch
+            {
+                "name" => material.OrderBy(c => c.NameMaterial).ToList(),
+                _ => material.OrderBy(c => c.Id).ToList()
+            };
+
+            var materialList = material.Select(c => new MaterialResDTO
+            {
+                Id = c.Id,
+                NameMaterial = c.NameMaterial
+            }).ToList();
 
             var resultList = await Pagination.GetPagination(materialList, page, 5);
             result.Data = resultList;

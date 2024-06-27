@@ -19,9 +19,9 @@ public class CollectionController : ControllerBase
 
     [Authorize(Roles = "Staff, Customer")]
     [HttpGet]
-    public async Task<IActionResult> GetListCollection(int page)
+    public async Task<IActionResult> GetListCollection([FromQuery] int page , [FromQuery] string search = "", [FromQuery] string filter = "",  [FromQuery] string sort = "id")
     {
-        var result = await _collectionService.GetListCollections(page);
+        var result = await _collectionService.GetListCollections(page, search, filter, sort );
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
