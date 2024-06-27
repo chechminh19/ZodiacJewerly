@@ -49,7 +49,7 @@ public class CategoryService : ICategoryService
         return result;
     }
 
-    public async Task<ServiceResponse<PaginationModel<CategoryResDTO>>> GetListCategory(int page)
+    public async Task<ServiceResponse<PaginationModel<CategoryResDTO>>> GetListCategory(int page, string search, string sort)
     {
         var result = new ServiceResponse<PaginationModel<CategoryResDTO>>();
         try
@@ -60,16 +60,22 @@ public class CategoryService : ICategoryService
             }
 
             var category = await _categoryRepo.GetListCategory();
-            List<CategoryResDTO> categoryList = new List<CategoryResDTO>();
-            foreach (var c in category)
+            if (!string.IsNullOrEmpty(search))
             {
-                CategoryResDTO crd = new()
-                {
-                    Id = c.Id,
-                    NameCategory = c.NameCategory
-                };
-                categoryList.Add(crd);
+                category = category.Where(c => c.NameCategory.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
             }
+            
+            category = sort.ToLower() switch
+            {
+                "name" => category.OrderBy(c => c.NameCategory).ToList(),
+                _ => category.OrderBy(c => c.Id).ToList()
+            };
+
+            var categoryList = category.Select(c => new CategoryResDTO
+            {
+               Id = c.Id,
+               NameCategory = c.NameCategory
+            }).ToList();
 
             var resultList = await Pagination.GetPagination(categoryList, page, 5);
 

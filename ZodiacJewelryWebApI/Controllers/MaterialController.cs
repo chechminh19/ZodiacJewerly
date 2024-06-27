@@ -18,9 +18,9 @@ public class MaterialController : ControllerBase
 
     [Authorize(Roles = "Staff")]
     [HttpGet]
-    public async Task<IActionResult> GetMaterials(int page)
+    public async Task<IActionResult> GetMaterials([FromQuery] int page , [FromQuery] string search = "",  [FromQuery] string sort = "id")
     {
-        var result = await _materialService.GetAllMaterials(page);
+        var result = await _materialService.GetAllMaterials(page, search, sort);
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
