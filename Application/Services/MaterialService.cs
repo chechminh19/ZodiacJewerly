@@ -20,7 +20,7 @@ public class MaterialService : IMaterialService
         _materialRepo = materialRepo;
     }
 
-    public async Task<ServiceResponse<PaginationModel<MaterialResDTO>>> GetAllMaterials(int page, string search, string sort)
+    public async Task<ServiceResponse<PaginationModel<MaterialResDTO>>> GetAllMaterials(int page,int pageSize , string search, string sort)
     {
         var result = new ServiceResponse<PaginationModel<MaterialResDTO>>();
         try
@@ -48,7 +48,7 @@ public class MaterialService : IMaterialService
                 NameMaterial = c.NameMaterial
             }).ToList();
 
-            var resultList = await Pagination.GetPagination(materialList, page, 5);
+            var resultList = await Pagination.GetPagination(materialList, page, pageSize);
             result.Data = resultList;
             result.Success = true;
         }
@@ -92,9 +92,9 @@ public class MaterialService : IMaterialService
         return result;
     }
 
-    public async Task<ServiceResponse<int>> CreateMaterial(MaterialReqDTO createForm)
+    public async Task<ServiceResponse<MaterialResDTO>> CreateMaterial(MaterialReqDTO createForm)
     {
-        var result = new ServiceResponse<int>();
+        var result = new ServiceResponse<MaterialResDTO>();
         try
         {
             var materialExist = await _materialRepo.GetMaterialByName(createForm.NameMaterial);
@@ -108,7 +108,11 @@ public class MaterialService : IMaterialService
                 var newMaterial = _mapper.Map<MaterialReqDTO, Material>(createForm);
                 newMaterial.Id = 0;
                 await _materialRepo.AddAsync(newMaterial);
-                result.Data = newMaterial.Id;
+                result.Data = new MaterialResDTO
+                {
+                    Id = newMaterial.Id,
+                    NameMaterial = newMaterial.NameMaterial
+                };
                 result.Success = true;
                 result.Message = "Material created successfully!";
             }
@@ -124,9 +128,9 @@ public class MaterialService : IMaterialService
         return result;
     }
 
-    public async Task<ServiceResponse<string>> UpdateMaterial(MaterialReqDTO updateForm, int materialId)
+    public async Task<ServiceResponse<MaterialResDTO>> UpdateMaterial(MaterialReqDTO updateForm, int materialId)
     {
-        var result = new ServiceResponse<string>();
+        var result = new ServiceResponse<MaterialResDTO>();
         try
         {
             ArgumentNullException.ThrowIfNull(updateForm);
@@ -151,9 +155,9 @@ public class MaterialService : IMaterialService
         return result;
     }
 
-    public async Task<ServiceResponse<string>> DeleteMaterial(int materialId)
+    public async Task<ServiceResponse<bool>> DeleteMaterial(int materialId)
     {
-        var result = new ServiceResponse<string>();
+        var result = new ServiceResponse<bool>();
 
         try
         {
