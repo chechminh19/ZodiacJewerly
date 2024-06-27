@@ -1,6 +1,7 @@
 ﻿using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.Ultilities;
 using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using Application.ViewModels.ZodiacDTO;
@@ -28,25 +29,30 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<IEnumerable<ZodiacDTO>>> GetAllZodiacs()
+        public async Task<ServiceResponse<PaginationModel<ZodiacDTO>>> GetAllZodiacs(int page)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<ZodiacDTO>>();
+            var response = new ServiceResponse<PaginationModel<ZodiacDTO>>();
 
             try
             {
-                var zodiac = await _zodiacRepo.GetAllZodiacs();
-                var zodiacDTOs = _mapper.Map<IEnumerable<ZodiacDTO>>(zodiac);
-                serviceResponse.Data = zodiacDTOs;
-                serviceResponse.Success = true;
+                var zodiacs = await _zodiacRepo.GetAllZodiacs(); 
+                var zodiacDTOs = _mapper.Map<IEnumerable<ZodiacDTO>>(zodiacs); // Map zodiacs to ZodiacDTO
+
+                // Apply pagination
+                var paginationModel = await Pagination.GetPaginationIENUM(zodiacDTOs, page, 5); // Adjust pageSize as needed
+
+                response.Data = paginationModel;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve zodiacs: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
+
 
         public async Task<ServiceResponse<ZodiacDTO>> GetZodiacById(int id)
         {

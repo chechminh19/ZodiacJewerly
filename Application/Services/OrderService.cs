@@ -1,6 +1,7 @@
 ﻿using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.Ultilities;
 using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using Application.ViewModels.ZodiacDTO;
@@ -31,25 +32,30 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<IEnumerable<OrderDTO>>> GetAllOrder()
+        public async Task<ServiceResponse<PaginationModel<OrderDTO>>> GetAllOrder(int page)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<OrderDTO>>();
+            var response = new ServiceResponse<PaginationModel<OrderDTO>>();
 
             try
             {
-                var order = await _orderRepo.GetAllOrders();
-                var orderDTOs = _mapper.Map<IEnumerable<OrderDTO>>(order);
-                serviceResponse.Data = orderDTOs;
-                serviceResponse.Success = true;
+                var orders = await _orderRepo.GetAllOrders(); // Assuming this method supports async retrieval
+                var orderDTOs = _mapper.Map<IEnumerable<OrderDTO>>(orders); // Map orders to OrderDTO
+
+                // Apply pagination
+                var paginationModel = await Pagination.GetPaginationIENUM(orderDTOs, page, 5); // Adjusted pageSize as per original example
+
+                response.Data = paginationModel;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve orders: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
+
 
         public async Task<ServiceResponse<OrderDTO>> GetOrderById(int id)
         {

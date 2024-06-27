@@ -23,9 +23,9 @@ namespace ZodiacJewelryWebApI.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllZodiacs()
+        public async Task<IActionResult> GetAllZodiacs(int page)
         {
-            var result = await _zodiacService.GetAllZodiacs();
+            var result = await _zodiacService.GetAllZodiacs(page);
             if (!result.Success)
             {
                 return BadRequest(result);

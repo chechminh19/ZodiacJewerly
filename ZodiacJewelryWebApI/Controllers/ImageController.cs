@@ -22,9 +22,9 @@ namespace ZodiacJewelryWebApI.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllOrderGetAllOrderGetAllImageInfors()
+        public async Task<IActionResult> AllImageInfors(int page)
         {
-            var result = await _imageService.GetAllOrderGetAllImageInfors();
+            var result = await _imageService.GetAllImageInfors(page);
             if (!result.Success)
             {
                 return BadRequest(result);
