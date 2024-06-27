@@ -1,3 +1,4 @@
+using Application.Enums;
 using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
@@ -24,7 +25,7 @@ public class CollectionService : ICollectionService
         _collectionProduct = collectionProduct;
     }
 
-    public async Task<ServiceResponse<PaginationModel<CollectionsResDTO>>> GetListCollections(int page)
+    public async Task<ServiceResponse<PaginationModel<CollectionsResDTO>>> GetListCollections(int page, int pageSize, string search, string filter, string sort)
     {
         var result = new ServiceResponse<PaginationModel<CollectionsResDTO>>();
         try
@@ -34,23 +35,40 @@ public class CollectionService : ICollectionService
                 page = 1;
             }
 
-            var collection = await _collectionRepo.GetCollections();
-            List<CollectionsResDTO> collectionList = [];
-            foreach (var c in collection)
+            var collections = await _collectionRepo.GetCollections();
+            if (!string.IsNullOrEmpty(search))
             {
-                CollectionsResDTO cr = new()
-                {
-                    Id = c.Id,
-                    NameCollection = c.NameCollection,
-                    ImageCollection = c.ImageCollection,
-                    DateOpen = c.DateOpen,
-                    DateClose = c.DateClose,
-                    Status = c.Status
-                };
-                collectionList.Add(cr);
+                collections = collections
+                    .Where(c => c.NameCollection.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            var resultList = await Pagination.GetPagination(collectionList, page, 10);
+            {
+                if (byte.TryParse(filter, out byte status))
+                {
+                    collections = collections.Where(c => c.Status == status).ToList();
+                }
+            }
+
+            collections = sort.ToLower() switch
+            {
+                "name" => collections.OrderBy(c => c.NameCollection).ToList(),
+                "dateopen" => collections.OrderBy(c => c.DateOpen).ToList(),
+                "dateclose" => collections.OrderBy(c => c.DateClose).ToList(),
+                "status" => collections.OrderBy(c => c.Status).ToList(),
+                _ => collections.OrderBy(c => c.Id).ToList()
+            };
+
+            var collectionList = collections.Select(c => new CollectionsResDTO
+            {
+                Id = c.Id,
+                NameCollection = c.NameCollection,
+                ImageCollection = c.ImageCollection,
+                DateOpen = c.DateOpen,
+                DateClose = c.DateClose,
+                Status = c.Status
+            }).ToList();
+
+            var resultList = await Pagination.GetPagination(collectionList, page, pageSize);
 
             result.Success = true;
             result.Data = resultList;

@@ -288,7 +288,7 @@ namespace Application.Services
             try
             {
                 var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(userObject.Email);
-                if (existEmail)
+                if (existEmail != null)
                 {
                     response.Success = false;
                     response.Message = "Email is already existed";
