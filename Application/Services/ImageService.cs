@@ -1,6 +1,7 @@
 ﻿using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.Ultilities;
 using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using Application.ViewModels.ProductImageDTO;
@@ -27,25 +28,30 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<IEnumerable<ProductImageDTO>>> GetAllOrderGetAllImageInfors()
+        public  async Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<ProductImageDTO>>();
+            var response = new ServiceResponse<PaginationModel<ProductImageDTO>>();
 
             try
             {
-                var image = await _imageRepo.GetAllImageInfors();
-                var imageDTOs = _mapper.Map<IEnumerable<ProductImageDTO>>(image);
-                serviceResponse.Data = imageDTOs;
-                serviceResponse.Success = true;
+                var images = await _imageRepo.GetAllImageInfors(); 
+                var imageDTOs = _mapper.Map<IEnumerable<ProductImageDTO>>(images); // Map images to ProductImageDTO
+
+                // Apply pagination
+                var paginationModel = await Pagination.GetPaginationIENUM(imageDTOs, page, 5); 
+
+                response.Data = paginationModel;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve image infors: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
+
 
         public async Task<ServiceResponse<ProductImageDTO>> GetImageInforById(int id)
         {

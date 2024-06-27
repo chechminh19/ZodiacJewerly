@@ -1,6 +1,7 @@
 ﻿using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.Ultilities;
 using Application.ViewModels.ProductDTO;
 using AutoMapper;
 using Domain.Entities;
@@ -22,25 +23,30 @@ namespace Application.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<ServiceResponse<IEnumerable<ZodiacProductDTO>>> GetAllZodiacProduct()
+        public async Task<ServiceResponse<PaginationModel<ZodiacProductDTO>>> GetAllZodiacProduct(int page)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<ZodiacProductDTO>>();
+            var response = new ServiceResponse<PaginationModel<ZodiacProductDTO>>();
 
             try
             {
                 var zodiacProducts = await _zodiacProductRepo.GetAllZodiacProduct();
-                var zodiacProductDTOs = _mapper.Map<IEnumerable<ZodiacProductDTO>>(zodiacProducts);
-                serviceResponse.Data = zodiacProductDTOs;
-                serviceResponse.Success = true;
+                var zodiacProductDTOs = _mapper.Map<IEnumerable<ZodiacProductDTO>>(zodiacProducts); // Map zodiac products to ZodiacProductDTO
+
+                // Apply pagination
+                var paginationModel = await Pagination.GetPaginationIENUM(zodiacProductDTOs, page, 5); // Adjust pageSize as needed
+
+                response.Data = paginationModel;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve zodiac products: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
+
 
         public async Task<ServiceResponse<ZodiacProductDTO>> GetZodiacProductById(int id)
         {
@@ -125,7 +131,7 @@ namespace Application.Services
             catch (Exception ex)
             {
                 // Log the exception (assuming a logger is available)
-                
+
 
                 // Prepare failure response
                 serviceResponse.Success = false;
@@ -175,42 +181,56 @@ namespace Application.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<IEnumerable<ProductDTO>>> GetAllProductsByZodiacId(int zodiacId)
+        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsByZodiacId(int zodiacId, int page)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<ProductDTO>>();
-
-            try
             {
-                var products = await _zodiacProductRepo.GetAllProductsByZodiacId(zodiacId);
-                if (products == null || !products.Any())
+                var serviceResponse = new ServiceResponse<PaginationModel<ProductDTO>>();
+
+                try
                 {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = "No products found for the specified zodiac.";
-                }
-                else
-                {
-                    var productDTOs = new List<ProductDTO>();
-                    foreach (var product in products)
+                    var products = await _zodiacProductRepo.GetAllProductsByZodiacId(zodiacId);
+
+                    // Check if products were found
+                    if (products == null || !products.Any())
                     {
-                        var productDTO = _mapper.Map<ProductDTO>(product);
-                        productDTO.ImageUrls = product.ProductImages.Select(pi => pi.ImageUrl).ToList();
-                        productDTO.ZodiacId = zodiacId;
-                        productDTOs.Add(productDTO);
+                        serviceResponse.Success = false;
+                        serviceResponse.Message = "No products found for the specified zodiac.";
+                        return serviceResponse;
                     }
 
-                    serviceResponse.Data = productDTOs;
+                    // Map products to ProductDTO and include ImageUrls
+                    var productDTOs = products.Select(product => new ProductDTO
+                    {
+                        Id = product.Id,
+                        NameProduct = product.NameProduct,
+                        DescriptionProduct = product.DescriptionProduct,
+                        Price = product.Price,
+                        ZodiacId = zodiacId,
+                        ImageUrls = product.ProductImages.Select(pi => pi.ImageUrl).ToList()
+                    });
+
+                    // Apply pagination
+                    var paginationModel = await Pagination.GetPaginationIENUM(productDTOs, page, 5);
+
+                    serviceResponse.Data = paginationModel;
                     serviceResponse.Success = true;
                 }
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
-            }
+                catch (Exception ex)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = $"Failed to retrieve products for zodiac {zodiacId}: {ex.Message}";
+                    // Log the exception for debugging
+                }
 
-            return serviceResponse;
+                return serviceResponse;
+            }
         }
-
-
     }
 }
+
+
+
+
+
+
+

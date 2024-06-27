@@ -1,4 +1,5 @@
-﻿/*
+
+/*
 using PayPal.Api;
 using System;
 using System.Collections.Generic;
@@ -32,13 +33,14 @@ namespace Application.Utils
             }).GetAccessToken();
             return accessToken;
         }
-        public static APIContext GetAPIContext(string ClientId, string Secret, string mode)
+        //public static APIContext GetAPIContext(string ClientId, string Secret, string mode)
         {
-            APIContext apiContext = new APIContext(GetAccessToken(ClientId, Secret, mode));
-            apiContext.Config = GetConfig(mode);
-            return apiContext;
+        //    APIContext apiContext = new APIContext(GetAccessToken(ClientId, Secret, mode));
+        //    apiContext.Config = GetConfig(mode);
+         //   return apiContext;
         }
 
     }
 }
 */
+
