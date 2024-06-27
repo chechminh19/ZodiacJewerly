@@ -32,17 +32,38 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<OrderDTO>>> GetAllOrder(int page)
+        public async Task<ServiceResponse<PaginationModel<OrderDTO>>> GetAllOrder(int page, int pageSize, string search,
+            string filter, string sort)
         {
             var response = new ServiceResponse<PaginationModel<OrderDTO>>();
 
             try
             {
                 var orders = await _orderRepo.GetAllOrders(); // Assuming this method supports async retrieval
-                var orderDTOs = _mapper.Map<IEnumerable<OrderDTO>>(orders); // Map orders to OrderDTO
+                if (!string.IsNullOrEmpty(search))
+                {
+                    orders = orders.Where(o =>
+                        o.User != null && o.User.FullName.Contains(search, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (byte.TryParse(filter, out byte status))
+                {
+                    orders = orders.Where(c => c.Status == status).ToList();
+                }
+
+                orders = sort.ToLower() switch
+                {
+                    "userid" => orders.OrderBy(o => o.UserId),
+                    "payment" => orders.OrderBy(o => o.PaymentDate),
+                    "status" => orders.OrderBy(o => o.Status),
+                    _ => orders.OrderBy(o => o.Id) 
+                };
+
+                var orderDtOs = _mapper.Map<IEnumerable<OrderDTO>>(orders); // Map orders to OrderDTO
 
                 // Apply pagination
-                var paginationModel = await Pagination.GetPaginationIENUM(orderDTOs, page, 5); // Adjusted pageSize as per original example
+                var paginationModel =
+                    await Pagination.GetPaginationIENUM(orderDtOs, page, pageSize); // Adjusted pageSize as per original example
 
                 response.Data = paginationModel;
                 response.Success = true;
@@ -84,8 +105,6 @@ namespace Application.Services
 
             return serviceResponse;
         }
-
-
 
 
         public async Task<ServiceResponse<int>> AddOrder(OrderDTO order)
@@ -193,7 +212,7 @@ namespace Application.Services
                 {
                     var existingOrder = checkUserOrder.OrderDetails.FirstOrDefault(od => od.ProductId == productId);
                     if (existingOrder != null)
-                    {                      
+                    {
                         existingOrder.QuantityProduct += 1;
                         await _orderRepo.UpdateOrderDetail(existingOrder);
                         response.Success = true;
@@ -226,15 +245,17 @@ namespace Application.Services
                 response.Message = "Error";
                 response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
             }
+
             return response;
-        }       
+        }
+
         public async Task<ServiceResponse<CreateOrderDTO>> GetAllOrderCustomerCart(int userId)
         {
             var response = new ServiceResponse<CreateOrderDTO>();
             try
             {
                 var listDetail = await _orderRepo.GetAllOrderCart(userId);
-                if(listDetail == null)
+                if (listDetail == null)
                 {
                     response.Success = true;
                     response.Message = "No order here";
@@ -242,6 +263,7 @@ namespace Application.Services
                     response.PriceTotal = 0;
                     return response;
                 }
+
                 var productList = new List<ProductToCreateOrderDTO>();
 
                 foreach (var detail in listDetail)
@@ -254,17 +276,18 @@ namespace Application.Services
                         NameProduct = detail.Product.NameProduct,
                         DescriptionProduct = detail.Product.DescriptionProduct,
                         Price = detail.Product.Price,
-                        Quantity = detail.QuantityProduct,                                                                   
+                        Quantity = detail.QuantityProduct,
                         NameMaterial = detail.Product.Material.NameMaterial,
                         NameCategory = detail.Product.Category.NameCategory,
                         NameGender = detail.Product.Gender.NameGender,
-                        ImageUrl = detail.Product.ProductImages.FirstOrDefault()?.ImageUrl,  
+                        ImageUrl = detail.Product.ProductImages.FirstOrDefault()?.ImageUrl,
                     };
                     productList.Add(productDto);
                 }
+
                 double priceTotal = productList.Sum(productDto => productDto.Price * productDto.Quantity);
                 response.Success = true;
-                response.Data = new CreateOrderDTO { Product = productList, PriceTotal = priceTotal };                
+                response.Data = new CreateOrderDTO { Product = productList, PriceTotal = priceTotal };
                 return response;
             }
             catch (DbException e)
@@ -279,6 +302,7 @@ namespace Application.Services
                 response.Message = "Error";
                 response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
             }
+
             return response;
         }
     }

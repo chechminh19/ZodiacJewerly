@@ -29,9 +29,9 @@ namespace ZodiacJewelryWebApI.Controllers
         
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProductsAsync(int page)
+        public async Task<IActionResult> GetAllProductsAsync([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string search, [FromQuery] Dictionary<string, string> filters, [FromQuery] string sort = "id")
         {
-            var result = await _productService.GetAllProductsAsync(page);
+            var result = await _productService.GetAllProductsAsync(page, pageSize, search, filters, sort);
             if (!result.Success)
             {
                 return BadRequest(result);

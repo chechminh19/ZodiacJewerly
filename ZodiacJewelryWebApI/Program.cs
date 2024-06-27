@@ -132,8 +132,8 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    string swaggerJsonBasePath = string.IsNullOrWhiteSpace(c.RoutePrefix) ? "." : "..";
-    c.SwaggerEndpoint($"{swaggerJsonBasePath}/swagger/v1/swagger.json", "My API");
+    c.SwaggerEndpoint("swagger/v1/swagger.json", "ZodiacJewelryWebApI v1");
+    c.RoutePrefix = string.Empty;
 });//app.UseCors("Allow");
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");

@@ -23,7 +23,7 @@ namespace Application.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<ServiceResponse<PaginationModel<ZodiacProductDTO>>> GetAllZodiacProduct(int page)
+        public async Task<ServiceResponse<PaginationModel<ZodiacProductDTO>>> GetAllZodiacProduct(int page, int pageSize)
         {
             var response = new ServiceResponse<PaginationModel<ZodiacProductDTO>>();
 
@@ -33,7 +33,7 @@ namespace Application.Services
                 var zodiacProductDTOs = _mapper.Map<IEnumerable<ZodiacProductDTO>>(zodiacProducts); // Map zodiac products to ZodiacProductDTO
 
                 // Apply pagination
-                var paginationModel = await Pagination.GetPaginationIENUM(zodiacProductDTOs, page, 5); // Adjust pageSize as needed
+                var paginationModel = await Pagination.GetPaginationIENUM(zodiacProductDTOs, page, pageSize); // Adjust pageSize as needed
 
                 response.Data = paginationModel;
                 response.Success = true;
@@ -181,7 +181,7 @@ namespace Application.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsByZodiacId(int zodiacId, int page)
+        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsByZodiacId(int zodiacId, int page, int pageSize, string search,Dictionary<string, string> filters, string sort)
         {
             {
                 var serviceResponse = new ServiceResponse<PaginationModel<ProductDTO>>();
@@ -198,6 +198,47 @@ namespace Application.Services
                         return serviceResponse;
                     }
 
+                    if (!string.IsNullOrEmpty(search))
+                    {
+                        products = products
+                            .Where(c => c.NameProduct.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                    }
+
+                    foreach (var filter in filters)
+                    {
+                        switch (filter.Key.ToLower())
+                        {
+                            case "categoryid":
+                                if (int.TryParse(filter.Value, out int categoryId))
+                                {
+                                    products = products.Where(p => p.CategoryId == categoryId);
+                                }
+                                break;
+                            case "materialid":
+                                if (int.TryParse(filter.Value, out int materialId))
+                                {
+                                    products = products.Where(p => p.MaterialId == materialId);
+                                }
+                                break;
+                            case "genderid":
+                                if (int.TryParse(filter.Value, out int genderId))
+                                {
+                                    products = products.Where(p => p.GenderId == genderId);
+                                }
+                                break;
+                        }
+                    }
+
+                    products = sort.ToLower() switch
+                    {
+                        "name" => products.OrderBy(p => p.NameProduct),
+                        "price" => products.OrderBy(p => p.Price),
+                        "quantity" => products.OrderBy(p => p.Quantity),
+                        "category" => products.OrderBy(p => p.CategoryId),
+                        "material" => products.OrderBy(p => p.MaterialId),
+                        "gender" => products.OrderBy(p => p.GenderId),
+                        _ => products.OrderBy(p => p.Id) 
+                    };
                     // Map products to ProductDTO and include ImageUrls
                     var productDTOs = products.Select(product => new ProductDTO
                     {
@@ -210,7 +251,7 @@ namespace Application.Services
                     });
 
                     // Apply pagination
-                    var paginationModel = await Pagination.GetPaginationIENUM(productDTOs, page, 5);
+                    var paginationModel = await Pagination.GetPaginationIENUM(productDTOs, page, pageSize);
 
                     serviceResponse.Data = paginationModel;
                     serviceResponse.Success = true;

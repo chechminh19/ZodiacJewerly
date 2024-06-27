@@ -20,58 +20,76 @@ namespace ZodiacJewelryWebApI.Controllers
         {
             _userService = userService;
         }
-       
+
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers(int page)
+        public async Task<IActionResult> GetAllUsers([FromQuery] Dictionary<string, string> filters,
+            [FromQuery] string search = "",
+            [FromQuery] string sort = "id", [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
         {
-            var result = await _userService.GetAllUsers(page);
+            var result = await _userService.GetAllUsers(page, pageSize, search, filters, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
 
         [HttpGet("customers")]
-        public async Task<IActionResult> GetAllUsersCustomer(int page)
+        public async Task<IActionResult> GetAllUsersCustomer(
+            [FromQuery] string filter,
+            [FromQuery] string search = "",
+            [FromQuery] string sort = "id", [FromQuery] int page = 1, [FromQuery] int pageSize = 5
+        )
         {
-            var result = await _userService.GetAllUsersByCustomer( page);
+            var result = await _userService.GetAllUsersByCustomer(page, pageSize, search, filter, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
 
         [HttpGet("admin")]
-        public async Task<IActionResult> GetAllUsersAdmin(int page)
+        public async Task<IActionResult> GetAllUsersAdmin([FromQuery] string filter,
+            [FromQuery] string search = "",
+            [FromQuery] string sort = "id", [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
         {
-            var result = await _userService.GetAllUsersByAdmin(page);
+            var result = await _userService.GetAllUsersByAdmin(page, pageSize, search, filter, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
+
         [HttpGet("staff")]
-        public async Task<IActionResult> GetAllUsersStaff(int page)
+        public async Task<IActionResult> GetAllUsersStaff([FromQuery] string filter,
+            [FromQuery] string search = "",
+            [FromQuery] string sort = "id", [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
         {
-            var result = await _userService.GetAllUsersByStaff(page);
+            var result = await _userService.GetAllUsersByStaff(page, pageSize, search, filter, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
 
         [HttpGet("role/{role}")]
-        public async Task<IActionResult> GetAllUsersByRole(string role,int page)
+        public async Task<IActionResult> GetAllUsersByRole(string role, [FromQuery] string filter,
+            [FromQuery] string search = "",
+            [FromQuery] string sort = "id", [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
         {
-            var result = await _userService.GetAllUsersByRole(role,page);
+            var result = await _userService.GetAllUsersByRole(role, page, pageSize, search, filter, sort);
             if (!result.Success)
             {
                 return NotFound(result);
             }
+
             return Ok(result);
         }
 
@@ -83,6 +101,7 @@ namespace ZodiacJewelryWebApI.Controllers
             {
                 return NotFound(result);
             }
+
             return Ok(result);
         }
 
@@ -94,19 +113,19 @@ namespace ZodiacJewelryWebApI.Controllers
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser( [FromBody] UserDTO userDTO)
+        public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO)
         {
-         
-
             var result = await _userService.UpdateUser(userDTO);
             if (!result.Success)
             {
                 return NotFound(result);
             }
+
             return Ok(result);
         }
 
@@ -118,6 +137,7 @@ namespace ZodiacJewelryWebApI.Controllers
             {
                 return NotFound(result);
             }
+
             return Ok(result);
         }
     }

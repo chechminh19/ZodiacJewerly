@@ -29,17 +29,29 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<ZodiacDTO>>> GetAllZodiacs(int page)
+        public async Task<ServiceResponse<PaginationModel<ZodiacDTO>>> GetAllZodiacs(int page, int pageSize,
+            string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<ZodiacDTO>>();
 
             try
             {
                 var zodiacs = await _zodiacRepo.GetAllZodiacs(); 
+                if (!string.IsNullOrEmpty(search))
+                {
+                    zodiacs = zodiacs
+                        .Where(c => c.NameZodiac.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+
+                zodiacs = sort.ToLower() switch
+                {
+                    "name" => zodiacs.OrderBy(p => p.NameZodiac),
+                    _ => zodiacs.OrderBy(p => p.Id) 
+                };
                 var zodiacDTOs = _mapper.Map<IEnumerable<ZodiacDTO>>(zodiacs); // Map zodiacs to ZodiacDTO
 
                 // Apply pagination
-                var paginationModel = await Pagination.GetPaginationIENUM(zodiacDTOs, page, 5); // Adjust pageSize as needed
+                var paginationModel = await Pagination.GetPaginationIENUM(zodiacDTOs, page, pageSize); // Adjust pageSize as needed
 
                 response.Data = paginationModel;
                 response.Success = true;
