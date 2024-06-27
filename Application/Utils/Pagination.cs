@@ -7,7 +7,6 @@ public class Pagination
     public static async Task<PaginationModel<T>> GetPagination<T>(List<T> list, int page, int pageSize)
     {
         var startIndex = (page - 1) * pageSize;
-        var endIndex = startIndex + pageSize;
         var currentPageData = list.Skip(startIndex).Take(pageSize).ToList(); 
         await Task.Delay(1);
         var paginationModel = new PaginationModel<T>

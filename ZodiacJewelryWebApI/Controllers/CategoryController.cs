@@ -18,9 +18,9 @@ public class CategoryController : ControllerBase
 
     [Authorize(Roles = "Staff")]
     [HttpGet]
-    public async Task<IActionResult> GetCategories([FromQuery] int page , [FromQuery] string search = "",  [FromQuery] string sort = "id")
+    public async Task<IActionResult> GetCategories([FromQuery] int page = 1,[FromQuery] int pageSize = 5, [FromQuery] string search = "",  [FromQuery] string sort = "id")
     {
-        var result = await _categoryService.GetListCategory(page, search, sort);
+        var result = await _categoryService.GetListCategory(page, pageSize, search, sort);
         return result.Success ? Ok(result) : BadRequest(result);
     }
 

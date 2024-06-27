@@ -25,7 +25,7 @@ public class CollectionService : ICollectionService
         _collectionProduct = collectionProduct;
     }
 
-    public async Task<ServiceResponse<PaginationModel<CollectionsResDTO>>> GetListCollections(int page, string search, string filter, string sort)
+    public async Task<ServiceResponse<PaginationModel<CollectionsResDTO>>> GetListCollections(int page, int pageSize, string search, string filter, string sort)
     {
         var result = new ServiceResponse<PaginationModel<CollectionsResDTO>>();
         try
@@ -38,7 +38,8 @@ public class CollectionService : ICollectionService
             var collections = await _collectionRepo.GetCollections();
             if (!string.IsNullOrEmpty(search))
             {
-                collections = collections.Where(c => c.NameCollection.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                collections = collections
+                    .Where(c => c.NameCollection.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
             {
@@ -47,7 +48,7 @@ public class CollectionService : ICollectionService
                     collections = collections.Where(c => c.Status == status).ToList();
                 }
             }
-            
+
             collections = sort.ToLower() switch
             {
                 "name" => collections.OrderBy(c => c.NameCollection).ToList(),
@@ -67,7 +68,7 @@ public class CollectionService : ICollectionService
                 Status = c.Status
             }).ToList();
 
-            var resultList = await Pagination.GetPagination(collectionList, page, 10);
+            var resultList = await Pagination.GetPagination(collectionList, page, pageSize);
 
             result.Success = true;
             result.Data = resultList;
