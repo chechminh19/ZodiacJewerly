@@ -181,7 +181,7 @@ namespace Application.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsByZodiacId(int zodiacId, int page, int pageSize, string search,Dictionary<string, string> filters, string sort)
+        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsByZodiacId(int zodiacId, int page, int pageSize, string search, string sort)
         {
             {
                 var serviceResponse = new ServiceResponse<PaginationModel<ProductDTO>>();
@@ -202,31 +202,6 @@ namespace Application.Services
                     {
                         products = products
                             .Where(c => c.NameProduct.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
-                    }
-
-                    foreach (var filter in filters)
-                    {
-                        switch (filter.Key.ToLower())
-                        {
-                            case "categoryid":
-                                if (int.TryParse(filter.Value, out int categoryId))
-                                {
-                                    products = products.Where(p => p.CategoryId == categoryId);
-                                }
-                                break;
-                            case "materialid":
-                                if (int.TryParse(filter.Value, out int materialId))
-                                {
-                                    products = products.Where(p => p.MaterialId == materialId);
-                                }
-                                break;
-                            case "genderid":
-                                if (int.TryParse(filter.Value, out int genderId))
-                                {
-                                    products = products.Where(p => p.GenderId == genderId);
-                                }
-                                break;
-                        }
                     }
 
                     products = sort.ToLower() switch

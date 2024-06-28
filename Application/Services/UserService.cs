@@ -22,7 +22,7 @@ namespace Application.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsers(int page, int pageSize, string search, Dictionary<string, string> filters, string sort)
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsers(int page, int pageSize, string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
@@ -34,22 +34,6 @@ namespace Application.Services
                     users = users
                         .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
                                     c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
-                }
-
-                foreach (var filter in filters) 
-                {
-                    switch (filter.Key.ToLower()) 
-                    {
-                        case "status":
-                            if (byte.TryParse(filter.Value, out byte status)) 
-                            {
-                                users = users.Where(u => u.Status == status);
-                            }
-                            break;
-                        case "role":
-                            users = users.Where(u => u.RoleName == filter.Value);
-                            break;
-                    }
                 }
 
                 users = sort.ToLower() switch
@@ -77,7 +61,7 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByRole(string role, int page, int pageSize, string search, string filter, string sort)
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByRole(string role, int page, int pageSize, string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
@@ -90,11 +74,6 @@ namespace Application.Services
                     users = users
                         .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
                                     c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (byte.TryParse(filter, out byte status))
-                {
-                    users = users.Where(c => c.Status == status).ToList();
                 }
 
                 users = sort.ToLower() switch
@@ -121,7 +100,7 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByStaff(int page, int pageSize, string search, string filter, string sort)
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByStaff(int page, int pageSize, string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
@@ -133,11 +112,6 @@ namespace Application.Services
                     users = users
                         .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
                                     c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (byte.TryParse(filter, out byte status))
-                {
-                    users = users.Where(c => c.Status == status).ToList();
                 }
 
                 users = sort.ToLower() switch
@@ -164,7 +138,7 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByAdmin(int page, int pageSize, string search, string filter, string sort)
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByAdmin(int page, int pageSize, string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
@@ -176,11 +150,6 @@ namespace Application.Services
                     users = users
                         .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
                                     c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (byte.TryParse(filter, out byte status))
-                {
-                    users = users.Where(c => c.Status == status).ToList();
                 }
 
                 users = sort.ToLower() switch
@@ -207,7 +176,7 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByCustomer(int page, int pageSize, string search, string filter, string sort)
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByCustomer(int page, int pageSize, string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
@@ -219,11 +188,6 @@ namespace Application.Services
                     users = users
                         .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
                                     c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
-                }
-
-                if (byte.TryParse(filter, out byte status))
-                {
-                    users = users.Where(c => c.Status == status).ToList();
                 }
 
                 users = sort.ToLower() switch
