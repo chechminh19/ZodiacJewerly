@@ -19,7 +19,7 @@ namespace Application.IService
         Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByCustomer(int page, int pageSize, string search, string filter, string sort);
         Task<ServiceResponse<UserDTO>> GetUserById(int id);
         Task<ServiceResponse<int>> AddUser(UserDTO user);
-        Task<ServiceResponse<string>> UpdateUser(UserDTO user);
+        Task<ServiceResponse<string>> UpdateUser(UserUpdateDTO userUpdate);
         Task<ServiceResponse<string>> DeleteUser(int id);
      
     }

@@ -300,13 +300,13 @@ namespace Application.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<string>> UpdateUser(UserDTO user)
+        public async Task<ServiceResponse<string>> UpdateUser(UserUpdateDTO userUpdate)
         {
             var serviceResponse = new ServiceResponse<string>();
 
             try
             {
-                var userEntity = _mapper.Map<User>(user);
+                var userEntity = _mapper.Map<User>(userUpdate);
                 await _userRepo.UpdateUser(userEntity);
 
                 serviceResponse.Success = true;

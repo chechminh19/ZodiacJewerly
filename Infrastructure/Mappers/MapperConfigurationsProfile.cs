@@ -31,6 +31,7 @@ namespace Infrastructure.Mappers
                  .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
             CreateMap<User, ResetPassDTO>();
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserUpdateDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Product, CreateProductDTO>().ReverseMap();
             CreateMap<Zodiac, ProductDTO>().ReverseMap();

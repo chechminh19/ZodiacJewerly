@@ -118,9 +118,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO)
         {
-            var result = await _userService.UpdateUser(userDTO);
+            var result = await _userService.UpdateUser(userUpdateDTO);
             if (!result.Success)
             {
                 return NotFound(result);
