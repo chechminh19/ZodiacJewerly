@@ -28,27 +28,19 @@ namespace Application.Services
         }
 
 
-        public  async Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page, int pageSize, string search, string sort, int? productId)
+        public  async Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page, int pageSize, string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<ProductImageDTO>>();                                                     
 
             try
             {
                 var images = await _imageRepo.GetAllImageInfors();
-                if (!string.IsNullOrEmpty(search))
+                if (!string.IsNullOrEmpty(search) && int.TryParse(search, out var searchProductId))
                 {
-                    images = images.Where(p =>
-                        p is { PublicId: not null, ImageUrl: not null } && (p.ImageUrl.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                                                            p.PublicId.Contains(search, StringComparison.OrdinalIgnoreCase)));
-                }
-
-                if (productId.HasValue)
-                {
-                    images = images.Where(p => p.ProductId == productId.Value);
+                    images = images.Where(p => p.ProductId == searchProductId);
                 }
                 images = sort.ToLower() switch
                 {
-                    "imageurl" => images.OrderBy(p => p.ImageUrl),
                     "publicid" => images.OrderBy(p => p.PublicId),
                     "productid" => images.OrderBy(p => p.ProductId),
                     _ => images.OrderBy(p => p.Id) 

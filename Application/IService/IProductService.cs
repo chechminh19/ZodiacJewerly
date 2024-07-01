@@ -12,7 +12,7 @@ namespace Application.IService
     public interface IProductService
     {
         //Task<ServiceResponse<IEnumerable<ProductDTO>>> GetAllProductsAsync();
-        Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsAsync(int page, int pageSize, string search, Dictionary<string, string> filters, string sort);
+        Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsAsync(int page, int pageSize, string search, string sort);
         Task<ServiceResponse<ProductDTO>> GetProductByIdAsync(int id);                                                                           
         Task<ServiceResponse<int>> CreateProductAsync(CreateProductDTO cproduct, int zodiacId);
         Task<ServiceResponse<string>> UpdateProductAsync(CreateProductDTO cproduct, int zodiacId);

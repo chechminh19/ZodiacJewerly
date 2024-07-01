@@ -13,6 +13,6 @@ namespace Application.IService
         Task<ServiceResponse<int>> AddZodiacProduct(ZodiacProductDTO zodiacProduct);
         Task<ServiceResponse<string>> UpdateZodiacProduct(ZodiacProductDTO zodiacProduct);
         Task<ServiceResponse<string>> DeleteZodiacProduct(int id);
-        Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsByZodiacId(int zodiacId, int page, int pageSize, string search,Dictionary<string, string> filters, string sort);
+        Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsByZodiacId(int zodiacId, int page, int pageSize, string search, string sort);
     }
 }

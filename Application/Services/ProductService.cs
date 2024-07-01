@@ -27,8 +27,7 @@ namespace Application.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsAsync(int page, int pageSize,
-            string search, Dictionary<string, string> filters, string sort)
+        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsAsync(int page, int pageSize, string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<ProductDTO>>();
 
@@ -37,34 +36,7 @@ namespace Application.Services
                 var products = await _productRepo.GetAllProduct();
                 if (!string.IsNullOrEmpty(search))
                 {
-                    products = products.Where(p => p.NameProduct.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                                   p.DescriptionProduct.Contains(search,
-                                                       StringComparison.OrdinalIgnoreCase));
-                }
-
-                foreach (var filter in filters)
-                {
-                    switch (filter.Key.ToLower())
-                    {
-                        case "categoryid":
-                            if (int.TryParse(filter.Value, out int categoryId))
-                            {
-                                products = products.Where(p => p.CategoryId == categoryId);
-                            }
-                            break;
-                        case "materialid":
-                            if (int.TryParse(filter.Value, out int materialId))
-                            {
-                                products = products.Where(p => p.MaterialId == materialId);
-                            }
-                            break;
-                        case "genderid":
-                            if (int.TryParse(filter.Value, out int genderId))
-                            {
-                                products = products.Where(p => p.GenderId == genderId);
-                            }
-                            break;
-                    }
+                    products = products.Where(p => p.NameProduct.Contains(search, StringComparison.OrdinalIgnoreCase));
                 }
 
                 products = sort.ToLower() switch

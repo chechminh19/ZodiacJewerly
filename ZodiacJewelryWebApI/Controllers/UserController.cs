@@ -22,11 +22,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers([FromQuery] Dictionary<string, string> filters,
-            [FromQuery] string search = "",
-            [FromQuery] string sort = "id", [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
+        public async Task<IActionResult> GetAllUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
-            var result = await _userService.GetAllUsers(page, pageSize, search, filters, sort);
+            var result = await _userService.GetAllUsers(page, pageSize, search, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -36,13 +34,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet("customers")]
-        public async Task<IActionResult> GetAllUsersCustomer(
-            [FromQuery] string filter,
-            [FromQuery] string search = "",
-            [FromQuery] string sort = "id", [FromQuery] int page = 1, [FromQuery] int pageSize = 5
-        )
+        public async Task<IActionResult> GetAllUsersCustomer([FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
-            var result = await _userService.GetAllUsersByCustomer(page, pageSize, search, filter, sort);
+            var result = await _userService.GetAllUsersByCustomer(page, pageSize, search, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -52,11 +46,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet("admin")]
-        public async Task<IActionResult> GetAllUsersAdmin([FromQuery] string filter,
-            [FromQuery] string search = "",
-            [FromQuery] string sort = "id", [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
+        public async Task<IActionResult> GetAllUsersAdmin([FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
-            var result = await _userService.GetAllUsersByAdmin(page, pageSize, search, filter, sort);
+            var result = await _userService.GetAllUsersByAdmin(page, pageSize, search, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -66,11 +58,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet("staff")]
-        public async Task<IActionResult> GetAllUsersStaff([FromQuery] string filter,
-            [FromQuery] string search = "",
-            [FromQuery] string sort = "id", [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
+        public async Task<IActionResult> GetAllUsersStaff([FromQuery] int page = 1,  [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
-            var result = await _userService.GetAllUsersByStaff(page, pageSize, search, filter, sort);
+            var result = await _userService.GetAllUsersByStaff(page, pageSize, search, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -80,11 +70,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet("role/{role}")]
-        public async Task<IActionResult> GetAllUsersByRole(string role, [FromQuery] string filter,
-            [FromQuery] string search = "",
-            [FromQuery] string sort = "id", [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
+        public async Task<IActionResult> GetAllUsersByRole(string role,[FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
-            var result = await _userService.GetAllUsersByRole(role, page, pageSize, search, filter, sort);
+            var result = await _userService.GetAllUsersByRole(role, page, pageSize, search, sort);
             if (!result.Success)
             {
                 return NotFound(result);

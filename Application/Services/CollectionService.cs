@@ -88,9 +88,9 @@ public class CollectionService : ICollectionService
         var result = new ServiceResponse<CollectionDetailResDTO>();
         try
         {
-            var collection = await _collectionRepo.GetCollectionDetails(collectionId);
+            var collectionDetail = await _collectionRepo.GetCollectionDetails(collectionId);
 
-            result.Data = collection;
+            result.Data = collectionDetail;
             result.Success = true;
         }
         catch (Exception e)
@@ -129,7 +129,7 @@ public class CollectionService : ICollectionService
                 };
                 await _collectionRepo.AddAsync(collection);
 
-                result.Data = new CollectionsResDTO
+                var newCollection = new CollectionsResDTO
                 {
                     Id = collection.Id,
                     NameCollection = collection.NameCollection,
@@ -138,6 +138,7 @@ public class CollectionService : ICollectionService
                     DateClose = collection.DateClose,
                     Status = collection.Status
                 };
+                result.Data = newCollection;
                 result.Success = true;
                 result.Message = "Create Collection successfully!";
             }
