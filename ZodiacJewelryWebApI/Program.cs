@@ -107,7 +107,7 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT",
         Scheme = "bearer"
     });
-
+    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     c.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
         {
@@ -117,7 +117,7 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer"
                 }
             },
-            new string[]{}
+            Array.Empty<string>()
         }
     });
 });
@@ -128,6 +128,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
 }
 app.UseSwagger();
 app.UseSwaggerUI(c =>
