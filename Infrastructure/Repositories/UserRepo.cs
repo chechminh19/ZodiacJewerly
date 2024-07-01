@@ -87,11 +87,30 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateUser(User user)
+        public async Task UpdateUser(User updatedUser)
         {
-            _dbContext.User.Update(user);
+            // Retrieve the existing user from the database
+            var existingUser = await _dbContext.User.FindAsync(updatedUser.Id);
+            if (existingUser == null)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+
+            // Update the properties
+            existingUser.FullName = updatedUser.FullName;
+            existingUser.Email = updatedUser.Email;
+            existingUser.Address = updatedUser.Address;
+            existingUser.TelephoneNumber = updatedUser.TelephoneNumber;
+            existingUser.Status = updatedUser.Status;
+            existingUser.RoleName = updatedUser.RoleName;
+
+            // Do not update the password to avoid setting it to null
+            // existingUser.Password remains unchanged
+
+            _dbContext.User.Update(existingUser);
             await _dbContext.SaveChangesAsync();
         }
+
 
         public async Task DeleteUser(int id)
         {
