@@ -4,6 +4,7 @@ using Application.Services;
 using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -26,8 +27,8 @@ namespace ZodiacJewelryWebApI.Controllers
             _productService = productService;
             _zodiacService = zodiacService;
         }
-        
 
+        [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet]
         public async Task<IActionResult> GetAllProductsAsync([FromQuery] int page = 1,  [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
@@ -38,7 +39,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-
+        [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductByIdAsync(int id)
         {
@@ -49,6 +50,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
+        [Authorize(Roles = "Staff,Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateProductAsync(CreateProductDTO product, int zodiacId)
         {
@@ -60,7 +62,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-
+        [Authorize(Roles = "Staff,Admin")]
         [HttpPut("{id}/zodiac/{zodiacId}")]
         public async Task<IActionResult> UpdateProductAsync(int id, CreateProductDTO product, int zodiacId)
         {
@@ -73,7 +75,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-
+        [Authorize(Roles = "Staff,Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProductAsync(int id)
         {
