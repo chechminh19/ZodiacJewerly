@@ -307,7 +307,7 @@ namespace Application.Services
                 //var confirmationLink = $"https://your-api-domain/confirm?token={userAccountRegister.ConfirmationToken}&redirectUrl=https://your-frontend-domain/login";
 
                 //SendMail
-                var emailSend = await Utils.SendMail.SendConfirmationEmail(userObject.Email, confirmationLink);
+                var emailSend = await SendMail.SendConfirmationEmail(userObject.Email, confirmationLink);
                 if (!emailSend)
                 {
                     response.Success = false;
