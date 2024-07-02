@@ -216,22 +216,11 @@ namespace Application.Services
                     response.Message = "Error when send mail";
                     return response;
                 }
-                else
-                {
-                    var success = await _unitOfWork.SaveChangeAsync() > 0;
-                    if (success)
-                    {
-                        var accountRegistedDTO = _mapper.Map<RegisterDTO>(userAccountRegister);
-                        response.Success = true;
-                        response.Data = accountRegistedDTO;
-                        response.Message = "Register successfully.";
-                    }
-                    else
-                    {
-                        response.Success = false;
-                        response.Message = "Error when saving ur account";
-                    }
-                }
+
+                var accountRegistedDTO = _mapper.Map<RegisterDTO>(userAccountRegister);
+                response.Success = true;
+                response.Data = accountRegistedDTO;
+                response.Message = "Register successfully.";
             }
             catch (DbException e)
             {
@@ -270,20 +259,12 @@ namespace Application.Services
                 }
 
                 userAccount.Password = Utils.HashPass.HashWithSHA256(dto.Password);
-                _unitOfWork.UserRepository.UpdateE(userAccount);
-                var success = await _unitOfWork.SaveChangeAsync() > 0;
-                if (success)
-                {
-                    var accountRegistedDTO = _mapper.Map<ResetPassDTO>(userAccount);
-                    response.Success = true;
-                    response.Message = "Password reset successfully.";
-                }
-                else
-                {
-                    response.Success = false;
-                    response.Message = "An error occurred while saving changes.";
-                    return response;
-                }
+                await _unitOfWork.UserRepository.Update(userAccount);
+
+
+                var accountRegistedDTO = _mapper.Map<ResetPassDTO>(userAccount);
+                response.Success = true;
+                response.Message = "Password reset successfully.";
             }
             catch (DbException e)
             {
