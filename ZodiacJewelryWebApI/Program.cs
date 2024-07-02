@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.ViewModels.Cloud;
 using CloudinaryDotNet;
 using Microsoft.Extensions.Options;
+using Net.payOS;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.Configure<EmailAdmin>(builder.Configuration.GetSection("EmailSettings"));
 //builder.Services.AddTransient<SendMail>();
 builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
+
 var configuration = builder.Configuration;
+PayOS payOS = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment client"),
+                    configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment api"),
+                    configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment sum"));
 var myConfig = new AppConfiguration();
 configuration.Bind(myConfig);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"))); // Use connection string directly
