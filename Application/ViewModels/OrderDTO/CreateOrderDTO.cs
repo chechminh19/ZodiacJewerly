@@ -8,6 +8,7 @@ namespace Application.ViewModels.OrderDTO
 {
     public class CreateOrderDTO
     {
+
         public List<ProductToCreateOrderDTO> Product { get; set; }
         public double PriceTotal { get; set; }  
     }

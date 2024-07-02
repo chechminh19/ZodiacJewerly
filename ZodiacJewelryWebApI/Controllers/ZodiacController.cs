@@ -3,6 +3,7 @@ using Application.Services;
 using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using Application.ViewModels.ZodiacDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ namespace ZodiacJewelryWebApI.Controllers
             _zodiacService = zodiacService;
         }
 
-
+        [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet]
         public async Task<IActionResult> GetAllZodiacs([FromQuery] int page = 1 ,[FromQuery] int pageSize = 5, [FromQuery] string search = "",  [FromQuery] string sort = "id")
         {
@@ -32,7 +33,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-
+        [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetZodiacById(int id)
         {
@@ -43,7 +44,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-
+        [Authorize(Roles = "Staff,Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateZodiac([FromBody] ZodiacUpdateDTO zodiac)
         {

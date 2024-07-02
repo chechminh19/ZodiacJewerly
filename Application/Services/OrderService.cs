@@ -273,7 +273,8 @@ namespace Application.Services
                         NameMaterial = detail.Product.Material.NameMaterial,
                         NameCategory = detail.Product.Category.NameCategory,
                         NameGender = detail.Product.Gender.NameGender,
-                        ImageUrl = detail.Product.ProductImages.FirstOrDefault()?.ImageUrl,
+                        ImageUrl = detail.Product.ProductImages.FirstOrDefault()?.ImageUrl,  
+                        OrderId = detail.OrderId,
                     };
                     productList.Add(productDto);
                 }

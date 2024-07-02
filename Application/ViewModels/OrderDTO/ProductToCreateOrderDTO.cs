@@ -21,5 +21,6 @@ namespace Application.ViewModels.OrderDTO
         //public int GenderId { get; set; }
         public string NameGender { get; set; }
         public string ImageUrl { get; set; }
+        public int OrderId { get; set; }
     }
 }
