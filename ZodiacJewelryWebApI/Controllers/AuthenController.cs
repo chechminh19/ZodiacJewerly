@@ -40,6 +40,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("staff")] //Admin
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> NewAccountStaff(RegisterDTO registerObject)
@@ -56,10 +57,8 @@ namespace ZodiacJewelryWebApI.Controllers
             {
                 return BadRequest(result);
             }
-            else
-            {
-                return Ok(result);
-            }
+
+            return Ok(result);
         }
 
 

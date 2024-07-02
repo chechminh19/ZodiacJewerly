@@ -22,7 +22,8 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<Order>> GetAllOrders()
         {
-            return _dbContext.Order.ToList();
+            var orders = await _dbContext.Order.Include(o => o.User).Include(o => o.OrderDetails).ToListAsync();
+            return  orders;
         }
 
         public async Task AddOrder(Order order)

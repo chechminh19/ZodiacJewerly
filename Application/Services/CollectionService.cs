@@ -159,9 +159,18 @@ public class CollectionService : ICollectionService
         var result = new ServiceResponse<object>();
         try
         {
-            await _collectionProduct.AddProductToCollectionAsync(collectionId, productId);
-            result.Success = true;
-            result.Message = "Product added to Collection successfully";
+            var exists = await _collectionProduct.ProductExistsInCollectionAsync(collectionId, productId);
+            if (exists)
+            {
+                result.Success = false;
+                result.Message = "Product is already in the collection.";
+            }
+            else
+            {
+                await _collectionProduct.AddProductToCollectionAsync(collectionId, productId);
+                result.Success = true;
+                result.Message = "Product added to Collection successfully";
+            }
         }
         catch (Exception e)
         {

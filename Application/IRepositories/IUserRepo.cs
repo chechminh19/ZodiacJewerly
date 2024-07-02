@@ -10,17 +10,17 @@ namespace Application.IRepositories
     public interface IUserRepo : IGenericRepo<User>
     {
         Task<User> GetUserByEmailAddressAndPasswordHash(string email, string passwordHash);
-        Task<bool> CheckEmailAddressExisted(string emailaddress);
+        Task<User?> CheckEmailAddressExisted(string emailaddress);
         Task<bool> CheckPhoneNumberExited(string phonenumber);
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserByConfirmationToken(string token);
         Task<User> GetUserById(int id);
-        Task<IEnumerable<User>> GetAllUsers();
-        Task<IEnumerable<User>> GetAllUsersByRole(string role);
-        Task<IEnumerable<User>> GetAllUsersAdmin();
-        Task<IEnumerable<User>> GetAllUsersStaff();
-        Task<IEnumerable<User>> GetAllUsersCustomer();
-        Task AddUser(User user);
+        Task<IEnumerable<User?>> GetAllUsers();
+        Task<IEnumerable<User?>> GetAllUsersByRole(string role);
+        Task<IEnumerable<User?>> GetAllUsersAdmin();
+        Task<IEnumerable<User?>> GetAllUsersStaff();
+        Task<IEnumerable<User?>> GetAllUsersCustomer();
+        Task AddUser(User? user);
         Task UpdateUser(User user);
         Task DeleteUser(int id);
     }
