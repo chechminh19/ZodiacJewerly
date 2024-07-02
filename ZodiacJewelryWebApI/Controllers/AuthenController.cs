@@ -42,15 +42,8 @@ namespace ZodiacJewelryWebApI.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("staff")] //Admin
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> NewAccountStaff(RegisterDTO registerObject)
         {
-            var isAdmin = User.IsInRole("Admin");
-            if (!isAdmin)
-            {
-                return Unauthorized(new { message = "You do not have permission to do this" });
-            }
-
             var result = await _authenticationService.CreateStaff(registerObject);
 
             if (!result.Success)

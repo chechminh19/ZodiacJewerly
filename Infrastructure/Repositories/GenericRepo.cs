@@ -33,8 +33,8 @@ namespace Infrastructure.Repositories
 
         public async Task AddAsync(T entity)
         {
-            await _dbSet.AddAsync(entity);
-            await context.SaveChangesAsync();
+            _ = await _dbSet.AddAsync(entity);
+            _ = await context.SaveChangesAsync();
         }
 
         public async Task Update(T entity)

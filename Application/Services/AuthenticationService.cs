@@ -19,20 +19,23 @@ using System.Threading.Tasks;
 namespace Application.Services
 {
     public class AuthenticationService : IAuthenticationService
-    {      
+    {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ICurrentTime _currentTime;
         private readonly AppConfiguration _config;
         private readonly IMemoryCache _memoryCache;
-        public AuthenticationService(IMemoryCache _memory,IUnitOfWork unitOfWork, IMapper mapper,AppConfiguration configuration, ICurrentTime curTime)
-        {      
+
+        public AuthenticationService(IMemoryCache _memory, IUnitOfWork unitOfWork, IMapper mapper,
+            AppConfiguration configuration, ICurrentTime curTime)
+        {
             _memoryCache = _memory;
             _unitOfWork = unitOfWork;
-            _mapper = mapper;        
+            _mapper = mapper;
             _config = configuration;
             _currentTime = curTime;
         }
+
         public async Task<TokenResponse<string>> VerifyForgotPassCode(VerifyOTPResetDTO dto)
         {
             var response = new TokenResponse<string>();
@@ -40,7 +43,7 @@ namespace Application.Services
             {
                 string key = $"{dto.Email}_OTP";
                 if (_memoryCache.TryGetValue(key, out string savedCode))
-                {                                         
+                {
                     if (savedCode == dto.CodeOTP)
                     {
                         response.Success = true;
@@ -57,6 +60,7 @@ namespace Application.Services
                     response.Success = false;
                     response.Message = "OTP not found.";
                 }
+
                 return response;
             }
             catch (DbException ex)
@@ -71,8 +75,10 @@ namespace Application.Services
                 response.Message = "Error";
                 response.ErrorMessages = new List<string> { ex.Message };
             }
+
             return response;
         }
+
         public async Task<TokenResponse<string>> ForgotPass(string email)
         {
             var response = new TokenResponse<string>();
@@ -84,18 +90,20 @@ namespace Application.Services
                     response.Success = false;
                     response.Message = "Email not found";
                     return response;
-                } 
+                }
+
                 var tokenEmail = await GenerateRandomPasswordResetTokenByEmailAsync(email);
                 var codeEmail = Utils.SendMail.GenerateRandomCodeWithExpiration(tokenEmail, 1);
-                var codeEmailSent = await Utils.SendMail.SendResetPass(_memoryCache,email, codeEmail, false);
+                var codeEmailSent = await Utils.SendMail.SendResetPass(_memoryCache, email, codeEmail, false);
                 if (!codeEmailSent)
                 {
                     response.Success = false;
                     response.Message = "Error when send mail";
                     return response;
                 }
+
                 response.Success = true;
-                response.Message = "Email have been sent your code to reset password";                
+                response.Message = "Email have been sent your code to reset password";
             }
             catch (DbException ex)
             {
@@ -109,18 +117,20 @@ namespace Application.Services
                 response.Message = "Error";
                 response.ErrorMessages = new List<string> { ex.Message };
             }
+
             return response;
         }
 
         public async Task<string> GenerateRandomPasswordResetTokenByEmailAsync(string email)
         {
             Random random = new Random();
-            string token = "";           
+            string token = "";
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             for (int i = 0; i < 8; i++)
             {
                 token += chars[random.Next(chars.Length)];
             }
+
             return token;
         }
 
@@ -130,13 +140,15 @@ namespace Application.Services
             try
             {
                 var passHash = Utils.HashPass.HashWithSHA256(userObject.Password);
-                var userLogin = await _unitOfWork.UserRepository.GetUserByEmailAddressAndPasswordHash(userObject.Email, passHash);
-                if(userLogin == null)
+                var userLogin =
+                    await _unitOfWork.UserRepository.GetUserByEmailAddressAndPasswordHash(userObject.Email, passHash);
+                if (userLogin == null)
                 {
                     response.Success = false;
                     response.Message = "Invalid username or password";
                     return response;
                 }
+
                 if (userLogin.ConfirmationToken != null && !userLogin.IsConfirmed)
                 {
                     System.Console.WriteLine(userLogin.ConfirmationToken + userLogin.IsConfirmed);
@@ -144,6 +156,7 @@ namespace Application.Services
                     response.Message = "Please confirm via link in your mail";
                     return response;
                 }
+
                 var auth = userLogin.RoleName;
                 var userId = userLogin.Id;
                 var token = userLogin.GenerateJsonWebToken(_config, _config.JWTSection.SecretKey, DateTime.Now);
@@ -152,8 +165,6 @@ namespace Application.Services
                 response.DataToken = token;
                 response.Role = auth;
                 response.HintId = userId;
-
-
             }
             catch (DbException ex)
             {
@@ -167,8 +178,10 @@ namespace Application.Services
                 response.Message = "Error";
                 response.ErrorMessages = new List<string> { ex.Message };
             }
+
             return response;
         }
+
         public async Task<ServiceResponse<RegisterDTO>> RegisterAsync(RegisterDTO userObjectDTO)
         {
             var response = new ServiceResponse<RegisterDTO>();
@@ -181,6 +194,7 @@ namespace Application.Services
                     response.Message = "Email is already existed";
                     return response;
                 }
+
                 var userAccountRegister = _mapper.Map<User>(userObjectDTO);
                 userAccountRegister.Password = Utils.HashPass.HashWithSHA256(userObjectDTO.Password);
                 //Create Token
@@ -190,124 +204,12 @@ namespace Application.Services
                 userAccountRegister.RoleName = "Customer";
                 await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
 
-                var confirmationLink = $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
+                var confirmationLink =
+                    $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
                 //var confirmationLink = $"https://your-api-domain/confirm?token={userAccountRegister.ConfirmationToken}&redirectUrl=https://your-frontend-domain/login";
 
                 //SendMail
                 var emailSend = await Utils.SendMail.SendConfirmationEmail(userObjectDTO.Email, confirmationLink);
-                if (!emailSend)
-                {
-                    response.Success = false;
-                    response.Message = "Error when send mail";
-                    return response;
-                }
-                else 
-                {
-                    var success = await _unitOfWork.SaveChangeAsync() > 0;
-                    if (success)
-                    {
-                        var accountRegistedDTO = _mapper.Map<RegisterDTO>(userAccountRegister);
-                        response.Success = true;
-                        response.Data = accountRegistedDTO;
-                        response.Message = "Register successfully.";                       
-                    }
-                    else
-                    { 
-                        response.Success = false;
-                        response.Message = "Error when saving ur account";
-                    }
-                }
-            }
-            catch(DbException e)
-            {
-                response.Success = false;
-                response.Message = "Database error occurred.";
-                response.ErrorMessages = new List<string> { e.Message };
-            }
-            catch(Exception e)
-            {
-                response.Success = false;
-                response.Message = "Error";
-                response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
-            }
-            return response;
-        }
-
-        public async Task<ServiceResponse<ResetPassDTO>> ResetPass(ResetPassDTO dto)
-        {
-            var response = new ServiceResponse<ResetPassDTO>();
-            try {
-
-                var userAccount = await _unitOfWork.UserRepository.GetUserByEmailAsync(dto.Email);
-                if (userAccount == null)
-                {
-                    response.Success = false;
-                    response.Message = "Email not found";
-                    return response;
-                }
-                if (dto.Password != dto.ConfirmPassword)
-                {
-                    response.Success = false;
-                    response.Message = "Password and Confirm Password do not match.";
-                    return response;
-                }
-                userAccount.Password = Utils.HashPass.HashWithSHA256(dto.Password);            
-                 _unitOfWork.UserRepository.UpdateE(userAccount);
-                 var success = await _unitOfWork.SaveChangeAsync() > 0;
-                if (success)
-                {
-                    var accountRegistedDTO = _mapper.Map<ResetPassDTO>(userAccount);
-                    response.Success = true;                    
-                    response.Message = "Password reset successfully.";
-                }
-                else
-                {
-                    response.Success = false;
-                    response.Message = "An error occurred while saving changes.";
-                    return response;
-                }
-            }
-            catch (DbException e)
-            {
-                response.Success = false;
-                response.Message = "Database error occurred.";
-                response.ErrorMessages = new List<string> { e.Message };
-            }
-            catch (Exception e)
-            {
-                response.Success = false;
-                response.Message = "Error";
-                response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
-            }
-            return response;
-        }
-
-        public async Task<ServiceResponse<RegisterDTO>> CreateStaff(RegisterDTO userObject)
-        {
-            var response = new ServiceResponse<RegisterDTO>();
-            try
-            {
-                var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(userObject.Email);
-                if (existEmail != null)
-                {
-                    response.Success = false;
-                    response.Message = "Email is already existed";
-                    return response;
-                }
-                var userAccountRegister = _mapper.Map<User>(userObject);
-                userAccountRegister.Password = Utils.HashPass.HashWithSHA256(userObject.Password);
-                //Create Token
-                userAccountRegister.ConfirmationToken = Guid.NewGuid().ToString();
-
-                userAccountRegister.Status = 1;
-                userAccountRegister.RoleName = "Staff";
-                await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
-
-                var confirmationLink = $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
-                //var confirmationLink = $"https://your-api-domain/confirm?token={userAccountRegister.ConfirmationToken}&redirectUrl=https://your-frontend-domain/login";
-
-                //SendMail
-                var emailSend = await SendMail.SendConfirmationEmail(userObject.Email, confirmationLink);
                 if (!emailSend)
                 {
                     response.Success = false;
@@ -343,6 +245,115 @@ namespace Application.Services
                 response.Message = "Error";
                 response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
             }
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<ResetPassDTO>> ResetPass(ResetPassDTO dto)
+        {
+            var response = new ServiceResponse<ResetPassDTO>();
+            try
+            {
+                var userAccount = await _unitOfWork.UserRepository.GetUserByEmailAsync(dto.Email);
+                if (userAccount == null)
+                {
+                    response.Success = false;
+                    response.Message = "Email not found";
+                    return response;
+                }
+
+                if (dto.Password != dto.ConfirmPassword)
+                {
+                    response.Success = false;
+                    response.Message = "Password and Confirm Password do not match.";
+                    return response;
+                }
+
+                userAccount.Password = Utils.HashPass.HashWithSHA256(dto.Password);
+                _unitOfWork.UserRepository.UpdateE(userAccount);
+                var success = await _unitOfWork.SaveChangeAsync() > 0;
+                if (success)
+                {
+                    var accountRegistedDTO = _mapper.Map<ResetPassDTO>(userAccount);
+                    response.Success = true;
+                    response.Message = "Password reset successfully.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "An error occurred while saving changes.";
+                    return response;
+                }
+            }
+            catch (DbException e)
+            {
+                response.Success = false;
+                response.Message = "Database error occurred.";
+                response.ErrorMessages = new List<string> { e.Message };
+            }
+            catch (Exception e)
+            {
+                response.Success = false;
+                response.Message = "Error";
+                response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<RegisterDTO>> CreateStaff(RegisterDTO userObject)
+        {
+            var response = new ServiceResponse<RegisterDTO>();
+            try
+            {
+                var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(userObject.Email);
+                if (existEmail != null)
+                {
+                    response.Success = false;
+                    response.Message = "Email is already existed";
+                    return response;
+                }
+
+                var userAccountRegister = _mapper.Map<User>(userObject);
+                userAccountRegister.Password = Utils.HashPass.HashWithSHA256(userObject.Password);
+                //Create Token
+                userAccountRegister.ConfirmationToken = Guid.NewGuid().ToString();
+
+                userAccountRegister.Status = 1;
+                userAccountRegister.RoleName = "Staff";
+
+                await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
+
+                var confirmationLink =
+                    $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
+
+                //SendMail
+                var emailSend = await SendMail.SendConfirmationEmail(userObject.Email, confirmationLink);
+                if (!emailSend)
+                {
+                    response.Success = false;
+                    response.Message = "Error when send mail";
+                    return response;
+                }
+
+                var accountRegistedDTO = _mapper.Map<RegisterDTO>(userAccountRegister);
+                response.Success = true;
+                response.Data = accountRegistedDTO;
+                response.Message = "Register successfully.";
+            }
+            catch (DbException e)
+            {
+                response.Success = false;
+                response.Message = "Database error occurred.";
+                response.ErrorMessages = new List<string> { e.Message };
+            }
+            catch (Exception e)
+            {
+                response.Success = false;
+                response.Message = "Error";
+                response.ErrorMessages = new List<string> { e.Message };
+            }
+
             return response;
         }
     }
