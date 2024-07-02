@@ -20,58 +20,64 @@ namespace ZodiacJewelryWebApI.Controllers
         {
             _userService = userService;
         }
-       
+
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
-            var result = await _userService.GetAllUsers();
+            var result = await _userService.GetAllUsers(page, pageSize, search, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
 
         [HttpGet("customers")]
-        public async Task<IActionResult> GetAllUsersCustomer()
+        public async Task<IActionResult> GetAllUsersCustomer([FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
-            var result = await _userService.GetAllUsersByCustomer();
+            var result = await _userService.GetAllUsersByCustomer(page, pageSize, search, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
 
         [HttpGet("admin")]
-        public async Task<IActionResult> GetAllUsersAdmin()
+        public async Task<IActionResult> GetAllUsersAdmin([FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
-            var result = await _userService.GetAllUsersByAdmin();
+            var result = await _userService.GetAllUsersByAdmin(page, pageSize, search, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
+
         [HttpGet("staff")]
-        public async Task<IActionResult> GetAllUsersStaff()
+        public async Task<IActionResult> GetAllUsersStaff([FromQuery] int page = 1,  [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
-            var result = await _userService.GetAllUsersByStaff();
+            var result = await _userService.GetAllUsersByStaff(page, pageSize, search, sort);
             if (!result.Success)
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
 
         [HttpGet("role/{role}")]
-        public async Task<IActionResult> GetAllUsersByRole(string role)
+        public async Task<IActionResult> GetAllUsersByRole(string role,[FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
         {
-            var result = await _userService.GetAllUsersByRole(role);
+            var result = await _userService.GetAllUsersByRole(role, page, pageSize, search, sort);
             if (!result.Success)
             {
                 return NotFound(result);
             }
+
             return Ok(result);
         }
 
@@ -83,6 +89,7 @@ namespace ZodiacJewelryWebApI.Controllers
             {
                 return NotFound(result);
             }
+
             return Ok(result);
         }
 
@@ -94,19 +101,19 @@ namespace ZodiacJewelryWebApI.Controllers
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser( [FromBody] UserDTO userDTO)
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO userUpdateDTO)
         {
-         
-
-            var result = await _userService.UpdateUser(userDTO);
+            var result = await _userService.UpdateUser(userUpdateDTO);
             if (!result.Success)
             {
                 return NotFound(result);
             }
+
             return Ok(result);
         }
 
@@ -118,6 +125,7 @@ namespace ZodiacJewelryWebApI.Controllers
             {
                 return NotFound(result);
             }
+
             return Ok(result);
         }
     }

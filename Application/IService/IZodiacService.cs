@@ -12,7 +12,7 @@ namespace Application.IService
 {
     public interface IZodiacService
     {
-        Task<ServiceResponse<IEnumerable<ZodiacDTO>>> GetAllZodiacs();
+        Task<ServiceResponse<PaginationModel<ZodiacDTO>>> GetAllZodiacs(int page, int pageSize, string search, string sort);
         Task<ServiceResponse<ZodiacDTO>> GetZodiacById(int id);
         Task<ServiceResponse<string>> UpdateZodiac(ZodiacUpdateDTO zodiac);
     }

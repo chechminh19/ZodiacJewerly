@@ -1,6 +1,7 @@
 ﻿using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.Ultilities;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
 using Domain.Entities;
@@ -21,105 +22,197 @@ namespace Application.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<ServiceResponse<IEnumerable<UserDTO>>> GetAllUsers()
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsers(int page, int pageSize, string search, string sort)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<UserDTO>>();
+            var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
             try
             {
                 var users = await _userRepo.GetAllUsers();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    users = users
+                        .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
+                                    c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                }
+
+                users = sort.ToLower() switch
+                {
+                    "name" => users.OrderBy(c => c.FullName),
+                    "email" => users.OrderBy(u => u.Email),
+                    "role" => users.OrderBy(c => c.RoleName),
+                    "status" => users.OrderBy(c => c.Status),
+                    _ => users.OrderBy(c => c.Id).ToList()
+                };
                 var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
-                serviceResponse.Data = userDTOs;
-                serviceResponse.Success = true;
+
+                var paginationModel = await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
+
+                response.Data = paginationModel;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve users: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
 
-        public async Task<ServiceResponse<IEnumerable<UserDTO>>> GetAllUsersByRole(string role)
+
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByRole(string role, int page, int pageSize, string search, string sort)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<UserDTO>>();
+            var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
             try
             {
                 var users = await _userRepo.GetAllUsersByRole(role);
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    users = users
+                        .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
+                                    c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                }
+
+                users = sort.ToLower() switch
+                {
+                    "name" => users.OrderBy(c => c.FullName),
+                    "email" => users.OrderBy(u => u.Email),
+                    "status" => users.OrderBy(c => c.Status),
+                    _ => users.OrderBy(c => c.Id).ToList()
+                };
                 var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
-                serviceResponse.Data = userDTOs;
-                serviceResponse.Success = true;
+
+                var paginationModel = await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
+
+                response.Data = paginationModel;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve users by role: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
 
-        public async Task<ServiceResponse<IEnumerable<UserDTO>>> GetAllUsersByStaff()
+
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByStaff(int page, int pageSize, string search, string sort)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<UserDTO>>();
+            var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
             try
             {
                 var users = await _userRepo.GetAllUsersStaff();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    users = users
+                        .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
+                                    c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                }
+
+                users = sort.ToLower() switch
+                {
+                    "name" => users.OrderBy(c => c.FullName),
+                    "email" => users.OrderBy(u => u.Email),
+                    "status" => users.OrderBy(c => c.Status),
+                    _ => users.OrderBy(c => c.Id).ToList()
+                };
                 var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
-                serviceResponse.Data = userDTOs;
-                serviceResponse.Success = true;
+
+                var paginationModel = await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
+
+                response.Data = paginationModel;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve staff users: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
 
-        public async Task<ServiceResponse<IEnumerable<UserDTO>>> GetAllUsersByAdmin()
+
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByAdmin(int page, int pageSize, string search, string sort)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<UserDTO>>();
+            var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
             try
             {
                 var users = await _userRepo.GetAllUsersAdmin();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    users = users
+                        .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
+                                    c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                }
+
+                users = sort.ToLower() switch
+                {
+                    "name" => users.OrderBy(c => c.FullName),
+                    "email" => users.OrderBy(u => u.Email),
+                    "status" => users.OrderBy(c => c.Status),
+                    _ => users.OrderBy(c => c.Id).ToList()
+                };
                 var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
-                serviceResponse.Data = userDTOs;
-                serviceResponse.Success = true;
+
+                var paginationModel = await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
+
+                response.Data = paginationModel;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve admin users: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
 
-        public async Task<ServiceResponse<IEnumerable<UserDTO>>> GetAllUsersByCustomer()
+
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByCustomer(int page, int pageSize, string search, string sort)
         {
-            var serviceResponse = new ServiceResponse<IEnumerable<UserDTO>>();
+            var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
             try
             {
                 var users = await _userRepo.GetAllUsersCustomer();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    users = users
+                        .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
+                                    c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                }
+
+                users = sort.ToLower() switch
+                {
+                    "name" => users.OrderBy(c => c.FullName),
+                    "email" => users.OrderBy(u => u.Email),
+                    "status" => users.OrderBy(c => c.Status),
+                    _ => users.OrderBy(c => c.Id).ToList()
+                };
                 var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
-                serviceResponse.Data = userDTOs;
-                serviceResponse.Success = true;
+
+                var paginationModel = await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
+
+                response.Data = paginationModel;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"Failed to retrieve customer users: {ex.Message}";
             }
 
-            return serviceResponse;
+            return response;
         }
+
 
         public async Task<ServiceResponse<UserDTO>> GetUserById(int id)
         {
@@ -171,13 +264,13 @@ namespace Application.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<string>> UpdateUser(UserDTO user)
+        public async Task<ServiceResponse<string>> UpdateUser(UserUpdateDTO userUpdate)
         {
             var serviceResponse = new ServiceResponse<string>();
 
             try
             {
-                var userEntity = _mapper.Map<User>(user);
+                var userEntity = _mapper.Map<User>(userUpdate);
                 await _userRepo.UpdateUser(userEntity);
 
                 serviceResponse.Success = true;

@@ -49,7 +49,7 @@ public class CategoryService : ICategoryService
         return result;
     }
 
-    public async Task<ServiceResponse<PaginationModel<CategoryResDTO>>> GetListCategory(int page)
+    public async Task<ServiceResponse<PaginationModel<CategoryResDTO>>> GetListCategory(int page, int pageSize, string search, string sort)
     {
         var result = new ServiceResponse<PaginationModel<CategoryResDTO>>();
         try
@@ -60,18 +60,24 @@ public class CategoryService : ICategoryService
             }
 
             var category = await _categoryRepo.GetListCategory();
-            List<CategoryResDTO> categoryList = new List<CategoryResDTO>();
-            foreach (var c in category)
+            if (!string.IsNullOrEmpty(search))
             {
-                CategoryResDTO crd = new()
-                {
-                    Id = c.Id,
-                    NameCategory = c.NameCategory
-                };
-                categoryList.Add(crd);
+                category = category.Where(c => c.NameCategory.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
             }
+            
+            category = sort.ToLower() switch
+            {
+                "name" => category.OrderBy(c => c.NameCategory).ToList(),
+                _ => category.OrderBy(c => c.Id).ToList()
+            };
 
-            var resultList = await Pagination.GetPagination(categoryList, page, 5);
+            var categoryList = category.Select(c => new CategoryResDTO
+            {
+               Id = c.Id,
+               NameCategory = c.NameCategory
+            }).ToList();
+
+            var resultList = await Pagination.GetPagination(categoryList, page, pageSize);
 
             result.Data = resultList;
             result.Success = true;
@@ -87,9 +93,9 @@ public class CategoryService : ICategoryService
         return result;
     }
 
-    public async Task<ServiceResponse<int>> CreateCategory(CategoryReqDTO createForm)
+    public async Task<ServiceResponse<CategoryResDTO>> CreateCategory(CategoryReqDTO createForm)
     {
-        var result = new ServiceResponse<int>();
+        var result = new ServiceResponse<CategoryResDTO>();
         try
         {
             var categoryExist = await _categoryRepo.GetCategoryByName(createForm.NameCategory);
@@ -101,9 +107,12 @@ public class CategoryService : ICategoryService
             else
             {
                 var newCategory = _mapper.Map<CategoryReqDTO, Category>(createForm);
-                newCategory.Id = 0;
                 await _categoryRepo.AddAsync(newCategory);
-                result.Data = newCategory.Id;
+                result.Data = new CategoryResDTO
+                {
+                    Id = newCategory.Id,
+                    NameCategory = newCategory.NameCategory 
+                };
                 result.Success = true;
                 result.Message = "Category created successfully!";
             }
@@ -119,9 +128,9 @@ public class CategoryService : ICategoryService
         return result;
     }
 
-    public async Task<ServiceResponse<string>> UpdateCategory(CategoryReqDTO updateCategoryReq, int categoryId)
+    public async Task<ServiceResponse<CategoryResDTO>> UpdateCategory(CategoryReqDTO updateCategoryReq, int categoryId)
     {
-        var result = new ServiceResponse<string>();
+        var result = new ServiceResponse<CategoryResDTO>();
         try
         {
             ArgumentNullException.ThrowIfNull(updateCategoryReq);
@@ -146,9 +155,9 @@ public class CategoryService : ICategoryService
         return result;
     }
 
-    public async Task<ServiceResponse<string>> DeleteCategory(int categoryId)
+    public async Task<ServiceResponse<bool>> DeleteCategory(int categoryId)
     {
-        var result = new ServiceResponse<string>();
+        var result = new ServiceResponse<bool>();
 
         try
         {

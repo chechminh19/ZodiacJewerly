@@ -1,5 +1,4 @@
-
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Threading.Tasks;
 using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
+using Application.Ultilities;
 using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using AutoMapper;
@@ -26,16 +26,35 @@ namespace Application.Services
             _zodiacProductRepo = zodiacProductRepo ?? throw new ArgumentNullException(nameof(zodiacProductRepo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        
-        public async Task<ServiceResponse<IEnumerable<ProductDTO>>> GetAllProductsAsync()
+
+        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsAsync(int page, int pageSize, string search, string sort)
         {
-            var response = new ServiceResponse<IEnumerable<ProductDTO>>();
+            var response = new ServiceResponse<PaginationModel<ProductDTO>>();
 
             try
             {
                 var products = await _productRepo.GetAllProduct();
-                var productDTOs = MapToDTO(products);
-                response.Data = productDTOs;
+                if (!string.IsNullOrEmpty(search))
+                {
+                    products = products.Where(p => p.NameProduct.Contains(search, StringComparison.OrdinalIgnoreCase));
+                }
+
+                products = sort.ToLower() switch
+                {
+                    "name" => products.OrderBy(p => p.NameProduct),
+                    "price" => products.OrderBy(p => p.Price),
+                    "quantity" => products.OrderBy(p => p.Quantity),
+                    "category" => products.OrderBy(p => p.CategoryId),
+                    "material" => products.OrderBy(p => p.MaterialId),
+                    "gender" => products.OrderBy(p => p.GenderId),
+                    _ => products.OrderBy(p => p.Id) 
+                };
+                var productDTOs = MapToDTO(products); // Map products to ProductDTO
+
+                // Apply pagination
+                var paginationModel = await Pagination.GetPaginationIENUM(productDTOs, page, pageSize);
+
+                response.Data = paginationModel;
                 response.Success = true;
             }
             catch (Exception ex)
@@ -46,6 +65,7 @@ namespace Application.Services
 
             return response;
         }
+
 
         public async Task<ServiceResponse<ProductDTO>> GetProductByIdAsync(int id)
         {
@@ -160,7 +180,7 @@ namespace Application.Services
             catch (Exception ex)
             {
                 // Log the exception
-                
+
 
                 response.Success = false;
                 response.Message = $"Failed to update product: {ex.Message}";
@@ -205,15 +225,16 @@ namespace Application.Services
             productDTO.ZodiacId = (int)(product.ProductZodiacs?.Select(pi => pi.ZodiacId).FirstOrDefault());
 
 
-
             return productDTO;
         }
+
         private CreateProductDTO MapToDTOCreate(Product product)
         {
             var productDTO = _mapper.Map<CreateProductDTO>(product);
 
             return productDTO;
         }
+
         private IEnumerable<ProductDTO> MapToDTO(IEnumerable<Product> products)
         {
             return products.Select(MapToDTO);
@@ -241,4 +262,3 @@ namespace Application.Services
         }
     }
 }
-

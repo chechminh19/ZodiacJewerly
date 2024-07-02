@@ -45,9 +45,9 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllOrders()
+        public async Task<IActionResult> GetAllOrders([FromQuery] int page = 1 ,[FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string filter = "",  [FromQuery] string sort = "id")
         {
-            var result = await _orderService.GetAllOrder();
+            var result = await _orderService.GetAllOrder(page, pageSize, search, filter, sort);
             if (!result.Success)
             {
                 return BadRequest(result);

@@ -11,7 +11,7 @@ namespace Application.IService
 {
     public interface IImageService
     {
-        Task<ServiceResponse<IEnumerable<ProductImageDTO>>> GetAllOrderGetAllImageInfors();
+        Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page, int pageSize, string search, string sort);
         Task<ServiceResponse<ProductImageDTO>> GetImageInforById(int id);
 
     }

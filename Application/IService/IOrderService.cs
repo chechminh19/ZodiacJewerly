@@ -11,7 +11,7 @@ namespace Application.IService
 {
     public interface IOrderService
     {
-        Task<ServiceResponse<IEnumerable<OrderDTO>>> GetAllOrder();
+        Task<ServiceResponse<PaginationModel<OrderDTO>>> GetAllOrder(int page, int pageSize, string search, string filter, string sort);
         Task<ServiceResponse<OrderDTO>> GetOrderById(int id);
         Task<ServiceResponse<int>> AddOrder(OrderDTO order);
         Task<ServiceResponse<string>> UpdateOrder(OrderDTO order);
