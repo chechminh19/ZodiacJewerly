@@ -5,15 +5,8 @@ using Application.Utils;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
 using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Application.Services
@@ -42,7 +35,7 @@ namespace Application.Services
             try
             {
                 string key = $"{dto.Email}_OTP";
-                if (_memoryCache.TryGetValue(key, out string savedCode))
+                if (_memoryCache.TryGetValue(key, out string? savedCode))
                 {
                     if (savedCode == dto.CodeOTP)
                     {
@@ -85,7 +78,7 @@ namespace Application.Services
             try
             {
                 var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(email);
-                if (existEmail != null)
+                if (existEmail == null)
                 {
                     response.Success = false;
                     response.Message = "Email not found";
@@ -93,17 +86,17 @@ namespace Application.Services
                 }
 
                 var tokenEmail = await GenerateRandomPasswordResetTokenByEmailAsync(email);
-                var codeEmail = Utils.SendMail.GenerateRandomCodeWithExpiration(tokenEmail, 1);
-                var codeEmailSent = await Utils.SendMail.SendResetPass(_memoryCache, email, codeEmail, false);
+                var codeEmail = SendMail.GenerateRandomCodeWithExpiration(tokenEmail, 1);
+                var codeEmailSent = await SendMail.SendResetPass(_memoryCache, email, codeEmail, false);
                 if (!codeEmailSent)
                 {
                     response.Success = false;
-                    response.Message = "Error when send mail";
+                    response.Message = "Error when sending email";
                     return response;
                 }
 
                 response.Success = true;
-                response.Message = "Email have been sent your code to reset password";
+                response.Message = "An email with a code to reset your password has been sent.";
             }
             catch (DbException ex)
             {
@@ -114,24 +107,24 @@ namespace Application.Services
             catch (Exception ex)
             {
                 response.Success = false;
-                response.Message = "Error";
+                response.Message = "An error occurred.";
                 response.ErrorMessages = new List<string> { ex.Message };
             }
 
             return response;
         }
 
-        public async Task<string> GenerateRandomPasswordResetTokenByEmailAsync(string email)
+        public Task<string> GenerateRandomPasswordResetTokenByEmailAsync(string email)
         {
             Random random = new Random();
-            string token = "";
+            var token = "";
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             for (int i = 0; i < 8; i++)
             {
                 token += chars[random.Next(chars.Length)];
             }
 
-            return token;
+            return Task.FromResult(token);
         }
 
         public async Task<TokenResponse<string>> LoginAsync(LoginUserDTO userObject)
@@ -139,7 +132,7 @@ namespace Application.Services
             var response = new TokenResponse<string>();
             try
             {
-                var passHash = Utils.HashPass.HashWithSHA256(userObject.Password);
+                var passHash = HashPass.HashWithSHA256(userObject.Password);
                 var userLogin =
                     await _unitOfWork.UserRepository.GetUserByEmailAddressAndPasswordHash(userObject.Email, passHash);
                 if (userLogin == null)
@@ -196,7 +189,7 @@ namespace Application.Services
                 }
 
                 var userAccountRegister = _mapper.Map<User>(userObjectDTO);
-                userAccountRegister.Password = Utils.HashPass.HashWithSHA256(userObjectDTO.Password);
+                userAccountRegister.Password = HashPass.HashWithSHA256(userObjectDTO.Password);
                 //Create Token
                 userAccountRegister.ConfirmationToken = Guid.NewGuid().ToString();
 
@@ -204,10 +197,11 @@ namespace Application.Services
                 userAccountRegister.RoleName = "Customer";
                 await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
 
-                var confirmationLink = $"https://zodiacjewerlyswd.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
+                var confirmationLink =
+                    $"https://zodiacjewerlyswd.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
 
                 //SendMail
-                var emailSend = await Utils.SendMail.SendConfirmationEmail(userObjectDTO.Email, confirmationLink);
+                var emailSend = await SendMail.SendConfirmationEmail(userObjectDTO.Email, confirmationLink);
                 if (!emailSend)
                 {
                     response.Success = false;
@@ -230,7 +224,7 @@ namespace Application.Services
             {
                 response.Success = false;
                 response.Message = "Error";
-                response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
+                response.ErrorMessages = new List<string> { e.Message };
             }
 
             return response;
@@ -256,7 +250,7 @@ namespace Application.Services
                     return response;
                 }
 
-                userAccount.Password = Utils.HashPass.HashWithSHA256(dto.Password);
+                userAccount.Password = HashPass.HashWithSHA256(dto.Password);
                 await _unitOfWork.UserRepository.Update(userAccount);
 
 
@@ -274,7 +268,7 @@ namespace Application.Services
             {
                 response.Success = false;
                 response.Message = "Error";
-                response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
+                response.ErrorMessages = new List<string> { e.Message };
             }
 
             return response;
@@ -286,7 +280,7 @@ namespace Application.Services
             try
             {
                 var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(userObject.Email);
-                if (existEmail)
+                if (existEmail != null)
                 {
                     response.Success = false;
                     response.Message = "Email is already existed";
@@ -294,7 +288,7 @@ namespace Application.Services
                 }
 
                 var userAccountRegister = _mapper.Map<User>(userObject);
-                userAccountRegister.Password = Utils.HashPass.HashWithSHA256(userObject.Password);
+                userAccountRegister.Password = HashPass.HashWithSHA256(userObject.Password);
                 //Create Token
                 userAccountRegister.ConfirmationToken = Guid.NewGuid().ToString();
 
@@ -304,7 +298,8 @@ namespace Application.Services
                 await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
 
 
-                var confirmationLink = $"https://zodiacjewerlyswd.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
+                var confirmationLink =
+                    $"https://zodiacjewerlyswd.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
                 //var confirmationLink = $"https://your-api-domain/confirm?token={userAccountRegister.ConfirmationToken}&redirectUrl=https://your-frontend-domain/login";
 
                 //SendMail

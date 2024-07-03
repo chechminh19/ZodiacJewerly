@@ -1,5 +1,4 @@
 using Application.IRepositories;
-using Application.ViewModels.CollectionProductDTO;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

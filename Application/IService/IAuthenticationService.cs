@@ -17,6 +17,6 @@ namespace Application.IService
         public Task<TokenResponse<string>> ForgotPass(string email);
         public Task<string> GenerateRandomPasswordResetTokenByEmailAsync(string email);
         public Task<TokenResponse<string>> VerifyForgotPassCode(VerifyOTPResetDTO dto);
-       public Task<ServiceResponse<ResetPassDTO>> ResetPass(ResetPassDTO dto);
+        public Task<ServiceResponse<ResetPassDTO>> ResetPass(ResetPassDTO dto);
     }
 }

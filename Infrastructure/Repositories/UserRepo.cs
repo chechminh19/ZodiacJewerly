@@ -1,12 +1,6 @@
 ﻿using Application.IRepositories;
-using Application.IService;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -21,7 +15,7 @@ namespace Infrastructure.Repositories
 
         public async Task<User?> CheckEmailAddressExisted(string email)
         {
-            return await _dbContext.User.FirstOrDefaultAsync(u => u != null && u.Email == email);
+            return await _dbContext.User.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<bool> CheckPhoneNumberExited(string phonenumber) =>

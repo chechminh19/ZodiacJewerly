@@ -1,5 +1,3 @@
-using Application.ViewModels;
-using Application.ViewModels.CollectionProductDTO;
 using Domain.Entities;
 
 namespace Application.IRepositories;
