@@ -78,7 +78,7 @@ namespace Application.Services
             try
             {
                 var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(email);
-                if (existEmail != null)
+                if (existEmail == null)
                 {
                     response.Success = false;
                     response.Message = "Email not found";
@@ -91,12 +91,12 @@ namespace Application.Services
                 if (!codeEmailSent)
                 {
                     response.Success = false;
-                    response.Message = "Error when send mail";
+                    response.Message = "Error when sending email";
                     return response;
                 }
 
                 response.Success = true;
-                response.Message = "Email have been sent your code to reset password";
+                response.Message = "An email with a code to reset your password has been sent.";
             }
             catch (DbException ex)
             {
@@ -107,14 +107,14 @@ namespace Application.Services
             catch (Exception ex)
             {
                 response.Success = false;
-                response.Message = "Error";
+                response.Message = "An error occurred.";
                 response.ErrorMessages = new List<string> { ex.Message };
             }
 
             return response;
         }
 
-        public async Task<string> GenerateRandomPasswordResetTokenByEmailAsync(string email)
+        public Task<string> GenerateRandomPasswordResetTokenByEmailAsync(string email)
         {
             Random random = new Random();
             var token = "";
@@ -124,7 +124,7 @@ namespace Application.Services
                 token += chars[random.Next(chars.Length)];
             }
 
-            return token;
+            return Task.FromResult(token);
         }
 
         public async Task<TokenResponse<string>> LoginAsync(LoginUserDTO userObject)

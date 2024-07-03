@@ -15,7 +15,7 @@ namespace Infrastructure.Repositories
 
         public async Task<User?> CheckEmailAddressExisted(string email)
         {
-            return await _dbContext.User.FirstOrDefaultAsync(u => u != null && u.Email == email);
+            return await _dbContext.User.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<bool> CheckPhoneNumberExited(string phonenumber) =>
