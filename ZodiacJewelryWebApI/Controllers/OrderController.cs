@@ -45,7 +45,8 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-        [Authorize(Roles = "Staff,Admin,Customer")]
+
+        [Authorize(Roles = "Admin, Staff, Customer")]
         [HttpGet]
         public async Task<IActionResult> GetAllOrders([FromQuery] int page = 1 ,[FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string filter = "",  [FromQuery] string sort = "id")
         {

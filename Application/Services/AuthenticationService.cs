@@ -5,15 +5,8 @@ using Application.Utils;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
 using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Application.Services
