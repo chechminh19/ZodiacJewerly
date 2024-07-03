@@ -3,6 +3,7 @@ using Application.Services;
 using Application.Utils.PaymentTypes;
 using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +45,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
+        [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet]
         public async Task<IActionResult> GetAllOrders([FromQuery] int page = 1 ,[FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string filter = "",  [FromQuery] string sort = "id")
         {
@@ -55,6 +57,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderById(int id)
         {
@@ -65,7 +68,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-                 
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         public async Task<IActionResult> AddOrder([FromBody] OrderDTO orderDTO)
         {
@@ -76,7 +79,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-
+        [Authorize(Roles = "Staff,Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateOrder( [FromBody] OrderDTO orderDTO)
         {
@@ -89,7 +92,7 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-
+        [Authorize(Roles = "Staff,Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {

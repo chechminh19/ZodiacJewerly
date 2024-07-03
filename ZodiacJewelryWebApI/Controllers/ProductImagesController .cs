@@ -9,6 +9,7 @@ using Domain.Entities;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Application.ViewModels.Cloud;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZodiacJewelryWebApI.Controllers
 {
@@ -30,7 +31,7 @@ namespace ZodiacJewelryWebApI.Controllers
             _cloudinary = new Cloudinary(cloudinaryAccount);
             _context = context;
         }
-
+        [Authorize(Roles = "Staff,Admin")]
         [HttpPost("{productId}/images")]
         public async Task<IActionResult> UploadProductImages(int productId, [FromForm] List<IFormFile> files)
         {
@@ -74,6 +75,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(new { imageUrls = uploadedImageUrls });
         }
 
+        [Authorize(Roles = "Staff,Admin")]
         [HttpPut("{productId}/images/{imageId}")]
         public async Task<IActionResult> UpdateProductImage(int productId, int imageId, IFormFile file)
         {
