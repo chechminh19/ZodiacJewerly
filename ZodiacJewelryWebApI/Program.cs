@@ -93,7 +93,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
 builder.Services.AddSwaggerGen(c =>
 {
 
