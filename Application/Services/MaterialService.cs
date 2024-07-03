@@ -4,7 +4,6 @@ using Application.ServiceResponse;
 using Application.Ultilities;
 using Application.ViewModels.MaterialDTO;
 using AutoMapper;
-using CloudinaryDotNet.Actions;
 using Domain.Entities;
 
 namespace Application.Services;
@@ -20,7 +19,8 @@ public class MaterialService : IMaterialService
         _materialRepo = materialRepo;
     }
 
-    public async Task<ServiceResponse<PaginationModel<MaterialResDTO>>> GetAllMaterials(int page,int pageSize , string search, string sort)
+    public async Task<ServiceResponse<PaginationModel<MaterialResDTO>>> GetAllMaterials(int page, int pageSize,
+        string search, string sort)
     {
         var result = new ServiceResponse<PaginationModel<MaterialResDTO>>();
         try
@@ -29,13 +29,15 @@ public class MaterialService : IMaterialService
             {
                 page = 1;
             }
+
             var material = await _materialRepo.GetAllMaterials();
 
             if (!string.IsNullOrEmpty(search))
             {
-                material = material.Where(c => c.NameMaterial.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                material = material.Where(c => c.NameMaterial.Contains(search, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
             }
-            
+
             material = sort.ToLower() switch
             {
                 "name" => material.OrderBy(c => c.NameMaterial).ToList(),
@@ -89,6 +91,7 @@ public class MaterialService : IMaterialService
                 ? e.InnerException.Message + "\n" + e.StackTrace
                 : e.Message + "\n" + e.StackTrace;
         }
+
         return result;
     }
 

@@ -1,14 +1,8 @@
 ﻿using Application.IService;
-using Application.ServiceResponse;
-using Application.Utils;
 using Application.ViewModels.UserDTO;
-using CloudinaryDotNet.Actions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 
 namespace ZodiacJewelryWebApI.Controllers
 {
@@ -68,7 +62,7 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpPost("verify-otp")]
-        public async Task<IActionResult> VerifyOTP(VerifyOTPResetDTO request)
+        public async Task<IActionResult> VerifyOtp(VerifyOTPResetDTO request)
         {
             var response = await _authenticationService.VerifyForgotPassCode(request);
             if (!response.Success)
@@ -78,6 +72,7 @@ namespace ZodiacJewelryWebApI.Controllers
 
             return Ok(response);
         }
+
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassWord(ResetPassDTO dto)
         {

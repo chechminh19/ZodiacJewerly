@@ -108,38 +108,41 @@ public class CollectionService : ICollectionService
         var result = new ServiceResponse<CollectionsResDTO>();
         try
         {
-            var collectionExist = await _collectionRepo.GetCollectionByName(createForm.NameCollection);
-            if (collectionExist != null)
+            if (createForm.NameCollection != null)
             {
-                result.Success = false;
-                result.Message = "Collection with the same name already exist!";
-            }
-            else
-            {
-                var imageURl = await UploadImageCollection(createForm.ImageCollection);
-
-                var collection = new Collections
+                var collectionExist = await _collectionRepo.GetCollectionByName(createForm.NameCollection);
+                if (collectionExist != null)
                 {
-                    NameCollection = createForm.NameCollection,
-                    ImageCollection = imageURl,
-                    DateOpen = DateTime.Now,
-                    DateClose = createForm.DateClose,
-                    Status = 1
-                };
-                await _collectionRepo.AddAsync(collection);
-
-                var newCollection = new CollectionsResDTO
+                    result.Success = false;
+                    result.Message = "Collection with the same name already exist!";
+                }
+                else
                 {
-                    Id = collection.Id,
-                    NameCollection = collection.NameCollection,
-                    ImageCollection = collection.ImageCollection,
-                    DateOpen = collection.DateOpen,
-                    DateClose = collection.DateClose,
-                    Status = collection.Status
-                };
-                result.Data = newCollection;
-                result.Success = true;
-                result.Message = "Create Collection successfully!";
+                    var imageURl = await UploadImageCollection(createForm.ImageCollection);
+
+                    var collection = new Collections
+                    {
+                        NameCollection = createForm.NameCollection,
+                        ImageCollection = imageURl,
+                        DateOpen = DateTime.Now,
+                        DateClose = createForm.DateClose,
+                        Status = 1
+                    };
+                    await _collectionRepo.AddAsync(collection);
+
+                    var newCollection = new CollectionsResDTO
+                    {
+                        Id = collection.Id,
+                        NameCollection = collection.NameCollection,
+                        ImageCollection = collection.ImageCollection,
+                        DateOpen = collection.DateOpen,
+                        DateClose = collection.DateClose,
+                        Status = collection.Status
+                    };
+                    result.Data = newCollection;
+                    result.Success = true;
+                    result.Message = "Create Collection successfully!";
+                }
             }
         }
         catch (Exception e)

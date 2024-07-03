@@ -5,9 +5,6 @@ using Application.Ultilities;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -22,7 +19,8 @@ namespace Application.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsers(int page, int pageSize, string search, string sort)
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsers(int page, int pageSize, string search,
+            string sort)
         {
             var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
@@ -32,21 +30,22 @@ namespace Application.Services
                 if (!string.IsNullOrEmpty(search))
                 {
                     users = users
-                        .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
-                                    c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                        .Where(u => u != null && (u.FullName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                                  u.Email.Contains(search, StringComparison.OrdinalIgnoreCase)));
                 }
 
                 users = sort.ToLower() switch
                 {
-                    "name" => users.OrderBy(c => c.FullName),
-                    "email" => users.OrderBy(u => u.Email),
-                    "role" => users.OrderBy(c => c.RoleName),
-                    "status" => users.OrderBy(c => c.Status),
-                    _ => users.OrderBy(c => c.Id).ToList()
+                    "name" => users.OrderBy(u => u?.FullName),
+                    "email" => users.OrderBy(u => u?.Email),
+                    "role" => users.OrderBy(u => u?.RoleName),
+                    "status" => users.OrderBy(u => u?.Status),
+                    _ => users.OrderBy(u => u?.Id).ToList()
                 };
                 var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
 
-                var paginationModel = await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
+                var paginationModel =
+                    await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
 
                 response.Data = paginationModel;
                 response.Success = true;
@@ -61,7 +60,8 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByRole(string role, int page, int pageSize, string search, string sort)
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByRole(string role, int page,
+            int pageSize, string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
@@ -72,20 +72,21 @@ namespace Application.Services
                 if (!string.IsNullOrEmpty(search))
                 {
                     users = users
-                        .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
-                                    c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                        .Where(u => u != null && (u.FullName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                                  u.Email.Contains(search, StringComparison.OrdinalIgnoreCase)));
                 }
 
                 users = sort.ToLower() switch
                 {
-                    "name" => users.OrderBy(c => c.FullName),
-                    "email" => users.OrderBy(u => u.Email),
-                    "status" => users.OrderBy(c => c.Status),
-                    _ => users.OrderBy(c => c.Id).ToList()
+                    "name" => users.OrderBy(u => u?.FullName),
+                    "email" => users.OrderBy(u => u?.Email),
+                    "status" => users.OrderBy(u => u?.Status),
+                    _ => users.OrderBy(u => u?.Id).ToList()
                 };
                 var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
 
-                var paginationModel = await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
+                var paginationModel =
+                    await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
 
                 response.Data = paginationModel;
                 response.Success = true;
@@ -100,7 +101,8 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByStaff(int page, int pageSize, string search, string sort)
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByStaff(int page, int pageSize,
+            string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
@@ -110,20 +112,21 @@ namespace Application.Services
                 if (!string.IsNullOrEmpty(search))
                 {
                     users = users
-                        .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
-                                    c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                        .Where(u => u != null && (u.FullName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                                  u.Email.Contains(search, StringComparison.OrdinalIgnoreCase)));
                 }
 
                 users = sort.ToLower() switch
                 {
-                    "name" => users.OrderBy(c => c.FullName),
-                    "email" => users.OrderBy(u => u.Email),
-                    "status" => users.OrderBy(c => c.Status),
-                    _ => users.OrderBy(c => c.Id).ToList()
+                    "name" => users.OrderBy(u => u?.FullName),
+                    "email" => users.OrderBy(u => u?.Email),
+                    "status" => users.OrderBy(u => u?.Status),
+                    _ => users.OrderBy(u => u?.Id).ToList()
                 };
                 var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
 
-                var paginationModel = await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
+                var paginationModel =
+                    await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
 
                 response.Data = paginationModel;
                 response.Success = true;
@@ -138,7 +141,8 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByAdmin(int page, int pageSize, string search, string sort)
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByAdmin(int page, int pageSize,
+            string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
@@ -148,20 +152,21 @@ namespace Application.Services
                 if (!string.IsNullOrEmpty(search))
                 {
                     users = users
-                        .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
-                                    c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                        .Where(u => u != null && (u.FullName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                                  u.Email.Contains(search, StringComparison.OrdinalIgnoreCase)));
                 }
 
                 users = sort.ToLower() switch
                 {
-                    "name" => users.OrderBy(c => c.FullName),
-                    "email" => users.OrderBy(u => u.Email),
-                    "status" => users.OrderBy(c => c.Status),
-                    _ => users.OrderBy(c => c.Id).ToList()
+                    "name" => users.OrderBy(u => u?.FullName),
+                    "email" => users.OrderBy(u => u?.Email),
+                    "status" => users.OrderBy(u => u?.Status),
+                    _ => users.OrderBy(u => u?.Id).ToList()
                 };
                 var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
 
-                var paginationModel = await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
+                var paginationModel =
+                    await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
 
                 response.Data = paginationModel;
                 response.Success = true;
@@ -176,7 +181,8 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByCustomer(int page, int pageSize, string search, string sort)
+        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByCustomer(int page, int pageSize,
+            string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<UserDTO>>();
 
@@ -186,20 +192,21 @@ namespace Application.Services
                 if (!string.IsNullOrEmpty(search))
                 {
                     users = users
-                        .Where(c => c.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)||
-                                    c.Email.Contains(search, StringComparison.OrdinalIgnoreCase));
+                        .Where(u => u != null && (u.FullName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                                  u.Email.Contains(search, StringComparison.OrdinalIgnoreCase)));
                 }
 
                 users = sort.ToLower() switch
                 {
-                    "name" => users.OrderBy(c => c.FullName),
-                    "email" => users.OrderBy(u => u.Email),
-                    "status" => users.OrderBy(c => c.Status),
-                    _ => users.OrderBy(c => c.Id).ToList()
+                    "name" => users.OrderBy(u => u?.FullName),
+                    "email" => users.OrderBy(u => u?.Email),
+                    "status" => users.OrderBy(u => u?.Status),
+                    _ => users.OrderBy(u => u?.Id).ToList()
                 };
                 var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
 
-                var paginationModel = await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
+                var paginationModel =
+                    await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
 
                 response.Data = paginationModel;
                 response.Success = true;

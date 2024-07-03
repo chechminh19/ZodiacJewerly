@@ -1,17 +1,9 @@
-
-using Application.IService;
-using Application.Services;
 using Application.ViewModels.ProductDTO;
 using Application.ViewModels.UserDTO;
 using Application.ViewModels.ZodiacDTO;
 using Application.ViewModels.OrderDTO;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Application.ViewModels.CollectionsDTO;
 using Application.ViewModels.MaterialDTO;
 using Application.ViewModels.ProductImageDTO;
@@ -40,7 +32,7 @@ namespace Infrastructure.Mappers
             CreateMap<Category, CategoryReqDTO>().ReverseMap();
             CreateMap<Category, CategoryResDTO>().ReverseMap();
             CreateMap<Order, OrderDTO>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.FullName))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User!.FullName))
                 .ReverseMap();
             CreateMap<Zodiac, ZodiacDTO>().ReverseMap();
             CreateMap<Zodiac, ZodiacUpdateDTO>().ReverseMap();
