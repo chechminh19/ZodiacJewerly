@@ -204,9 +204,7 @@ namespace Application.Services
                 userAccountRegister.RoleName = "Customer";
                 await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
 
-                var confirmationLink =
-                    $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
-                //var confirmationLink = $"https://your-api-domain/confirm?token={userAccountRegister.ConfirmationToken}&redirectUrl=https://your-frontend-domain/login";
+                var confirmationLink = $"https://zodiacjewerlyswd.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
 
                 //SendMail
                 var emailSend = await Utils.SendMail.SendConfirmationEmail(userObjectDTO.Email, confirmationLink);
@@ -288,7 +286,7 @@ namespace Application.Services
             try
             {
                 var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(userObject.Email);
-                if (existEmail != null)
+                if (existEmail)
                 {
                     response.Success = false;
                     response.Message = "Email is already existed";
@@ -305,8 +303,9 @@ namespace Application.Services
 
                 await _unitOfWork.UserRepository.AddAsync(userAccountRegister);
 
-                var confirmationLink =
-                    $"https://zodiacjewerly.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
+
+                var confirmationLink = $"https://zodiacjewerlyswd.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
+                //var confirmationLink = $"https://your-api-domain/confirm?token={userAccountRegister.ConfirmationToken}&redirectUrl=https://your-frontend-domain/login";
 
                 //SendMail
                 var emailSend = await SendMail.SendConfirmationEmail(userObject.Email, confirmationLink);

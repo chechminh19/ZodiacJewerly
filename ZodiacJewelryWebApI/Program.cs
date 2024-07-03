@@ -26,6 +26,7 @@ var configuration = builder.Configuration;
 PayOS payOS = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment client"),
                     configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment api"),
                     configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment sum"));
+builder.Services.AddSingleton<PayOS>();
 var myConfig = new AppConfiguration();
 configuration.Bind(myConfig);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DatabaseConnection"))); // Use connection string directly

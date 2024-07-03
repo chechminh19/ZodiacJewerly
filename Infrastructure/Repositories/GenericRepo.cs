@@ -31,8 +31,7 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task AddAsync(T entity)
-        {
+        
             _ = await _dbSet.AddAsync(entity);
             _ = await context.SaveChangesAsync();
         }
