@@ -13,29 +13,36 @@ namespace Infrastructure.Repositories
     public class UserRepo : GenericRepo<User>, IUserRepo
     {
         private readonly AppDbContext _dbContext;
+
         public UserRepo(AppDbContext context) : base(context)
         {
             _dbContext = context;
         }
 
-        public async Task<bool> CheckEmailAddressExisted(string email) => await _dbContext.User.AnyAsync(u => u.Email == email);
-        public async Task<bool> CheckPhoneNumberExited(string phonenumber) => await _dbContext.User.AnyAsync(x => x.TelephoneNumber == phonenumber);
+        public async Task<User?> CheckEmailAddressExisted(string email)
+        {
+            return await _dbContext.User.FirstOrDefaultAsync(u => u != null && u.Email == email);
+        }
+
+        public async Task<bool> CheckPhoneNumberExited(string phonenumber) =>
+            await _dbContext.User.AnyAsync(x => x.TelephoneNumber == phonenumber);
 
         public async Task<User> GetUserByConfirmationToken(string token)
         {
             return await _dbContext.User.SingleOrDefaultAsync(
-               u => u.ConfirmationToken == token
-               );
+                u => u.ConfirmationToken == token
+            );
         }
 
         public async Task<User> GetUserByEmailAddressAndPasswordHash(string email, string passwordHash)
         {
             var user = await _dbContext.User
-                 .FirstOrDefaultAsync(record => record.Email == email && record.Password == passwordHash);
+                .FirstOrDefaultAsync(record => record.Email == email && record.Password == passwordHash);
             if (user is null)
             {
                 throw new Exception("Email & password is not correct");
             }
+
             return user;
         }
 
@@ -49,31 +56,33 @@ namespace Infrastructure.Repositories
             return await _dbContext.User.FindAsync(id);
         }
 
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<IEnumerable<User?>> GetAllUsers()
         {
             return _dbContext.User.ToList();
         }
-        public async Task<IEnumerable<User>> GetAllUsersByRole(string roleName)
+
+        public async Task<IEnumerable<User?>> GetAllUsersByRole(string roleName)
         {
             return await _dbContext.User
                 .Where(u => u.RoleName == roleName)
                 .ToListAsync();
         }
-        public async Task<IEnumerable<User>> GetAllUsersAdmin()
+
+        public async Task<IEnumerable<User?>> GetAllUsersAdmin()
         {
             return await _dbContext.User
                 .Where(u => u.RoleName == "Admin")
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersStaff()
+        public async Task<IEnumerable<User?>> GetAllUsersStaff()
         {
             return await _dbContext.User
                 .Where(u => u.RoleName == "Staff")
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersCustomer()
+        public async Task<IEnumerable<User?>> GetAllUsersCustomer()
         {
             return await _dbContext.User
                 .Where(u => u.RoleName == "Customer")
@@ -81,9 +90,9 @@ namespace Infrastructure.Repositories
         }
 
 
-        public async Task AddUser(User user)
+        public async Task AddUser(User? user)
         {
-            _dbContext.User.Add(user);
+            if (user != null) _dbContext.User.Add(user);
             await _dbContext.SaveChangesAsync();
         }
 

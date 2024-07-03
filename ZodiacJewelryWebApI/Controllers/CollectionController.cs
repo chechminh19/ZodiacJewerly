@@ -71,9 +71,7 @@ public class CollectionController : ControllerBase
             Success = result.Success,
             Message = result.Message,
         };
-
         return Ok(formattedResult);
-
     }
 
     [Authorize(Roles = "Staff")]

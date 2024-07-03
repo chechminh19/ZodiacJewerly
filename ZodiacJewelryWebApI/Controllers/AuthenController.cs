@@ -40,26 +40,18 @@ namespace ZodiacJewelryWebApI.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("staff")] //Admin
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> NewAccountStaff(RegisterDTO registerObject)
         {
-            var isAdmin = User.IsInRole("Admin");
-            if (!isAdmin)
-            {
-                return Unauthorized(new { message = "You do not have permission to do this" });
-            }
-
             var result = await _authenticationService.CreateStaff(registerObject);
 
             if (!result.Success)
             {
                 return BadRequest(result);
             }
-            else
-            {
-                return Ok(result);
-            }
+
+            return Ok(result);
         }
 
 
@@ -86,7 +78,7 @@ namespace ZodiacJewelryWebApI.Controllers
 
             return Ok(response);
         }
-        [HttpPost("pass-new")]
+        [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassWord(ResetPassDTO dto)
         {
             var response = await _authenticationService.ResetPass(dto);
