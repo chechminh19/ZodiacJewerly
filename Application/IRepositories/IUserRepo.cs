@@ -16,7 +16,7 @@ namespace Application.IRepositories
         Task<User> GetUserByConfirmationToken(string token);
         Task<User> GetUserById(int id);
         Task<IEnumerable<User?>> GetAllUsers();
-        Task<IEnumerable<User?>> GetAllUsersByRole(string role);
+        Task<int> CountUsersByRoleAsync(string role);
         Task<IEnumerable<User?>> GetAllUsersAdmin();
         Task<IEnumerable<User?>> GetAllUsersStaff();
         Task<IEnumerable<User?>> GetAllUsersCustomer();

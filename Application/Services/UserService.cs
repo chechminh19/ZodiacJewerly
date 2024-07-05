@@ -60,36 +60,23 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByRole(string role, int page,
-            int pageSize, string search, string sort)
+        public async Task<ServiceResponse<UserCountDTO>> CountUsersByRoleAsync(string role)
         {
-            var response = new ServiceResponse<PaginationModel<UserDTO>>();
+            var response = new ServiceResponse<UserCountDTO>();
 
             try
             {
-                var users = await _userRepo.GetAllUsersByRole(role);
+                int userCount = await _userRepo.CountUsersByRoleAsync(role);
 
-                if (!string.IsNullOrEmpty(search))
+                var userCountDTO = new UserCountDTO
                 {
-                    users = users
-                        .Where(u => u != null && (u.FullName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                                  u.Email.Contains(search, StringComparison.OrdinalIgnoreCase)));
-                }
-
-                users = sort.ToLower() switch
-                {
-                    "name" => users.OrderBy(u => u?.FullName),
-                    "email" => users.OrderBy(u => u?.Email),
-                    "status" => users.OrderBy(u => u?.Status),
-                    _ => users.OrderBy(u => u?.Id).ToList()
+                    UserCount = userCount,
+                    RoleName = role
                 };
-                var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
 
-                var paginationModel =
-                    await Pagination.GetPaginationIENUM(userDTOs, page, pageSize); // Adjust pageSize as needed
-
-                response.Data = paginationModel;
+                response.Data = userCountDTO;
                 response.Success = true;
+                response.Message = "User count retrieved successfully.";
             }
             catch (Exception ex)
             {
@@ -99,6 +86,7 @@ namespace Application.Services
 
             return response;
         }
+
 
 
         public async Task<ServiceResponse<PaginationModel<UserDTO>>> GetAllUsersByStaff(int page, int pageSize,
