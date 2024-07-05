@@ -55,12 +55,13 @@ namespace Infrastructure.Repositories
             return _dbContext.User.ToList();
         }
 
-        public async Task<IEnumerable<User?>> GetAllUsersByRole(string roleName)
+        public async Task<int> CountUsersByRoleAsync(string roleName)
         {
             return await _dbContext.User
                 .Where(u => u.RoleName == roleName)
-                .ToListAsync();
+                .CountAsync();
         }
+
 
         public async Task<IEnumerable<User?>> GetAllUsersAdmin()
         {

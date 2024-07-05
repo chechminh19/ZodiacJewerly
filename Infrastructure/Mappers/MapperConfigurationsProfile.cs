@@ -24,6 +24,7 @@ namespace Infrastructure.Mappers
             CreateMap<User, ResetPassDTO>();
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, UserUpdateDTO>().ReverseMap();
+            CreateMap<User, UserCountDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Product, CreateProductDTO>().ReverseMap();
             CreateMap<Zodiac, ProductDTO>().ReverseMap();
