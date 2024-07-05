@@ -17,7 +17,7 @@ public class CollectionController : ControllerBase
         _collectionService = collectionService;
     }
 
-    [Authorize(Roles = "Admin, Staff, Customer")]
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetListCollection([FromQuery] int page = 1, [FromQuery] int pageSize = 5,
         [FromQuery] string search = "", [FromQuery] string filter = "", [FromQuery] string sort = "id")
@@ -82,7 +82,7 @@ public class CollectionController : ControllerBase
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
-    [Authorize(Roles = "Admin, Staff, Customer")]
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCollectionDetails(int id)
     {
@@ -100,7 +100,7 @@ public class CollectionController : ControllerBase
                 p.Id,
                 p.NameProduct,
                 p.DescriptionProduct,
-                ImageUrls = p.ImageUrls.Select(iu => new { iu.Id, iu.ImageUrl }).ToList(),
+                ImageUrls = p.ImageUrls.Select(iu => iu.ImageUrl ).ToList(),
                 p.Price
             }).ToList()
         };
