@@ -8,6 +8,7 @@ namespace ZodiacJewelryWebApI.Controllers;
 
 [Route("api/collections")]
 [ApiController]
+[Authorize(Roles = "Staff")]
 public class CollectionController : ControllerBase
 {
     private readonly ICollectionService _collectionService;
@@ -17,8 +18,9 @@ public class CollectionController : ControllerBase
         _collectionService = collectionService;
     }
 
-    [AllowAnonymous]
+    
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetListCollection([FromQuery] int page = 1, [FromQuery] int pageSize = 5,
         [FromQuery] string search = "", [FromQuery] string filter = "", [FromQuery] string sort = "id")
     {
@@ -48,7 +50,6 @@ public class CollectionController : ControllerBase
         return Ok(formattedResult);
     }
 
-    [Authorize(Roles = "Staff")]
     [HttpPost]
     public async Task<IActionResult> CreateCollection([FromForm] CollectionsReqDTO form)
     {
@@ -74,7 +75,6 @@ public class CollectionController : ControllerBase
         return Ok(formattedResult);
     }
 
-    [Authorize(Roles = "Staff")]
     [HttpPost("{collectionId}/products/{productId}")]
     public async Task<IActionResult> AddProductToCollection(int collectionId, int productId)
     {
@@ -82,8 +82,9 @@ public class CollectionController : ControllerBase
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
-    [AllowAnonymous]
+    
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetCollectionDetails(int id)
     {
         var result = await _collectionService.GetCollectionDetails(id);
@@ -115,7 +116,6 @@ public class CollectionController : ControllerBase
 
     }
 
-    [Authorize(Roles = "Staff")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCollection(int id, [FromForm] CollectionsReqDTO form)
     {
@@ -135,7 +135,6 @@ public class CollectionController : ControllerBase
         return Ok(formattedResult);
     }
 
-    [Authorize(Roles = "Staff")]
     [HttpPatch("{id}/status")]
     public async Task<IActionResult> ChangeStatus(int id, [FromBody] CollectionStatusReqDTO statusReqDto)
     {
@@ -143,7 +142,6 @@ public class CollectionController : ControllerBase
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
-    [Authorize(Roles = "Staff")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCollection(int id)
     {
