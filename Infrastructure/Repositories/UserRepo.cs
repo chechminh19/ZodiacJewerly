@@ -1,6 +1,7 @@
 ﻿using Application.IRepositories;
 using Application.IService;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,16 @@ namespace Infrastructure.Repositories
             }
             return user;
         }
-
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var user = await _dbContext.User
+                 .FirstOrDefaultAsync(record => record.Email == email);
+            if (user is null)
+            {
+                throw new Exception("Email is not correct");
+            }
+            return user;
+        }
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
@@ -121,5 +131,7 @@ namespace Infrastructure.Repositories
                 await _dbContext.SaveChangesAsync();
             }
         }
+
+        
     }
 }

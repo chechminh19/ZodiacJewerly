@@ -1,4 +1,5 @@
-﻿using Application.IRepositories;
+﻿using Application.Enums;
+using Application.IRepositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -62,7 +63,7 @@ namespace Infrastructure.Repositories
         public async Task<List<OrderDetails>> GetAllOrderCart(int userId)
         {            
             return _dbContext.Order
-                .Where(o => o.UserId == userId)
+                .Where(o => o.UserId == userId && o.Status == (byte)OrderCart.Process)
                     .SelectMany(o => o.OrderDetails)
                     .Include(od => od.Product)
                         .ThenInclude(p => p.Category)

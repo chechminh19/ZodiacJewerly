@@ -40,7 +40,7 @@ namespace ZodiacJewelryWebApI.Middlewares
                         //    System.Console.WriteLine($"Failed to send registration success email to {user.Email}");
                         //}
                         //context.Response.Redirect($"https://zodiacjewerly.azurewebsites.net");
-                        context.Response.Redirect("https://swd-392.vercel.app/login");
+                        context.Response.Redirect("https://zodiacgems.vercel.app/login");
                         return;
                     }
                 }
