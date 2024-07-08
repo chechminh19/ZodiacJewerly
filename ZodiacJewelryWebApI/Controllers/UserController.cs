@@ -70,9 +70,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpGet("role/{role}")]
-        public async Task<IActionResult> GetAllUsersByRole(string role,[FromQuery] int page = 1, [FromQuery] int pageSize = 5, [FromQuery] string search = "", [FromQuery] string sort = "")
+        public async Task<IActionResult> CountUsersByRole(string role)
         {
-            var result = await _userService.GetAllUsersByRole(role, page, pageSize, search, sort);
+            var result = await _userService.CountUsersByRoleAsync(role);
             if (!result.Success)
             {
                 return NotFound(result);

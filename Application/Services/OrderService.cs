@@ -3,16 +3,9 @@ using Application.IService;
 using Application.ServiceResponse;
 using Application.Ultilities;
 using Application.ViewModels.OrderDTO;
-using Application.ViewModels.ProductDTO;
-using Application.ViewModels.ZodiacDTO;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -39,7 +32,7 @@ namespace Application.Services
 
             try
             {
-                var orders = await _orderRepo.GetAllOrders(); // Assuming this method supports async retrieval
+                var orders = await _orderRepo.GetAllOrders(); 
                 if (!string.IsNullOrEmpty(search))
                 {
                     orders = orders.Where(o =>
@@ -88,7 +81,7 @@ namespace Application.Services
                 if (order == null)
                 {
                     serviceResponse.Success = false;
-                    serviceResponse.Message = "Zodiac product not found";
+                    serviceResponse.Message = "Orders not found";
                 }
                 else
                 {

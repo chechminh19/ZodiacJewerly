@@ -1,14 +1,5 @@
 ﻿using Application.IRepositories;
-using Application.IService;
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Formats.Asn1;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -33,7 +24,8 @@ namespace Infrastructure.Repositories
 
         public async Task AddAsync(T entity)
         {
-             _dbSet.AddAsync(entity);            
+            _ = await _dbSet.AddAsync(entity);
+            _ = await context.SaveChangesAsync();
         }
 
         public async Task Update(T entity)

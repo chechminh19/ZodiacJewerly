@@ -41,7 +41,7 @@ public class CollectionsRepo : GenericRepo<Collections>, ICollectionRepo
 
             if (collection == null)
             {
-                return null;
+                return null!;
             }
 
             var collectionDetailResDto = new CollectionDetailResDTO()

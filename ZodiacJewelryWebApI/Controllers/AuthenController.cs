@@ -1,14 +1,8 @@
 ﻿using Application.IService;
-using Application.ServiceResponse;
-using Application.Utils;
 using Application.ViewModels.UserDTO;
-using CloudinaryDotNet.Actions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 
 namespace ZodiacJewelryWebApI.Controllers
 {
@@ -40,26 +34,18 @@ namespace ZodiacJewelryWebApI.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("staff")] //Admin
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> NewAccountStaff(RegisterDTO registerObject)
         {
-            var isAdmin = User.IsInRole("Admin");
-            if (!isAdmin)
-            {
-                return Unauthorized(new { message = "You do not have permission to do this" });
-            }
-
             var result = await _authenticationService.CreateStaff(registerObject);
 
             if (!result.Success)
             {
                 return BadRequest(result);
             }
-            else
-            {
-                return Ok(result);
-            }
+
+            return Ok(result);
         }
 
 
@@ -76,7 +62,7 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpPost("verify-otp")]
-        public async Task<IActionResult> VerifyOTP(VerifyOTPResetDTO request)
+        public async Task<IActionResult> VerifyOtp(VerifyOTPResetDTO request)
         {
             var response = await _authenticationService.VerifyForgotPassCode(request);
             if (!response.Success)
@@ -86,7 +72,8 @@ namespace ZodiacJewelryWebApI.Controllers
 
             return Ok(response);
         }
-        [HttpPost("pass-new")]
+
+        [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassWord(ResetPassDTO dto)
         {
             var response = await _authenticationService.ResetPass(dto);

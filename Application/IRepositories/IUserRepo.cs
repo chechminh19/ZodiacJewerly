@@ -17,12 +17,12 @@ namespace Application.IRepositories
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserByConfirmationToken(string token);
         Task<User> GetUserById(int id);
-        Task<IEnumerable<User>> GetAllUsers();
-        Task<IEnumerable<User>> GetAllUsersByRole(string role);
-        Task<IEnumerable<User>> GetAllUsersAdmin();
-        Task<IEnumerable<User>> GetAllUsersStaff();
-        Task<IEnumerable<User>> GetAllUsersCustomer();
-        Task AddUser(User user);
+        Task<IEnumerable<User?>> GetAllUsers();
+        Task<int> CountUsersByRoleAsync(string role);
+        Task<IEnumerable<User?>> GetAllUsersAdmin();
+        Task<IEnumerable<User?>> GetAllUsersStaff();
+        Task<IEnumerable<User?>> GetAllUsersCustomer();
+        Task AddUser(User? user);
         Task UpdateUser(User user);
         Task DeleteUser(int id);
     }

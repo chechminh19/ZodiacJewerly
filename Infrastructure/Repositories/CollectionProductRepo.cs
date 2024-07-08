@@ -1,5 +1,4 @@
 using Application.IRepositories;
-using Application.ViewModels.CollectionProductDTO;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,5 +24,11 @@ public class CollectionProductRepo : GenericRepo<CollectionProduct>, ICollection
 
         await _context.Set<CollectionProduct>().AddAsync(collectionProduct);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> ProductExistsInCollectionAsync(int collectionId, int productId)
+    {
+        return await _context.CollectionProduct
+            .AnyAsync(cp => cp.CollectionId == collectionId && cp.ProductId == productId);
     }
 }
