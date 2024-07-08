@@ -84,7 +84,20 @@ namespace Application.Services
                     response.Message = "Email not found";
                     return response;
                 }
-
+                var user = await _unitOfWork.UserRepository.GetUserByEmail(email);
+                if (user == null)
+                {
+                    response.Success = false;
+                    response.Message = "Invalid username";
+                    return response;
+                }
+                if (user.ConfirmationToken != null && !user.IsConfirmed)
+                {
+                    System.Console.WriteLine(user.ConfirmationToken + user.IsConfirmed);
+                    response.Success = false;
+                    response.Message = "Please confirm via link in your mail";
+                    return response;
+                }
                 var tokenEmail = await GenerateRandomPasswordResetTokenByEmailAsync(email);
                 var codeEmail = SendMail.GenerateRandomCodeWithExpiration(tokenEmail, 1);
                 var codeEmailSent = await SendMail.SendResetPass(_memoryCache, email, codeEmail, false);
