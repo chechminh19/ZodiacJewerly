@@ -15,6 +15,8 @@ namespace Application.IRepositories
         Task DeleteOrder(int id);
         Task<Order> CheckUserWithOrder(int userId);
         Task<List<OrderDetails>> GetAllOrderCart(int userId);
+        Task<List<OrderDetails>> GetAllOrderCartToPaid(long orderID);
         Task UpdateOrderDetail(OrderDetails orderDetail);
+        Task SaveChangesAsync();
     }
 }
