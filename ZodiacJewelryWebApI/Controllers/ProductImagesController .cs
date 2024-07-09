@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Domain.Entities;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +28,7 @@ namespace ZodiacJewelryWebApI.Controllers
             _cloudinary = new Cloudinary(cloudinaryAccount);
             _context = context;
         }
+
         [Authorize(Roles = "Staff,Admin")]
         [HttpPost("{productId}/images")]
         public async Task<IActionResult> UploadProductImages(int productId, [FromForm] List<IFormFile> files)
@@ -83,7 +81,8 @@ namespace ZodiacJewelryWebApI.Controllers
             if (product == null)
                 return NotFound("Product not found");
 
-            var productImage = await _context.ProductImage.FirstOrDefaultAsync(pi => pi.ProductId == productId && pi.Id == imageId);
+            var productImage =
+                await _context.ProductImage.FirstOrDefaultAsync(pi => pi.ProductId == productId && pi.Id == imageId);
             if (productImage == null)
                 return NotFound("Product image not found");
 

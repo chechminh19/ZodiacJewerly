@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.IRepositories;
 using Application.IService;
 using Application.ServiceResponse;
 using Application.Ultilities;
-using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
 using AutoMapper;
 using Domain.Entities;

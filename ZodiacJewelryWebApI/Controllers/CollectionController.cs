@@ -18,14 +18,14 @@ public class CollectionController : ControllerBase
         _collectionService = collectionService;
     }
 
-    
+
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> GetListCollection([FromQuery] int page = 1, [FromQuery] int pageSize = 5,
         [FromQuery] string search = "", [FromQuery] string filter = "", [FromQuery] string sort = "id")
     {
         var result = await _collectionService.GetListCollections(page, pageSize, search, filter, sort);
-        if (!result.Success) return BadRequest(result);
+        if (!result.Success) return BadRequest(result.Message);
         var formattedData = result.Data.ListData.Select(c => new
         {
             c.Id,
@@ -55,13 +55,13 @@ public class CollectionController : ControllerBase
     {
         var result = await _collectionService.CreateCollection(form);
 
-        if (!result.Success) return BadRequest(result);
+        if (!result.Success) return BadRequest(result.Message);
         var formattedData = new
         {
             result.Data.Id,
             result.Data.NameCollection,
             result.Data.ImageCollection,
-            DateOpen = result.Data.DateOpen.ToString("f"), 
+            DateOpen = result.Data.DateOpen.ToString("f"),
             DateClose = result.Data.DateClose.ToString("f"),
             result.Data.Status
         };
@@ -79,29 +79,36 @@ public class CollectionController : ControllerBase
     public async Task<IActionResult> AddProductToCollection(int collectionId, int productId)
     {
         var result = await _collectionService.AddProductToCollection(collectionId, productId);
-        return result.Success ? Ok(result) : BadRequest(result);
+        return result.Success ? Ok(result) : BadRequest(result.Message);
     }
 
-    
+    [HttpDelete("remove-product/{collectionId}/{productId}")]
+    public async Task<IActionResult> RemoveProduct(int collectionId, int productId)
+    {
+        var result = await _collectionService.RemoveProductFromCollectionAsync(collectionId, productId);
+        return result.Success ? Ok(result) : BadRequest(result.Message);
+    }
+
+
     [HttpGet("{id}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetCollectionDetails(int id)
     {
         var result = await _collectionService.GetCollectionDetails(id);
-        if (!result.Success) return BadRequest(result);
+        if (!result.Success) return BadRequest(result.Message);
         var formattedData = new
         {
             result.Data.Id,
             result.Data.NameCollection,
             result.Data.ImageCollection,
-            DateOpen = result.Data.DateOpen.ToString("f"), 
+            DateOpen = result.Data.DateOpen.ToString("f"),
             DateClose = result.Data.DateClose.ToString("f"),
             Products = result.Data.Products.Select(p => new
             {
                 p.Id,
                 p.NameProduct,
                 p.DescriptionProduct,
-                ImageUrls = p.ImageUrls.Select(iu => iu.ImageUrl ).ToList(),
+                ImageUrls = p.ImageUrls.Select(iu => iu.ImageUrl).ToList(),
                 p.Price
             }).ToList()
         };
@@ -113,14 +120,13 @@ public class CollectionController : ControllerBase
         };
 
         return Ok(formattedResult);
-
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCollection(int id, [FromForm] CollectionsReqDTO form)
     {
         var result = await _collectionService.UpdateCollection(form, id);
-        if (!result.Success) return BadRequest(result);
+        if (!result.Success) return BadRequest(result.Message);
         var formattedResult = new ServiceResponse<object>()
         {
             Data = new
@@ -139,13 +145,13 @@ public class CollectionController : ControllerBase
     public async Task<IActionResult> ChangeStatus(int id, [FromBody] CollectionStatusReqDTO statusReqDto)
     {
         var result = await _collectionService.ChangeStatusCollection(id, statusReqDto);
-        return result.Success ? Ok(result) : BadRequest(result);
+        return result.Success ? Ok(result) : BadRequest(result.Message);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCollection(int id)
     {
         var result = await _collectionService.DeleteCollection(id);
-        return result.Success ? Ok(result) : BadRequest(result);
+        return result.Success ? Ok(result) : BadRequest(result.Message);
     }
 }

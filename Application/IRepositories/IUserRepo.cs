@@ -11,7 +11,6 @@ namespace Application.IRepositories
     {
         Task<User> GetUserByEmailAddressAndPasswordHash(string email, string passwordHash);
         Task<User> GetUserByEmail(string email);
-
         Task<bool> CheckEmailAddressExisted(string emailaddress);
         Task<bool> CheckPhoneNumberExited(string phonenumber);
         Task<User> GetUserByEmailAsync(string email);
