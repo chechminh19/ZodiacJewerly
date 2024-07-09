@@ -70,7 +70,7 @@ namespace Infrastructure.Repositories
 
         public async Task<List<OrderDetails>> GetAllOrderCart(int userId)
         {            
-            return _dbContext.Order
+            return  _dbContext.Order
                 .Where(o => o.UserId == userId && o.Status == (byte)OrderCart.Process)
                     .SelectMany(o => o.OrderDetails)
                     .Include(od => od.Product)
@@ -90,6 +90,30 @@ namespace Infrastructure.Repositories
         {
             _dbContext.OrderDetail.Update(orderDetail);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<OrderDetails>> GetAllOrderCartToPaid(long orderID)
+        {
+            return await _dbContext.Order
+               .Where(o => o.Id == orderID && o.Status == (byte)OrderCart.Process)
+                   .SelectMany(o => o.OrderDetails)
+                   .Include(od => od.Product)
+                       .ThenInclude(p => p.Category)
+                   .Include(od => od.Product)
+                       .ThenInclude(p => p.Material)
+                   .Include(od => od.Product)
+                       .ThenInclude(p => p.Gender)
+                   .Include(od => od.Product)
+                       .ThenInclude(p => p.ProductImages)
+                   .Include(od => od.Product)
+                       .ThenInclude(p => p.ProductZodiacs)
+                           .ThenInclude(pz => pz.Zodiac)
+                   .ToListAsync();
         }
     }
 }

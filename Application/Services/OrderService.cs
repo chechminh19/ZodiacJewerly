@@ -301,5 +301,29 @@ namespace Application.Services
 
             return response;
         }
+
+        //public async Task UpdateOrderStatusToPaid(long orderCode)
+        //{
+        //    Order order = await _orderRepo.GetOrderById((int)orderCode);
+
+        //    if (order == null)
+        //    {
+        //        return;
+        //    }
+        //    order.Status = 2;
+        //    await UpdateProductQuantitiesBasedOnCart(order);
+        //    order.PaymentDate = DateTimeOffset.UtcNow.ToLocalTime();
+        //    await _orderRepo.SaveChangesAsync();
+        //}
+        //private async Task UpdateProductQuantitiesBasedOnCart(Order order)
+        //{          
+        //    var cartItems = await _orderRepo.GetAllOrderCartToPaid(order.Id);
+        //    foreach (var item in cartItems)
+        //    {
+        //        Product product = await _productRepo.GetProductById(item.ProductId);
+        //        product.Quantity -= item.Quantity;
+        //        await _productRepo.UpdateProduct(product);
+        //    }
+        //}
     }
 }
