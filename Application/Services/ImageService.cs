@@ -20,9 +20,10 @@ namespace Application.Services
         }
 
 
-        public  async Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page, int pageSize, string search, string sort)
+        public async Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page, int pageSize,
+            string search, string sort)
         {
-            var response = new ServiceResponse<PaginationModel<ProductImageDTO>>();                                                     
+            var response = new ServiceResponse<PaginationModel<ProductImageDTO>>();
 
             try
             {
@@ -31,16 +32,17 @@ namespace Application.Services
                 {
                     images = images.Where(p => p.ProductId == searchProductId);
                 }
+
                 images = sort.ToLower() switch
                 {
                     "publicid" => images.OrderBy(p => p.PublicId),
                     "productid" => images.OrderBy(p => p.ProductId),
-                    _ => images.OrderBy(p => p.Id) 
+                    _ => images.OrderBy(p => p.Id)
                 };
                 var imageDTOs = _mapper.Map<IEnumerable<ProductImageDTO>>(images); // Map images to ProductImageDTO
 
                 // Apply pagination
-                var paginationModel = await Pagination.GetPaginationIENUM(imageDTOs, page, pageSize); 
+                var paginationModel = await Pagination.GetPaginationIENUM(imageDTOs, page, pageSize);
 
                 response.Data = paginationModel;
                 response.Success = true;
@@ -81,30 +83,6 @@ namespace Application.Services
             }
 
             return serviceResponse;
-        }
-
-        public string GetPublicIdFromImageUrl(string imageUrl)
-        {
-            if (string.IsNullOrEmpty(imageUrl))
-            {
-                return null!;
-            }
-
-            // Split the URL by forward slashes (/)
-            var urlParts = imageUrl.Split('/');
-
-            // Cloudinary image URL usually follows a pattern:
-            // cloud_name/image/upload/transformations/public_id.extension
-    
-            // Assuming the public ID is the second part from the end (before extension)
-            int possiblePublicIdIndex = urlParts.Length - 2;
-
-            if (possiblePublicIdIndex >= 0 && !urlParts[possiblePublicIdIndex].Contains("."))
-            {
-                return urlParts[possiblePublicIdIndex];
-            }
-
-            return null!;
         }
     }
 }

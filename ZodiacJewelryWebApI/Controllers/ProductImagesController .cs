@@ -1,5 +1,4 @@
-﻿using Application.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
@@ -16,11 +15,9 @@ namespace ZodiacJewelryWebApI.Controllers
     public class ProductImagesController : ControllerBase
     {
         private readonly Cloudinary _cloudinary;
-        private readonly ImageService _imageService;
         private readonly AppDbContext _context;
 
-        public ProductImagesController(IOptions<CloudinarySettings> config, AppDbContext context,
-            ImageService imageService)
+        public ProductImagesController(IOptions<CloudinarySettings> config, AppDbContext context)
         {
             var cloudinaryAccount = new Account(
                 config.Value.CloudName,
@@ -30,7 +27,6 @@ namespace ZodiacJewelryWebApI.Controllers
 
             _cloudinary = new Cloudinary(cloudinaryAccount);
             _context = context;
-            _imageService = imageService;
         }
 
         [Authorize(Roles = "Staff,Admin")]
@@ -113,37 +109,6 @@ namespace ZodiacJewelryWebApI.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { imageUrl = productImage.ImageUrl });
-        }
-
-        [Authorize(Roles = "Staff,Admin")]
-        [HttpDelete("{productId}/images/{imageId}")]
-        public async Task<IActionResult> RemoveProductImage(int productId, int imageId)
-        {
-            var product = await _context.Product.FindAsync(productId);
-            if (product == null)
-                return NotFound("Product not found");
-
-            var productImage =
-                await _context.ProductImage.FirstOrDefaultAsync(pi => pi.ProductId == productId && pi.Id == imageId);
-            if (productImage == null)
-                return NotFound("Product image not found");
-
-            {
-                if (productImage.ImageUrl != null)
-                {
-                    var publicId =
-                        _imageService.GetPublicIdFromImageUrl(productImage.ImageUrl);
-
-                    var deletionParams = new DeletionParams(publicId);
-
-                    var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
-
-                    if (deletionResult.Result == "deleted") return Ok("Product image deleted successfully");
-                    _context.ProductImage.Remove(productImage);
-                    await _context.SaveChangesAsync();
-                }
-            }
-            return Ok("Product image deleted successfully");
         }
     }
 }
