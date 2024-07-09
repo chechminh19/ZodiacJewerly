@@ -28,6 +28,7 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpPost("{userid}/{productid}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> AddProductToOrder(int userid, int productid)
         {
             var result = await _orderService.AddProductToOrderAsync(userid, productid);
@@ -91,17 +92,16 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Staff,Admin")]
-        [HttpPut]
-        public async Task<IActionResult> UpdateOrder([FromBody] OrderDTO orderDTO)
+        [HttpPut("update-quantity")]
+        public async Task<IActionResult> UpdateQuantity([FromBody] UpdateQuantityRequest request)
         {
-            var result = await _orderService.UpdateOrder(orderDTO);
-            if (!result.Success)
+            var result = await _orderService.UpdateOrderQuantity(request.OrderId, request.ProductId, request.Quantity);
+            if (result.Success)
             {
-                return NotFound(result);
+                return Ok(result);
             }
 
-            return Ok(result);
+            return BadRequest(result);
         }
 
         [Authorize(Roles = "Staff,Admin")]

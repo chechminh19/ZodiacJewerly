@@ -7,7 +7,8 @@ namespace Application.IRepositories
 {
     public interface IOrderRepo : IGenericRepo<Order>
     {
-        Task<Order> GetOrderById(int id);
+        Task<Order?> GetOrderById(int id);
+        Task<Order?> GetOrderWithDetailsAsync(int orderId);
         Task<IEnumerable<Order>> GetAllOrders();
         Task AddOrder(Order order);
         Task AddOrderDetail(OrderDetails orderDetail);

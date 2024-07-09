@@ -16,9 +16,16 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
-        public async Task<Order> GetOrderById(int id)
+        public async Task<Order?> GetOrderById(int id)
         {
             return await _dbContext.Order.FindAsync(id);
+        }
+
+        public async Task<Order?> GetOrderWithDetailsAsync(int orderId)
+        {
+            return await _dbContext.Order
+                .Include(o => o.OrderDetails)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
         public async Task<IEnumerable<Order>> GetAllOrders()

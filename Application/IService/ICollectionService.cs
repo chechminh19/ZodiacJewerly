@@ -1,6 +1,5 @@
 using Application.ServiceResponse;
 using Application.ViewModels.CollectionsDTO;
-using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.IService;

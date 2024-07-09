@@ -118,28 +118,32 @@ public class CollectionService : ICollectionService
                 }
                 else
                 {
-                    var imageURl = await UploadImageCollection(createForm.ImageCollection);
-
-                    var collection = new Collections
+                    if (createForm.ImageCollection != null)
                     {
-                        NameCollection = createForm.NameCollection,
-                        ImageCollection = imageURl,
-                        DateOpen = DateTime.Now,
-                        DateClose = createForm.DateClose,
-                        Status = 1
-                    };
-                    await _collectionRepo.AddAsync(collection);
+                        var imageURl = await UploadImageCollection(createForm.ImageCollection);
 
-                    var newCollection = new CollectionsResDTO
-                    {
-                        Id = collection.Id,
-                        NameCollection = collection.NameCollection,
-                        ImageCollection = collection.ImageCollection,
-                        DateOpen = collection.DateOpen,
-                        DateClose = collection.DateClose,
-                        Status = collection.Status
-                    };
-                    result.Data = newCollection;
+                        var collection = new Collections
+                        {
+                            NameCollection = createForm.NameCollection,
+                            ImageCollection = imageURl,
+                            DateOpen = DateTime.Now,
+                            DateClose = createForm.DateClose,
+                            Status = 1
+                        };
+                        await _collectionRepo.AddAsync(collection);
+
+                        var newCollection = new CollectionsResDTO
+                        {
+                            Id = collection.Id,
+                            NameCollection = collection.NameCollection,
+                            ImageCollection = collection.ImageCollection,
+                            DateOpen = collection.DateOpen,
+                            DateClose = collection.DateClose,
+                            Status = collection.Status
+                        };
+                        result.Data = newCollection;
+                    }
+
                     result.Success = true;
                     result.Message = "Create Collection successfully!";
                 }

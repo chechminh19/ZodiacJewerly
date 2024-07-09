@@ -78,15 +78,9 @@ namespace Application.Services
             try
             {
                 var order = await _orderRepo.GetOrderById(id);
-                if (order == null)
                 {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = "Orders not found";
-                }
-                else
-                {
-                    var orderDTO = _mapper.Map<OrderDTO>(order);
-                    serviceResponse.Data = orderDTO;
+                    var orderDto = _mapper.Map<OrderDTO>(order);
+                    serviceResponse.Data = orderDto;
                     serviceResponse.Success = true;
                 }
             }
@@ -137,24 +131,32 @@ namespace Application.Services
         }
 
 
-        public async Task<ServiceResponse<string>> UpdateOrder(OrderDTO order)
+        public async Task<ServiceResponse<bool>> UpdateOrderQuantity(int orderId, int productId, int quantity)
         {
-            var serviceResponse = new ServiceResponse<string>();
+            var response = new ServiceResponse<bool>();
 
-            try
+            var order = await _orderRepo.GetOrderWithDetailsAsync(orderId);
+            if (order == null)
             {
-                var OrderEntity = _mapper.Map<Order>(order);
-                await _orderRepo.UpdateOrder(OrderEntity);
-                serviceResponse.Success = true;
-                serviceResponse.Message = "order updated successfully";
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "Failed to update order: " + ex.Message;
+                response.Success = false;
+                response.Message = "Order not found.";
+                return response;
             }
 
-            return serviceResponse;
+            var orderDetail = order.OrderDetails.FirstOrDefault(od => od.ProductId == productId);
+            if (orderDetail == null)
+            {
+                response.Success = false;
+                response.Message = "Product not found in order.";
+                return response;
+            }
+
+            orderDetail.QuantityProduct = quantity;
+            await _orderRepo.Update(order);
+
+            response.Data = true;
+            response.Message = "Quantity updated successfully.";
+            return response;
         }
 
         public async Task<ServiceResponse<string>> DeleteOrder(int id)

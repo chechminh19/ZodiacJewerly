@@ -14,10 +14,8 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
-        public async Task<User?> CheckEmailAddressExisted(string email)
-        {
-            return await _dbContext.User.FirstOrDefaultAsync(u => u.Email == email);
-        }
+        public async Task<bool> CheckEmailAddressExisted(string email) =>
+            await _dbContext.User.AnyAsync(u => u.Email == email);
 
         public async Task<bool> CheckPhoneNumberExited(string phonenumber) =>
             await _dbContext.User.AnyAsync(x => x.TelephoneNumber == phonenumber);
@@ -40,16 +38,19 @@ namespace Infrastructure.Repositories
 
             return user;
         }
+
         public async Task<User> GetUserByEmail(string email)
         {
             var user = await _dbContext.User
-                 .FirstOrDefaultAsync(record => record.Email == email);
+                .FirstOrDefaultAsync(record => record.Email == email);
             if (user is null)
             {
                 throw new Exception("Email is not correct");
             }
+
             return user;
         }
+
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
@@ -135,7 +136,5 @@ namespace Infrastructure.Repositories
                 await _dbContext.SaveChangesAsync();
             }
         }
-
-        
     }
 }
