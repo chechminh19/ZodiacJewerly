@@ -87,9 +87,35 @@ public class CollectionService : ICollectionService
         var result = new ServiceResponse<CollectionDetailResDTO>();
         try
         {
-            var collectionDetail = await _collectionRepo.GetCollectionDetails(collectionId);
+            var collection = await _collectionRepo.GetCollectionDetails(collectionId);
 
-            result.Data = collectionDetail;
+            if (collection == null)
+            {
+                return null!;
+            }
+
+            var collectionDetailResDto = new CollectionDetailResDTO()
+            {
+                Id = collection.Id,
+                NameCollection = collection.NameCollection,
+                ImageCollection = collection.ImageCollection,
+                DateOpen = collection.DateOpen,
+                DateClose = collection.DateClose,
+                Products = collection.CollectionProducts.Select(cp => new ProductOfCollectionResDTO
+                {
+                    Id = cp.Product.Id,
+                    NameProduct = cp.Product.NameProduct,
+                    DescriptionProduct = cp.Product.DescriptionProduct,
+                    ImageUrls = cp.Product.ProductImages.Select(pi => new ProductImageCollectionDTO
+                    {
+                        Id = pi.Id,
+                        ImageUrl = pi.ImageUrl
+                    }).ToList(),
+                    Price = cp.Product.Price
+                }).ToList()
+            };
+
+            result.Data = collectionDetailResDto;
             result.Success = true;
         }
         catch (Exception e)
@@ -189,25 +215,49 @@ public class CollectionService : ICollectionService
         return result;
     }
 
+    public async Task<ServiceResponse<bool>> RemoveProductFromCollectionAsync(int collectionId, int productId)
+    {
+        var response = new ServiceResponse<bool>();
+
+        var collection = await _collectionRepo.GetCollectionDetails(collectionId);
+        if (collection == null)
+        {
+            response.Success = false;
+            response.Message = "Collection not found.";
+            return response;
+        }
+
+        var collectionProduct = collection.CollectionProducts.FirstOrDefault(cp => cp.ProductId == productId);
+        if (collectionProduct == null)
+        {
+            response.Success = false;
+            response.Message = "Product not found in collection.";
+            return response;
+        }
+
+        collection.CollectionProducts.Remove(collectionProduct);
+        await _collectionRepo.Update(collection);
+
+        response.Data = true;
+        response.Message = "Product removed from collection successfully.";
+        return response;
+    }
+
 
     public async Task<string> UploadImageCollection(IFormFile file)
     {
-        if (file.Length > 0)
+        if (file.Length <= 0) throw new Exception("Failed to upload image");
+        await using var stream = file.OpenReadStream();
+        var upLoadParams = new ImageUploadParams()
         {
-            using (var stream = file.OpenReadStream())
-            {
-                var upLoadParams = new ImageUploadParams()
-                {
-                    File = new FileDescription(file.Name, stream),
-                    Transformation = new Transformation().Crop("fill").Gravity("face")
-                };
-                var uploadResult = await _cloudinary.UploadAsync(upLoadParams);
+            File = new FileDescription(file.Name, stream),
+            Transformation = new Transformation().Crop("fill").Gravity("face")
+        };
+        var uploadResult = await _cloudinary.UploadAsync(upLoadParams);
 
-                if (uploadResult.Url != null)
-                {
-                    return uploadResult.Url.ToString();
-                }
-            }
+        if (uploadResult.Url != null)
+        {
+            return uploadResult.Url.ToString();
         }
 
         throw new Exception("Failed to upload image");

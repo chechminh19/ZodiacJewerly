@@ -10,6 +10,7 @@ public interface ICollectionService
     public Task<ServiceResponse<CollectionDetailResDTO>> GetCollectionDetails(int collectionId);
     public Task<ServiceResponse<CollectionsResDTO>> CreateCollection(CollectionsReqDTO createForm);
     public Task<ServiceResponse<object>> AddProductToCollection(int collectionId, int productId);
+    public Task<ServiceResponse<bool>> RemoveProductFromCollectionAsync(int collectionId, int productId);
     public Task<string> UploadImageCollection(IFormFile file);
     public Task<ServiceResponse<CollectionsResDTO>> UpdateCollection(CollectionsReqDTO updateForm, int collectionId);
     public Task<ServiceResponse<CollectionsResDTO>> ChangeStatusCollection(int collectionId, CollectionStatusReqDTO statusReq);

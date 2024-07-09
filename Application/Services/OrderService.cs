@@ -32,7 +32,7 @@ namespace Application.Services
 
             try
             {
-                var orders = await _orderRepo.GetAllOrders(); 
+                var orders = await _orderRepo.GetAllOrders();
                 if (!string.IsNullOrEmpty(search))
                 {
                     orders = orders.Where(o =>
@@ -49,14 +49,15 @@ namespace Application.Services
                     "userid" => orders.OrderBy(o => o.UserId),
                     "payment" => orders.OrderBy(o => o.PaymentDate),
                     "status" => orders.OrderBy(o => o.Status),
-                    _ => orders.OrderBy(o => o.Id) 
+                    _ => orders.OrderBy(o => o.Id)
                 };
 
                 var orderDtOs = _mapper.Map<IEnumerable<OrderDTO>>(orders); // Map orders to OrderDTO
 
                 // Apply pagination
                 var paginationModel =
-                    await Pagination.GetPaginationIENUM(orderDtOs, page, pageSize); // Adjusted pageSize as per original example
+                    await Pagination.GetPaginationIENUM(orderDtOs, page,
+                        pageSize); // Adjusted pageSize as per original example
 
                 response.Data = paginationModel;
                 response.Success = true;
@@ -156,6 +157,34 @@ namespace Application.Services
 
             response.Data = true;
             response.Message = "Quantity updated successfully.";
+            return response;
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveProductFromCart(int orderId, int productId)
+        {
+            var response = new ServiceResponse<bool>();
+
+            var order = await _orderRepo.GetOrderWithDetailsAsync(orderId);
+            if (order == null)
+            {
+                response.Success = false;
+                response.Message = "Order not found.";
+                return response;
+            }
+
+            var orderDetail = order.OrderDetails.FirstOrDefault(od => od.ProductId == productId);
+            if (orderDetail == null)
+            {
+                response.Success = false;
+                response.Message = "Product not found in order.";
+                return response;
+            }
+
+            order.OrderDetails.Remove(orderDetail);
+            await _orderRepo.Update(order);
+
+            response.Data = true;
+            response.Message = "Product removed successfully.";
             return response;
         }
 
@@ -275,7 +304,7 @@ namespace Application.Services
                         NameMaterial = detail.Product.Material.NameMaterial,
                         NameCategory = detail.Product.Category.NameCategory,
                         NameGender = detail.Product.Gender.NameGender,
-                        ImageUrl = detail.Product.ProductImages.FirstOrDefault()?.ImageUrl,  
+                        ImageUrl = detail.Product.ProductImages.FirstOrDefault()?.ImageUrl,
                         OrderId = detail.OrderId,
                     };
                     productList.Add(productDto);

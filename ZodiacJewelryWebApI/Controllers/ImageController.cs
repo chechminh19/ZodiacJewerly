@@ -1,10 +1,6 @@
 ﻿using Application.IService;
-using Application.Services;
-using Application.ViewModels.OrderDTO;
-using Application.ViewModels.ProductDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ZodiacJewelryWebApI.Controllers

@@ -2,16 +2,8 @@
 using Application.IService;
 using Application.ServiceResponse;
 using Application.Ultilities;
-using Application.ViewModels.OrderDTO;
-using Application.ViewModels.ProductDTO;
 using Application.ViewModels.ProductImageDTO;
 using AutoMapper;
-using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -89,6 +81,30 @@ namespace Application.Services
             }
 
             return serviceResponse;
+        }
+
+        public string GetPublicIdFromImageUrl(string imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl))
+            {
+                return null!;
+            }
+
+            // Split the URL by forward slashes (/)
+            var urlParts = imageUrl.Split('/');
+
+            // Cloudinary image URL usually follows a pattern:
+            // cloud_name/image/upload/transformations/public_id.extension
+    
+            // Assuming the public ID is the second part from the end (before extension)
+            int possiblePublicIdIndex = urlParts.Length - 2;
+
+            if (possiblePublicIdIndex >= 0 && !urlParts[possiblePublicIdIndex].Contains("."))
+            {
+                return urlParts[possiblePublicIdIndex];
+            }
+
+            return null!;
         }
     }
 }

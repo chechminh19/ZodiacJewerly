@@ -1,15 +1,11 @@
 ﻿using Application.IService;
-using Application.Services;
 using Application.Utils.PaymentTypes;
 using Application.ViewModels.OrderDTO;
-using Application.ViewModels.ProductDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Net.payOS.Types;
 using Net.payOS;
-using Azure;
 
 namespace ZodiacJewelryWebApI.Controllers
 {
@@ -52,7 +48,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin, Staff, Customer")]
+        [Authorize(Roles = "Admin, Staff")]
         [HttpGet]
         public async Task<IActionResult> GetAllOrders([FromQuery] int page = 1, [FromQuery] int pageSize = 5,
             [FromQuery] string search = "", [FromQuery] string filter = "", [FromQuery] string sort = "id")
@@ -93,9 +89,23 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         [HttpPut("update-quantity")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UpdateQuantity([FromBody] UpdateQuantityRequest request)
         {
             var result = await _orderService.UpdateOrderQuantity(request.OrderId, request.ProductId, request.Quantity);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpDelete("remove-product/{orderId}/{productId}")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> RemoveProduct(int orderId, int productId)
+        {
+            var result = await _orderService.RemoveProductFromCart(orderId, productId);
             if (result.Success)
             {
                 return Ok(result);
