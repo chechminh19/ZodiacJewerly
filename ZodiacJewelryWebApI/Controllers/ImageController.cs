@@ -43,6 +43,19 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-  
+
+
+        [Authorize(Roles = "Staff,Admin")]
+        [HttpDelete("image/{id}")]
+        public async Task<IActionResult> DeleteProductImage(int id)
+        {
+            var result = await _imageService.DeleteProductImage(id);
+            if (!result.Success)
+            {
+                return NotFound(result);
+            }
+            return Ok(result);
+        }
+
     }
 }
