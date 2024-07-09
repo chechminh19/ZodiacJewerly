@@ -84,5 +84,26 @@ namespace Application.Services
 
             return serviceResponse;
         }
+
+
+
+        public async Task<ServiceResponse<string>> DeleteProductImage(int id)
+        {
+            var serviceResponse = new ServiceResponse<string>();
+
+            try
+            {
+                await _imageRepo.DeleteProductImage(id);
+                serviceResponse.Success = true;
+                serviceResponse.Message = "Product image deleted successfully";
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Failed to delete product image: " + ex.Message;
+            }
+
+            return serviceResponse;
+        }
     }
 }
