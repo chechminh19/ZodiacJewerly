@@ -10,6 +10,7 @@ namespace Application.IRepositories
         Task<ProductImage> GetImageInforById(int id);
         Task<IEnumerable<ProductImage>> GetAllImageInfors();
 
-       
+        Task DeleteProductImage(int id);
+
     }
 }

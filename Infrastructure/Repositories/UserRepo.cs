@@ -13,6 +13,10 @@ namespace Infrastructure.Repositories
         {
             _dbContext = context;
         }
+
+        public async Task<bool> CheckEmailAddressExisted(string email) =>
+            await _dbContext.User.AnyAsync(u => u.Email == email);
+
         public async Task<bool> CheckPhoneNumberExited(string phonenumber) =>
             await _dbContext.User.AnyAsync(x => x.TelephoneNumber == phonenumber);
 
@@ -130,7 +134,6 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<bool> CheckEmailAddressExisted(string email) => await _dbContext.User.AnyAsync(u => u.Email == email);
         
     }
 }

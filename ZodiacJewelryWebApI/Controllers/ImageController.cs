@@ -1,10 +1,6 @@
 ﻿using Application.IService;
-using Application.Services;
-using Application.ViewModels.OrderDTO;
-using Application.ViewModels.ProductDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ZodiacJewelryWebApI.Controllers
@@ -43,6 +39,19 @@ namespace ZodiacJewelryWebApI.Controllers
             }
             return Ok(result);
         }
-  
+
+
+        [Authorize(Roles = "Staff,Admin")]
+        [HttpDelete("image/{id}")]
+        public async Task<IActionResult> DeleteProductImage(int id)
+        {
+            var result = await _imageService.DeleteProductImage(id);
+            if (!result.Success)
+            {
+                return NotFound(result);
+            }
+            return Ok(result);
+        }
+
     }
 }

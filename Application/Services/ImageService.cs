@@ -2,16 +2,8 @@
 using Application.IService;
 using Application.ServiceResponse;
 using Application.Ultilities;
-using Application.ViewModels.OrderDTO;
-using Application.ViewModels.ProductDTO;
 using Application.ViewModels.ProductImageDTO;
 using AutoMapper;
-using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -28,9 +20,10 @@ namespace Application.Services
         }
 
 
-        public  async Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page, int pageSize, string search, string sort)
+        public async Task<ServiceResponse<PaginationModel<ProductImageDTO>>> GetAllImageInfors(int page, int pageSize,
+            string search, string sort)
         {
-            var response = new ServiceResponse<PaginationModel<ProductImageDTO>>();                                                     
+            var response = new ServiceResponse<PaginationModel<ProductImageDTO>>();
 
             try
             {
@@ -39,16 +32,17 @@ namespace Application.Services
                 {
                     images = images.Where(p => p.ProductId == searchProductId);
                 }
+
                 images = sort.ToLower() switch
                 {
                     "publicid" => images.OrderBy(p => p.PublicId),
                     "productid" => images.OrderBy(p => p.ProductId),
-                    _ => images.OrderBy(p => p.Id) 
+                    _ => images.OrderBy(p => p.Id)
                 };
                 var imageDTOs = _mapper.Map<IEnumerable<ProductImageDTO>>(images); // Map images to ProductImageDTO
 
                 // Apply pagination
-                var paginationModel = await Pagination.GetPaginationIENUM(imageDTOs, page, pageSize); 
+                var paginationModel = await Pagination.GetPaginationIENUM(imageDTOs, page, pageSize);
 
                 response.Data = paginationModel;
                 response.Success = true;
@@ -86,6 +80,27 @@ namespace Application.Services
             {
                 serviceResponse.Success = false;
                 serviceResponse.Message = ex.Message;
+            }
+
+            return serviceResponse;
+        }
+
+
+
+        public async Task<ServiceResponse<string>> DeleteProductImage(int id)
+        {
+            var serviceResponse = new ServiceResponse<string>();
+
+            try
+            {
+                await _imageRepo.DeleteProductImage(id);
+                serviceResponse.Success = true;
+                serviceResponse.Message = "Product image deleted successfully";
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Failed to delete product image: " + ex.Message;
             }
 
             return serviceResponse;
