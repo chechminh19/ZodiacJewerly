@@ -300,28 +300,41 @@ namespace Application.Services
             return response;
         }
 
-        //public async Task UpdateOrderStatusToPaid(long orderCode)
-        //{
-        //    Order order = await _orderRepo.GetOrderById((int)orderCode);
+        public async Task UpdateOrderStatusToPaid(long orderCode)
+        {
+            try
+            {
+                Order order = await _orderRepo.GetOrderById((int)orderCode);
 
-        //    if (order == null)
-        //    {
-        //        return;
-        //    }
-        //    order.Status = 2;
-        //    await UpdateProductQuantitiesBasedOnCart(order);
-        //    order.PaymentDate = DateTimeOffset.UtcNow.ToLocalTime();
-        //    await _orderRepo.SaveChangesAsync();
-        //}
-        //private async Task UpdateProductQuantitiesBasedOnCart(Order order)
-        //{          
-        //    var cartItems = await _orderRepo.GetAllOrderCartToPaid(order.Id);
-        //    foreach (var item in cartItems)
-        //    {
-        //        Product product = await _productRepo.GetProductById(item.ProductId);
-        //        product.Quantity -= item.Quantity;
-        //        await _productRepo.UpdateProduct(product);
-        //    }
-        //}
+                if (order == null)
+                {
+                    return;
+                }
+                order.Status = 2;
+                //TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"); // Múi giờ Việt Nam
+                DateTime currentTimeUtc = DateTime.UtcNow;
+                // Chuyển đổi từ múi giờ UTC sang múi giờ Việt Nam
+                order.PaymentDate = currentTimeUtc;
+
+                await _orderRepo.SaveChangesAsync();
+            }catch(Exception e) {
+            }
+        }
+        private async Task UpdateProductQuantitiesBasedOnCart(Order order)
+        {
+            var cartItems = await _orderRepo.GetAllOrderCartToPaid(order.Id);
+            foreach (var item in cartItems)
+            {
+                try
+                {
+                    Product product = await _productRepo.GetProductById(item.ProductId);
+                    product.Quantity -= item.QuantityProduct;
+                    await _productRepo.UpdateProduct(product);
+                }catch (Exception e)
+                {
+
+                }
+            }
+        }
     }
 }

@@ -28,17 +28,9 @@ namespace ZodiacJewelryWebApI.Controllers
 
                 if (data.description == "Ma giao dich thu nghiem" || data.description == "VQRIO123")
                 {
-                    //long orderCode =  data.orderCode;
-               
-                    //_orderService.UpdateOrderStatusToPaid(orderCode);
+                    long orderCode = data.orderCode;
 
-                    //// Cập nhật số lượng sản phẩm dựa trên giỏ hàng
-                    //UpdateProductQuantitiesBasedOnCart(orderCode);
-
-                    //// Ghi lại datetime thanh toán thành công
-                    //DateTime paymentSuccessDatetime = DateTime.UtcNow;
-                    //_orderService.RecordPaymentSuccessDatetime(orderCode, paymentSuccessDatetime);
-
+                    _orderService.UpdateOrderStatusToPaid(orderCode);
                     return Ok(new ResponsePayment(0, "Ok", null));
                 }
                 return Ok(new ResponsePayment(0, "Ok", null));
