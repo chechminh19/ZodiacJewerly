@@ -78,7 +78,7 @@ namespace Application.Services
             try
             {
                 var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(email);
-                if (existEmail == null)
+                if (existEmail)
                 {
                     response.Success = false;
                     response.Message = "Email not found";
@@ -194,7 +194,7 @@ namespace Application.Services
             try
             {
                 var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(userObjectDTO.Email);
-                if (existEmail != null)
+                if (existEmail)
                 {
                     response.Success = false;
                     response.Message = "Email is already existed";
@@ -293,7 +293,7 @@ namespace Application.Services
             try
             {
                 var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(userObject.Email);
-                if (existEmail != null)
+                if (existEmail)
                 {
                     response.Success = false;
                     response.Message = "Email is already existed";
