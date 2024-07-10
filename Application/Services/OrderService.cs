@@ -213,7 +213,7 @@ namespace Application.Services
             try
             {
                 var checkUserOrder = await _orderRepo.CheckUserWithOrder(userId);
-                if (checkUserOrder == null)
+                if (checkUserOrder == null || checkUserOrder.Status == 2)
                 {
                     Order newOrder = new Order
                     {
