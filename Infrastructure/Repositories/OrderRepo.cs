@@ -86,6 +86,26 @@ namespace Infrastructure.Repositories
                             .ThenInclude(pz => pz.Zodiac)
                     .ToList();      
         }
+
+        public async Task<List<OrderDetails>> GetAllOrderDetailById(int orderId)
+        {
+            return await _dbContext.Order
+                .Where(o => o.Id == orderId)
+                .SelectMany(o => o.OrderDetails)
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.Material)
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.Gender)
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.ProductImages)
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.ProductZodiacs)
+                        .ThenInclude(pz => pz.Zodiac)
+                .ToListAsync();
+        }
+
         public async Task UpdateOrderDetail(OrderDetails orderDetail)
         {
             _dbContext.OrderDetail.Update(orderDetail);

@@ -48,6 +48,20 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
+
+        [Authorize(Roles = "Staff,Admin,Customer")]
+        [HttpGet("order/{orderid}")]
+        public async Task<IActionResult> GetAllOrderDetailById(int orderid)
+        {
+            var result = await _orderService.GetAllOrderDetailById(orderid);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
         [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet]
         public async Task<IActionResult> GetAllOrders([FromQuery] int page = 1, [FromQuery] int pageSize = 5,

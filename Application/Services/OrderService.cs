@@ -331,6 +331,67 @@ namespace Application.Services
             return response;
         }
 
+
+
+
+        public async Task<ServiceResponse<CreateOrderDTO>> GetAllOrderDetailById(int orderId)
+        {
+            var response = new ServiceResponse<CreateOrderDTO>();
+            try
+            {
+                var listDetail = await _orderRepo.GetAllOrderDetailById(orderId);
+                if (listDetail == null)
+                {
+                    response.Success = true;
+                    response.Message = "No order here";
+                    response.Data = null;
+                    response.PriceTotal = 0;
+                    return response;
+                }
+
+                var productList = new List<ProductToCreateOrderDTO>();
+
+                foreach (var detail in listDetail)
+                {
+                    var zodiacNames = _zodiPro.GetZodiacNameForProduct(detail.ProductId);
+                    var productDto = new ProductToCreateOrderDTO
+                    {
+                        ProductId = detail.ProductId,
+                        ZodiacName = zodiacNames,
+                        NameProduct = detail.Product.NameProduct,
+                        DescriptionProduct = detail.Product.DescriptionProduct,
+                        Price = detail.Product.Price,
+                        Quantity = detail.QuantityProduct,
+                        NameMaterial = detail.Product.Material.NameMaterial,
+                        NameCategory = detail.Product.Category.NameCategory,
+                        NameGender = detail.Product.Gender.NameGender,
+                        ImageUrl = detail.Product.ProductImages.FirstOrDefault()?.ImageUrl,
+                        OrderId = detail.OrderId,
+                    };
+                    productList.Add(productDto);
+                }
+
+                double priceTotal = productList.Sum(productDto => productDto.Price * productDto.Quantity);
+                response.Success = true;
+                response.Data = new CreateOrderDTO { Product = productList, PriceTotal = priceTotal };
+                return response;
+            }
+            catch (DbException e)
+            {
+                response.Success = false;
+                response.Message = "Database error occurred.";
+                response.ErrorMessages = new List<string> { e.Message };
+            }
+            catch (Exception e)
+            {
+                response.Success = false;
+                response.Message = "Error";
+                response.ErrorMessages = new List<string> { e.Message, e.StackTrace };
+            }
+
+            return response;
+        }
+
         public async Task UpdateOrderStatusToPaid(long orderCode)
         {
             try
