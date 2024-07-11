@@ -65,9 +65,9 @@ namespace ZodiacJewelryWebApI.Controllers
         [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet]
         public async Task<IActionResult> GetAllOrders([FromQuery] int page = 1, [FromQuery] int pageSize = 5,
-            [FromQuery] string search = "", [FromQuery] string filter = "", [FromQuery] string sort = "id")
+            [FromQuery] string search = "", [FromQuery] string status = "", [FromQuery] string sort = "id")
         {
-            var result = await _orderService.GetAllOrder(page, pageSize, search, filter, sort);
+            var result = await _orderService.GetAllOrder(page, pageSize, search, status, sort);
             if (!result.Success)
             {
                 return BadRequest(result);

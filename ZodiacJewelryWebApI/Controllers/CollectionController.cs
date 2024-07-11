@@ -18,13 +18,15 @@ public class CollectionController : ControllerBase
         _collectionService = collectionService;
     }
 
-
+    /// <summary>
+    /// Gets a paginated list of collections.
+    /// </summary>
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> GetListCollection([FromQuery] int page = 1, [FromQuery] int pageSize = 5,
-        [FromQuery] string search = "", [FromQuery] string filter = "", [FromQuery] string sort = "id")
+        [FromQuery] string search = "", [FromQuery] string status = "", [FromQuery] string sort = "id")
     {
-        var result = await _collectionService.GetListCollections(page, pageSize, search, filter, sort);
+        var result = await _collectionService.GetListCollections(page, pageSize, search, status, sort);
         if (!result.Success) return BadRequest(result.Message);
         var formattedData = result.Data.ListData.Select(c => new
         {
@@ -50,46 +52,10 @@ public class CollectionController : ControllerBase
         return Ok(formattedResult);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateCollection([FromForm] CollectionsReqDTO form)
-    {
-        var result = await _collectionService.CreateCollection(form);
 
-        if (!result.Success) return BadRequest(result.Message);
-        var formattedData = new
-        {
-            result.Data.Id,
-            result.Data.NameCollection,
-            result.Data.ImageCollection,
-            DateOpen = result.Data.DateOpen.ToString("f"),
-            DateClose = result.Data.DateClose.ToString("f"),
-            result.Data.Status
-        };
-
-        var formattedResult = new ServiceResponse<object>
-        {
-            Data = formattedData,
-            Success = result.Success,
-            Message = result.Message,
-        };
-        return Ok(formattedResult);
-    }
-
-    [HttpPost("{collectionId}/products/{productId}")]
-    public async Task<IActionResult> AddProductToCollection(int collectionId, int productId)
-    {
-        var result = await _collectionService.AddProductToCollection(collectionId, productId);
-        return result.Success ? Ok(result) : BadRequest(result.Message);
-    }
-
-    [HttpDelete("remove-product/{collectionId}/{productId}")]
-    public async Task<IActionResult> RemoveProduct(int collectionId, int productId)
-    {
-        var result = await _collectionService.RemoveProductFromCollectionAsync(collectionId, productId);
-        return result.Success ? Ok(result) : BadRequest(result.Message);
-    }
-
-
+    /// <summary>
+    /// Gets the details of a collection by its ID.
+    /// </summary>
     [HttpGet("{id}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetCollectionDetails(int id)
@@ -122,6 +88,49 @@ public class CollectionController : ControllerBase
         return Ok(formattedResult);
     }
 
+    /// <summary>
+    /// Creates a new collection.
+    /// </summary>
+    [HttpPost]
+    public async Task<IActionResult> CreateCollection([FromForm] CollectionsReqDTO form)
+    {
+        var result = await _collectionService.CreateCollection(form);
+
+        if (!result.Success) return BadRequest(result.Message);
+        var formattedData = new
+        {
+            result.Data.Id,
+            result.Data.NameCollection,
+            result.Data.ImageCollection,
+            DateOpen = result.Data.DateOpen.ToString("f"),
+            DateClose = result.Data.DateClose.ToString("f"),
+            result.Data.Status
+        };
+
+        var formattedResult = new ServiceResponse<object>
+        {
+            Data = formattedData,
+            Success = result.Success,
+            Message = result.Message,
+        };
+        return Ok(formattedResult);
+    }
+
+
+    /// <summary>
+    /// Adds a product to a collection.
+    /// </summary>
+    [HttpPost("{collectionId}/products/{productId}")]
+    public async Task<IActionResult> AddProductToCollection(int collectionId, int productId)
+    {
+        var result = await _collectionService.AddProductToCollection(collectionId, productId);
+        return result.Success ? Ok(result) : BadRequest(result.Message);
+    }
+
+
+    /// <summary>
+    /// Updates an existing collection.
+    /// </summary>
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCollection(int id, [FromForm] CollectionsReqDTO form)
     {
@@ -141,6 +150,9 @@ public class CollectionController : ControllerBase
         return Ok(formattedResult);
     }
 
+    /// <summary>
+    /// Changes the status of a collection.
+    /// </summary>
     [HttpPatch("{id}/status")]
     public async Task<IActionResult> ChangeStatus(int id, [FromBody] CollectionStatusReqDTO statusReqDto)
     {
@@ -148,6 +160,21 @@ public class CollectionController : ControllerBase
         return result.Success ? Ok(result) : BadRequest(result.Message);
     }
 
+
+    /// <summary>
+    /// Removes a product from a collection.
+    /// </summary>
+    [HttpDelete("remove-product/{collectionId}/{productId}")]
+    public async Task<IActionResult> RemoveProduct(int collectionId, int productId)
+    {
+        var result = await _collectionService.RemoveProductFromCollectionAsync(collectionId, productId);
+        return result.Success ? Ok(result) : BadRequest(result.Message);
+    }
+
+
+    /// <summary>
+    /// Deletes a collection by its ID.
+    /// </summary>
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCollection(int id)
     {

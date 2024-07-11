@@ -2,8 +2,6 @@
 using Application.IRepositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -115,6 +113,16 @@ namespace Infrastructure.Repositories
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> GetProductSoldThisMonthAsync()
+        {
+            var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+
+            return await _dbContext.OrderDetail
+                .Where(od => od.Order.PaymentDate >= startDate && od.Order.PaymentDate <= endDate)
+                .SumAsync(od => od.QuantityProduct);
         }
 
         public async Task<List<OrderDetails>> GetAllOrderCartToPaid(long orderID)
