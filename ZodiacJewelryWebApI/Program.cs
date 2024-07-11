@@ -1,3 +1,4 @@
+using System.Reflection;
 using Application.Commons;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -112,6 +113,9 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT",
         Scheme = "bearer"
     });
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     c.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
@@ -135,7 +139,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
 }
 app.UseSwagger();
 app.UseSwaggerUI(c =>

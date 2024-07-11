@@ -19,5 +19,6 @@ namespace Application.IRepositories
         Task<List<OrderDetails>> GetAllOrderCartToPaid(long orderID);
         Task UpdateOrderDetail(OrderDetails orderDetail);
         Task SaveChangesAsync();
+        Task<int> GetProductSoldThisMonthAsync();
     }
 }

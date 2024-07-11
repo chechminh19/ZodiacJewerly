@@ -1,10 +1,6 @@
 ﻿using Application.IRepositories;
-using Application.ViewModels.OrderDTO;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -119,6 +115,11 @@ namespace Infrastructure.Repositories
         public double GetProductPriceById(int productId)
         {
             return _dbContext.Product.FirstOrDefault(p => p.Id == productId)?.Price ?? 0;
+        }
+
+        public async Task<int> GetTotalProductsAsync()
+        {
+            return await _dbContext.Product.CountAsync();
         }
     }
 }

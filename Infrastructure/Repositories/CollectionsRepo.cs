@@ -16,7 +16,7 @@ public class CollectionsRepo : GenericRepo<Collections>, ICollectionRepo
 
     public async Task<List<Collections>> GetCollections()
     {
-        return await _context.Collection.Where(c => c.Status == (byte)Status.Active).ToListAsync();
+        return await _context.Collection.ToListAsync();
     }
 
     public async Task<Collections?> GetCollectionById(int collectionId)

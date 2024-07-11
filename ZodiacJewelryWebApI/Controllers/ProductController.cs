@@ -9,19 +9,18 @@ namespace ZodiacJewelryWebApI.Controllers
     [EnableCors("Allow")]
     [Route("api/products")]
     [ApiController]
+    [Authorize(Roles = "Staff,Admin,Customer")]
     public class ProductController : BaseController
     {
         private readonly IProductService _productService;
-        private readonly IZodiacProductService _zodiacService;
 
 
-        public ProductController(IProductService productService, IZodiacProductService zodiacService)
+        public ProductController(IProductService productService)
         {
             _productService = productService;
-            _zodiacService = zodiacService;
         }
 
-        [Authorize(Roles = "Staff,Admin,Customer")]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAllProductsAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 5,
             [FromQuery] string search = "", [FromQuery] string sort = "")
@@ -35,7 +34,7 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Staff,Admin,Customer")]
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductByIdAsync(int id)
         {
@@ -82,6 +81,21 @@ namespace ZodiacJewelryWebApI.Controllers
             if (!result.Success)
             {
                 return NotFound(result);
+            }
+
+            return Ok(result);
+        }
+
+
+        /// <returns>Product statistics.</returns>
+        [AllowAnonymous]
+        [HttpGet("statistics")]
+        public async Task<IActionResult> GetProductStatistics()
+        {
+            var result = await _productService.GetProductStatisticsAsync();
+            if (!result.Success)
+            {
+                return BadRequest(result);
             }
 
             return Ok(result);

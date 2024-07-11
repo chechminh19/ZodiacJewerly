@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿    using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +16,6 @@ namespace Application.IRepositories
         Task DeleteProduct(int id);
         Task<Product> GetProductByIdToOrder(int id);
         double GetProductPriceById(int productId);
+        Task<int> GetTotalProductsAsync();
     }
 }

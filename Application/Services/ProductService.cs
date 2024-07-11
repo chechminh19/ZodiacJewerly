@@ -13,16 +13,20 @@ namespace Application.Services
     {
         private readonly IProductRepo _productRepo;
         private readonly IZodiacProductRepo _zodiacProductRepo;
+        private readonly IOrderRepo _orderRepo;
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepo productRepo, IZodiacProductRepo zodiacProductRepo, IMapper mapper)
+        public ProductService(IProductRepo productRepo, IZodiacProductRepo zodiacProductRepo, IMapper mapper,
+            IOrderRepo orderRepo)
         {
             _productRepo = productRepo ?? throw new ArgumentNullException(nameof(productRepo));
             _zodiacProductRepo = zodiacProductRepo ?? throw new ArgumentNullException(nameof(zodiacProductRepo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _orderRepo = orderRepo;
         }
 
-        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsAsync(int page, int pageSize, string search, string sort)
+        public async Task<ServiceResponse<PaginationModel<ProductDTO>>> GetAllProductsAsync(int page, int pageSize,
+            string search, string sort)
         {
             var response = new ServiceResponse<PaginationModel<ProductDTO>>();
 
@@ -42,7 +46,7 @@ namespace Application.Services
                     "category" => products.OrderBy(p => p.CategoryId),
                     "material" => products.OrderBy(p => p.MaterialId),
                     "gender" => products.OrderBy(p => p.GenderId),
-                    _ => products.OrderBy(p => p.Id) 
+                    _ => products.OrderBy(p => p.Id)
                 };
                 var productDTOs = MapToDTO(products); // Map products to ProductDTO
 
@@ -208,6 +212,30 @@ namespace Application.Services
             {
                 response.Success = false;
                 response.Message = $"Failed to delete product: {ex.Message}";
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<ProductStatisticsDTO>> GetProductStatisticsAsync()
+        {
+            var response = new ServiceResponse<ProductStatisticsDTO>();
+            try
+            {
+                var totalProduct = await _productRepo.GetTotalProductsAsync();
+                var productSoldThisMonth = await _orderRepo.GetProductSoldThisMonthAsync();
+
+                response.Data = new ProductStatisticsDTO()
+                {
+                    TotalProducts = totalProduct,
+                    ProductSoldThisMonth = productSoldThisMonth
+                };
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
             }
 
             return response;
