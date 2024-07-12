@@ -58,7 +58,8 @@ namespace Infrastructure.Repositories
 
         public async Task<Order> CheckUserWithOrder(int userId)
         {
-            var order = await _dbContext.Order.Include(p => p.OrderDetails).FirstOrDefaultAsync(p=>p.UserId == userId);
+            var order = await _dbContext.Order.Include(p => p.OrderDetails)
+                .FirstOrDefaultAsync(p=>p.UserId == userId && p.Status == (byte)OrderCart.Process);
             return order;
         }
 
