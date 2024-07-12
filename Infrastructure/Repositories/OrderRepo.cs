@@ -2,8 +2,6 @@
 using Application.IRepositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -87,6 +85,26 @@ namespace Infrastructure.Repositories
                             .ThenInclude(pz => pz.Zodiac)
                     .ToList();      
         }
+
+        public async Task<List<OrderDetails>> GetAllOrderDetailById(int orderId)
+        {
+            return await _dbContext.Order
+                .Where(o => o.Id == orderId)
+                .SelectMany(o => o.OrderDetails)
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.Material)
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.Gender)
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.ProductImages)
+                .Include(od => od.Product)
+                    .ThenInclude(p => p.ProductZodiacs)
+                        .ThenInclude(pz => pz.Zodiac)
+                .ToListAsync();
+        }
+
         public async Task UpdateOrderDetail(OrderDetails orderDetail)
         {
             _dbContext.OrderDetail.Update(orderDetail);
@@ -96,6 +114,16 @@ namespace Infrastructure.Repositories
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> GetProductSoldThisMonthAsync()
+        {
+            var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+
+            return await _dbContext.OrderDetail
+                .Where(od => od.Order.PaymentDate >= startDate && od.Order.PaymentDate <= endDate)
+                .SumAsync(od => od.QuantityProduct);
         }
 
         public async Task<List<OrderDetails>> GetAllOrderCartToPaid(long orderID)
