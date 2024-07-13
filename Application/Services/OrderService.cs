@@ -213,7 +213,7 @@ namespace Application.Services
             try
             {
                 var checkUserOrder = await _orderRepo.CheckUserWithOrder(userId);
-                if (checkUserOrder == null || checkUserOrder.Status == 2)
+                if (checkUserOrder == null)
                 {
                     Order newOrder = new Order
                     {
@@ -232,7 +232,7 @@ namespace Application.Services
                     response.Success = true;
                     response.Message = "Add Product successfully when have no order already for user";
                 }
-                else
+                else if(checkUserOrder.Status == 1)
                 {
                     var existingOrder = checkUserOrder.OrderDetails.FirstOrDefault(od => od.ProductId == productId);
                     if (existingOrder != null)
@@ -242,7 +242,7 @@ namespace Application.Services
                         response.Success = true;
                         response.Message = "add duplicate success";
                     }
-                    else
+                    else if(existingOrder == null)
                     {
                         OrderDetails existingOrderDetail = new OrderDetails
                         {
