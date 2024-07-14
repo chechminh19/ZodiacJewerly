@@ -27,14 +27,14 @@ namespace Application.Utils
 
             DateTime expirationTime = DateTime.Now.AddMinutes(minutesToExpire);
             string code = codeWithExpiration.ToString();
-            
+             
             return code;
         }
         public static async Task<bool> SendResetPass(IMemoryCache cache,string toEmail, string code, bool showExpirationTime)
         {
             var userName = "ZodiacJewelry";
-            var emailFrom = "minhpcse172904@fpt.edu.vn";
-            var password = "lwfr bgex dipf iijf";
+            var emailFrom = "chechminh1136@gmail.com";
+            var password = "fnwl dkyf sqps wgoq";
 
             var subjet = "Reset Password Confirmation";
 

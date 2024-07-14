@@ -169,8 +169,14 @@ namespace ZodiacJewelryWebApI.Controllers
                     body.description, items, body.cancelUrl, body.returnUrl);
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
-
-                return Ok(new ResponsePayment(0, "success", createPayment));
+                if (createPayment != null)
+                {
+                    return Ok(new ResponsePayment(0, "success", createPayment));
+                }
+                else
+                {
+                    return Ok(new ResponsePayment(-1, "Failed to create payment link", createPayment));
+                }
             }
             catch (System.Exception exception)
             {
@@ -184,7 +190,7 @@ namespace ZodiacJewelryWebApI.Controllers
         {
             try
             {
-                var paymentLinkInformation = await _payOS.getPaymentLinkInformation(orderId);
+                var paymentLinkInformation = await _payOS.getPaymentLinkInformation((int)orderId);
                 return Ok(new ResponsePayment(0, "Ok", paymentLinkInformation));
             }
             catch (System.Exception exception)
@@ -199,8 +205,8 @@ namespace ZodiacJewelryWebApI.Controllers
         {
             try
             {
-                PaymentLinkInformation paymentLinkInformation = await _payOS.cancelPaymentLink(orderId);
-                return Ok(new ResponsePayment(0, "Ok", paymentLinkInformation));
+                PaymentLinkInformation paymentLinkInformation = await _payOS.cancelPaymentLink(orderId);                           
+                    return Ok(new ResponsePayment(0, "Ok", paymentLinkInformation));             
             }
             catch (System.Exception exception)
             {

@@ -407,9 +407,10 @@ namespace Application.Services
                 DateTime currentTimeUtc = DateTime.UtcNow;
                 // Chuyển đổi từ múi giờ UTC sang múi giờ Việt Nam
                 order.PaymentDate = currentTimeUtc;
-
+                UpdateProductQuantitiesBasedOnCart(order);
                 await _orderRepo.SaveChangesAsync();
             }catch(Exception e) {
+
             }
         }
         private async Task UpdateProductQuantitiesBasedOnCart(Order order)
@@ -422,7 +423,8 @@ namespace Application.Services
                     Product product = await _productRepo.GetProductById(item.ProductId);
                     product.Quantity -= item.QuantityProduct;
                     await _productRepo.UpdateProduct(product);
-                }catch (Exception e)
+                }
+                catch (Exception e)
                 {
 
                 }

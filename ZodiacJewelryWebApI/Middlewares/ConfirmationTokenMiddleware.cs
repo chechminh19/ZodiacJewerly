@@ -1,4 +1,5 @@
 ﻿using Application;
+using Application.Services;
 using Azure;
 using System.Text.Json;
 namespace ZodiacJewelryWebApI.Middlewares
@@ -6,6 +7,7 @@ namespace ZodiacJewelryWebApI.Middlewares
     public class ConfirmationTokenMiddleware
     {
         private readonly RequestDelegate _next;
+
 
         public ConfirmationTokenMiddleware(RequestDelegate next)
         {
