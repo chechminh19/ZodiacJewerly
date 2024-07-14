@@ -333,8 +333,6 @@ namespace Application.Services
         }
 
 
-
-
         public async Task<ServiceResponse<CreateOrderDTO>> GetAllOrderDetailById(int orderId)
         {
             var response = new ServiceResponse<CreateOrderDTO>();
@@ -411,7 +409,9 @@ namespace Application.Services
                 order.PaymentDate = currentTimeUtc;
 
                 await _orderRepo.SaveChangesAsync();
-            }catch(Exception e) {
+            }
+            catch (Exception e)
+            {
             }
         }
 
@@ -459,6 +459,7 @@ namespace Application.Services
 
             return response;
         }
+
         private async Task UpdateProductQuantitiesBasedOnCart(Order order)
         {
             var cartItems = await _orderRepo.GetAllOrderCartToPaid(order.Id);
@@ -469,9 +470,9 @@ namespace Application.Services
                     Product product = await _productRepo.GetProductById(item.ProductId);
                     product.Quantity -= item.QuantityProduct;
                     await _productRepo.UpdateProduct(product);
-                }catch (Exception e)
+                }
+                catch (Exception e)
                 {
-
                 }
             }
         }

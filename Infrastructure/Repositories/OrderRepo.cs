@@ -58,7 +58,7 @@ namespace Infrastructure.Repositories
         public async Task<Order> CheckUserWithOrder(int userId)
         {
             var order = await _dbContext.Order.Include(p => p.OrderDetails)
-                .FirstOrDefaultAsync(p=>p.UserId == userId && p.Status == (byte)OrderCart.Process);
+                .FirstOrDefaultAsync(p => p.UserId == userId && p.Status == (byte)OrderCart.Process);
             return order;
         }
 
@@ -69,22 +69,22 @@ namespace Infrastructure.Repositories
         }
 
         public async Task<List<OrderDetails>> GetAllOrderCart(int userId)
-        {            
-            return  _dbContext.Order
+        {
+            return _dbContext.Order
                 .Where(o => o.UserId == userId && o.Status == (byte)OrderCart.Process)
-                    .SelectMany(o => o.OrderDetails)
-                    .Include(od => od.Product)
-                        .ThenInclude(p => p.Category)
-                    .Include(od => od.Product)
-                        .ThenInclude(p => p.Material)
-                    .Include(od => od.Product)
-                        .ThenInclude(p => p.Gender)
-                    .Include(od => od.Product)
-                        .ThenInclude(p => p.ProductImages)
-                    .Include(od => od.Product)
-                        .ThenInclude(p => p.ProductZodiacs)
-                            .ThenInclude(pz => pz.Zodiac)
-                    .ToList();      
+                .SelectMany(o => o.OrderDetails)
+                .Include(od => od.Product)
+                .ThenInclude(p => p.Category)
+                .Include(od => od.Product)
+                .ThenInclude(p => p.Material)
+                .Include(od => od.Product)
+                .ThenInclude(p => p.Gender)
+                .Include(od => od.Product)
+                .ThenInclude(p => p.ProductImages)
+                .Include(od => od.Product)
+                .ThenInclude(p => p.ProductZodiacs)
+                .ThenInclude(pz => pz.Zodiac)
+                .ToList();
         }
 
         public async Task<List<OrderDetails>> GetAllOrderDetailById(int orderId)
@@ -93,16 +93,16 @@ namespace Infrastructure.Repositories
                 .Where(o => o.Id == orderId)
                 .SelectMany(o => o.OrderDetails)
                 .Include(od => od.Product)
-                    .ThenInclude(p => p.Category)
+                .ThenInclude(p => p.Category)
                 .Include(od => od.Product)
-                    .ThenInclude(p => p.Material)
+                .ThenInclude(p => p.Material)
                 .Include(od => od.Product)
-                    .ThenInclude(p => p.Gender)
+                .ThenInclude(p => p.Gender)
                 .Include(od => od.Product)
-                    .ThenInclude(p => p.ProductImages)
+                .ThenInclude(p => p.ProductImages)
                 .Include(od => od.Product)
-                    .ThenInclude(p => p.ProductZodiacs)
-                        .ThenInclude(pz => pz.Zodiac)
+                .ThenInclude(p => p.ProductZodiacs)
+                .ThenInclude(pz => pz.Zodiac)
                 .ToListAsync();
         }
 
@@ -156,20 +156,20 @@ namespace Infrastructure.Repositories
         public async Task<List<OrderDetails>> GetAllOrderCartToPaid(long orderID)
         {
             return await _dbContext.Order
-               .Where(o => o.Id == orderID && o.Status == (byte)OrderCart.Process)
-                   .SelectMany(o => o.OrderDetails)
-                   .Include(od => od.Product)
-                       .ThenInclude(p => p.Category)
-                   .Include(od => od.Product)
-                       .ThenInclude(p => p.Material)
-                   .Include(od => od.Product)
-                       .ThenInclude(p => p.Gender)
-                   .Include(od => od.Product)
-                       .ThenInclude(p => p.ProductImages)
-                   .Include(od => od.Product)
-                       .ThenInclude(p => p.ProductZodiacs)
-                           .ThenInclude(pz => pz.Zodiac)
-                   .ToListAsync();
+                .Where(o => o.Id == orderID && o.Status == (byte)OrderCart.Process)
+                .SelectMany(o => o.OrderDetails)
+                .Include(od => od.Product)
+                .ThenInclude(p => p.Category)
+                .Include(od => od.Product)
+                .ThenInclude(p => p.Material)
+                .Include(od => od.Product)
+                .ThenInclude(p => p.Gender)
+                .Include(od => od.Product)
+                .ThenInclude(p => p.ProductImages)
+                .Include(od => od.Product)
+                .ThenInclude(p => p.ProductZodiacs)
+                .ThenInclude(pz => pz.Zodiac)
+                .ToListAsync();
         }
     }
 }
