@@ -6,6 +6,7 @@ using Application.ViewModels.OrderDTO;
 using AutoMapper;
 using Domain.Entities;
 using System.Data.Common;
+using Application.ViewModels.SalesDTO;
 
 namespace Application.Services
 {
@@ -332,8 +333,6 @@ namespace Application.Services
         }
 
 
-
-
         public async Task<ServiceResponse<CreateOrderDTO>> GetAllOrderDetailById(int orderId)
         {
             var response = new ServiceResponse<CreateOrderDTO>();
@@ -402,6 +401,7 @@ namespace Application.Services
                 {
                     return;
                 }
+
                 order.Status = 2;
                 //TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"); // Múi giờ Việt Nam
                 DateTime currentTimeUtc = DateTime.UtcNow;
@@ -409,9 +409,57 @@ namespace Application.Services
                 order.PaymentDate = currentTimeUtc;
 
                 await _orderRepo.SaveChangesAsync();
-            }catch(Exception e) {
+            }
+            catch (Exception e)
+            {
             }
         }
+
+        public async Task<ServiceResponse<Dictionary<string, int>>> GetSalesByItemAsync()
+        {
+            var response = new ServiceResponse<Dictionary<string, int>>();
+            try
+            {
+                var salesByItem = await _orderRepo.GetSalesByItemAsync();
+                response.Data = salesByItem;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+                response.Error = ex.InnerException?.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<SalesOverviewDTO>>> GetSalesOverviewAsync(int year)
+        {
+            var response = new ServiceResponse<List<SalesOverviewDTO>>();
+            try
+            {
+                var salesOverview = await _orderRepo.GetSalesOverviewAsync(year);
+                if (salesOverview.Count == 0)
+                {
+                    response.Success = false;
+                    response.Message = "No sales data found for the specified year.";
+                    return response;
+                }
+
+                response.Data = salesOverview;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+                response.Error = ex.InnerException?.Message;
+            }
+
+            return response;
+        }
+
         private async Task UpdateProductQuantitiesBasedOnCart(Order order)
         {
             var cartItems = await _orderRepo.GetAllOrderCartToPaid(order.Id);
@@ -422,9 +470,9 @@ namespace Application.Services
                     Product product = await _productRepo.GetProductById(item.ProductId);
                     product.Quantity -= item.QuantityProduct;
                     await _productRepo.UpdateProduct(product);
-                }catch (Exception e)
+                }
+                catch (Exception e)
                 {
-
                 }
             }
         }
