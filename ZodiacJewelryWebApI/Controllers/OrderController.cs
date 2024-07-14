@@ -229,5 +229,31 @@ namespace ZodiacJewelryWebApI.Controllers
                 return Ok(new ResponsePayment(-1, "fail", null));
             }
         }
+
+        [HttpGet("sales-by-item")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSalesByItem()
+        {
+            var result = await _orderService.GetSalesByItemAsync();
+            if (!result.Success) return BadRequest(result.Message);
+            return Ok(result);
+        }
+
+        [HttpGet("sales-overview")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSalesOverview([FromQuery] int? year)
+        {
+            if (!year.HasValue)
+            {
+                return BadRequest("Please input the specific year.");
+            }
+
+            var result = await _orderService.GetSalesOverviewAsync(year.Value);
+            if (result.Success) return Ok(result);
+            if (result.Message == "No sales data found for the specified year.")
+                return NotFound(result.Message);
+
+            return BadRequest(result.Message);
+        }
     }
 }

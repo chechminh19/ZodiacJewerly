@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.ViewModels.SalesDTO;
 
 namespace Application.IService
 {
@@ -22,5 +23,7 @@ namespace Application.IService
 
         Task<ServiceResponse<CreateOrderDTO>> GetAllOrderDetailById(int orderId);
         Task UpdateOrderStatusToPaid(long orderCode);
+        Task<ServiceResponse<Dictionary<string, int>>> GetSalesByItemAsync();
+        Task<ServiceResponse<List<SalesOverviewDTO>>> GetSalesOverviewAsync(int year);
     }
 }
