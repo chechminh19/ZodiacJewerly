@@ -9,6 +9,7 @@ namespace Application.IRepositories
     public interface IOrderRepo : IGenericRepo<Order>
     {
         Task<Order?> GetOrderById(int id);
+        Task<Order> GetOrderByIdToPay(int orderId);
         Task<Order?> GetOrderWithDetailsAsync(int orderId);
         Task<IEnumerable<Order>> GetAllOrders();
         Task AddOrder(Order order);
@@ -22,6 +23,8 @@ namespace Application.IRepositories
         Task UpdateOrderDetail(OrderDetails orderDetail);
         Task SaveChangesAsync();
         Task<int> GetProductSoldThisMonthAsync();
+        Task<ICollection<OrderDetails>> GetOrderDetailsByOrderId(int orderId);
+
         Task<Dictionary<string, int>> GetSalesByItemAsync();
         Task<List<SalesOverviewDTO>> GetSalesOverviewAsync(int year);
     }

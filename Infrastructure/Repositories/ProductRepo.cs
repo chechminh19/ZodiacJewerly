@@ -1,4 +1,5 @@
 ﻿using Application.IRepositories;
+using Application.Utils;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -120,6 +121,20 @@ namespace Infrastructure.Repositories
         public async Task<int> GetTotalProductsAsync()
         {
             return await _dbContext.Product.CountAsync();
+        }
+
+        public async Task UpdateProductQuantities(IEnumerable<ProductUpdate> products)
+        {
+            foreach (var productInfo in products)
+            {
+                var product = await _dbContext.Product.FindAsync(productInfo.ProductId);
+                if (product != null)
+                {
+                    product.Quantity += productInfo.QuantityChange;
+                    _dbContext.Product.Update(product);
+                } 
+            }
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿    using Domain.Entities;
+﻿using Application.Utils;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Application.IRepositories
 {
@@ -17,5 +19,6 @@ namespace Application.IRepositories
         Task<Product> GetProductByIdToOrder(int id);
         double GetProductPriceById(int productId);
         Task<int> GetTotalProductsAsync();
+        Task UpdateProductQuantities(IEnumerable<ProductUpdate> products);
     }
 }
