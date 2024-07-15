@@ -72,19 +72,6 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         /// <summary>
-        /// Deletes an order.
-        /// </summary>
-        [Authorize(Roles = "Staff,Admin")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
-        {
-            var result = await _orderService.DeleteOrder(id);
-            if (!result.Success) return NotFound(result);
-
-            return Ok(result);
-        }
-
-        /// <summary>
         /// Completes the payment for an order and sets its status to completed.
         /// </summary>
         [Authorize(Roles = "Customer")]
@@ -139,16 +126,6 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Staff,Admin,Customer")]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderById(int id)
-        {
-            var result = await _orderService.GetOrderById(id);
-            if (!result.Success) return NotFound(result);
-
-            return Ok(result);
-        }
-
         #endregion
 
         #region Sales Overview
@@ -166,7 +143,7 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         /// <summary>
-        /// Retrieves a sales overview for a specific month and week.
+        /// Retrieves a sales overview for a specific year.
         /// </summary>
         [HttpGet("sales-overview")]
         [AllowAnonymous]
