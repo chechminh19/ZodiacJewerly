@@ -160,25 +160,6 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<OrderDetails>> GetAllOrderCartToPaid(long orderID)
-        {
-            return await _dbContext.Order
-                .Where(o => o.Id == orderID && o.Status == (byte)OrderCart.Process)
-                .SelectMany(o => o.OrderDetails)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.Category)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.Material)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.Gender)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.ProductImages)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.ProductZodiacs)
-                .ThenInclude(pz => pz.Zodiac)
-                .ToListAsync();
-        }
-
         public async Task<Order> GetOrderByIdToPay(int orderId)
         {
             return await _dbContext.Order
