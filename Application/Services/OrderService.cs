@@ -507,18 +507,14 @@ namespace Application.Services
                 serviceResponse.Success = false;
                 serviceResponse.Message = "Database error occurred.";
                 serviceResponse.ErrorMessages = new List<string> { e.Message };
-
-                order.Status = 2;
-                //TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"); // Múi giờ Việt Nam
-                DateTime currentTimeUtc = DateTime.UtcNow;
-                // Chuyển đổi từ múi giờ UTC sang múi giờ Việt Nam
-                order.PaymentDate = currentTimeUtc;
-
-                await _orderRepo.SaveChangesAsync();
             }
             catch (Exception e)
             {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Error error occurred.";
+                serviceResponse.ErrorMessages = new List<string> { e.Message };
             }
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<Dictionary<string, int>>> GetSalesByItemAsync()
@@ -564,30 +560,7 @@ namespace Application.Services
             }
 
             return response;
-        }
-
-        private async Task UpdateProductQuantitiesBasedOnCart(Order order)
-        {
-            var cartItems = await _orderRepo.GetAllOrderCartToPaid(order.Id);
-            foreach (var item in cartItems)
-            {
-                try
-                {
-                    Product product = await _productRepo.GetProductById(item.ProductId);
-                    product.Quantity -= item.QuantityProduct;
-                    await _productRepo.UpdateProduct(product);
-                }
-                catch (Exception e)
-                {
-                }
-            }
-            catch (Exception e)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.ErrorMessages = new List<string> { e.Message, e.StackTrace };
-            }
-            return serviceResponse;
-        }
+        }        
       
     }
 }

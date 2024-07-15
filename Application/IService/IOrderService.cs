@@ -25,7 +25,6 @@ namespace Application.IService
         Task<ServiceResponse<CreateOrderDTO>> GetAllOrderDetailById(int orderId);
         Task<ServiceResponse<string>> UpdateProductQuantitiesBasedOnCart(Order order);
         Task<ServiceResponse<string>> PaymentOrder(int orderId);
-        Task UpdateOrderStatusToPaid(long orderCode);
         Task<ServiceResponse<Dictionary<string, int>>> GetSalesByItemAsync();
         Task<ServiceResponse<List<SalesOverviewDTO>>> GetSalesOverviewAsync(int year);
     }

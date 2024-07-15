@@ -232,21 +232,7 @@ namespace ZodiacJewelryWebApI.Controllers
         //        Console.WriteLine(exception);
         //        return Ok(new ResponsePayment(-1, "fail", null));
         //    }
-        //}
-        [HttpPost("confirm-webhook")]
-        public async Task<IActionResult> ConfirmWebhook(ConfirmWebhook body)
-        {
-            try
-            {
-                await _payOS.confirmWebhook(body.webhook_url);
-                return Ok(new ResponsePayment(0, "Ok", null));
-            }
-            catch (System.Exception exception)
-            {
-                Console.WriteLine(exception);
-                return Ok(new ResponsePayment(-1, "fail", null));
-            }
-        }
+        //}       
 
         [HttpGet("sales-by-item")]
         [AllowAnonymous]
