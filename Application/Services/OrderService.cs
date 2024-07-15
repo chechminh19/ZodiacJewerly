@@ -9,6 +9,7 @@ using Domain.Entities;
 using System.Data.Common;
 using System.Globalization;
 using System.Transactions;
+using Application.ViewModels.SalesDTO;
 
 namespace Application.Services
 {
@@ -216,7 +217,7 @@ namespace Application.Services
             try
             {
                 var checkUserOrder = await _orderRepo.CheckUserWithOrder(userId);
-                if (checkUserOrder == null)
+                if (checkUserOrder == null || checkUserOrder.Status == 2)
                 {
                     Order newOrder = new Order
                     {
@@ -235,7 +236,7 @@ namespace Application.Services
                     response.Success = true;
                     response.Message = "Add Product successfully when have no order already for user";
                 }
-                else if(checkUserOrder.Status == 1)
+                else
                 {
                     var existingOrder = checkUserOrder.OrderDetails.FirstOrDefault(od => od.ProductId == productId);
                     if (existingOrder != null)
@@ -245,7 +246,7 @@ namespace Application.Services
                         response.Success = true;
                         response.Message = "add duplicate success";
                     }
-                    else if(existingOrder == null)
+                    else
                     {
                         OrderDetails existingOrderDetail = new OrderDetails
                         {
@@ -333,8 +334,6 @@ namespace Application.Services
 
             return response;
         }
-
-
 
 
         public async Task<ServiceResponse<CreateOrderDTO>> GetAllOrderDetailById(int orderId)
@@ -508,6 +507,79 @@ namespace Application.Services
                 serviceResponse.Success = false;
                 serviceResponse.Message = "Database error occurred.";
                 serviceResponse.ErrorMessages = new List<string> { e.Message };
+
+                order.Status = 2;
+                //TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"); // Múi giờ Việt Nam
+                DateTime currentTimeUtc = DateTime.UtcNow;
+                // Chuyển đổi từ múi giờ UTC sang múi giờ Việt Nam
+                order.PaymentDate = currentTimeUtc;
+
+                await _orderRepo.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        public async Task<ServiceResponse<Dictionary<string, int>>> GetSalesByItemAsync()
+        {
+            var response = new ServiceResponse<Dictionary<string, int>>();
+            try
+            {
+                var salesByItem = await _orderRepo.GetSalesByItemAsync();
+                response.Data = salesByItem;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+                response.Error = ex.InnerException?.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<SalesOverviewDTO>>> GetSalesOverviewAsync(int year)
+        {
+            var response = new ServiceResponse<List<SalesOverviewDTO>>();
+            try
+            {
+                var salesOverview = await _orderRepo.GetSalesOverviewAsync(year);
+                if (salesOverview.Count == 0)
+                {
+                    response.Success = false;
+                    response.Message = "No sales data found for the specified year.";
+                    return response;
+                }
+
+                response.Data = salesOverview;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+                response.Error = ex.InnerException?.Message;
+            }
+
+            return response;
+        }
+
+        private async Task UpdateProductQuantitiesBasedOnCart(Order order)
+        {
+            var cartItems = await _orderRepo.GetAllOrderCartToPaid(order.Id);
+            foreach (var item in cartItems)
+            {
+                try
+                {
+                    Product product = await _productRepo.GetProductById(item.ProductId);
+                    product.Quantity -= item.QuantityProduct;
+                    await _productRepo.UpdateProduct(product);
+                }
+                catch (Exception e)
+                {
+                }
             }
             catch (Exception e)
             {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.ViewModels.OrderDTO;
+using Application.ViewModels.SalesDTO;
 using Domain.Entities;
 
 namespace Application.IRepositories
@@ -24,5 +25,7 @@ namespace Application.IRepositories
         Task<int> GetProductSoldThisMonthAsync();
         Task<ICollection<OrderDetails>> GetOrderDetailsByOrderId(int orderId);
 
+        Task<Dictionary<string, int>> GetSalesByItemAsync();
+        Task<List<SalesOverviewDTO>> GetSalesOverviewAsync(int year);
     }
 }
