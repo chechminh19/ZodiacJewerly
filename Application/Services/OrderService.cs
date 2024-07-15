@@ -2,10 +2,13 @@
 using Application.IService;
 using Application.ServiceResponse;
 using Application.Ultilities;
+using Application.Utils;
 using Application.ViewModels.OrderDTO;
 using AutoMapper;
 using Domain.Entities;
 using System.Data.Common;
+using System.Globalization;
+using System.Transactions;
 
 namespace Application.Services
 {
@@ -392,43 +395,127 @@ namespace Application.Services
             return response;
         }
 
-        public async Task UpdateOrderStatusToPaid(long orderCode)
+       
+        public async Task<ServiceResponse<string>> UpdateProductQuantitiesBasedOnCart(Order order)
         {
+            var serviceResponse = new ServiceResponse<string>();
+
             try
             {
-                Order order = await _orderRepo.GetOrderById((int)orderCode);
+                var orderDetails = await _orderRepo.GetOrderDetailsByOrderId(order.Id);
+                if (orderDetails == null || !orderDetails.Any())
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Order not found or no items in cart.";
+                    return serviceResponse;
+                }
+
+                var productUpdates = orderDetails
+                 .GroupBy(detail => detail.ProductId)
+                 .Select(group => new ProductUpdate
+                 {
+                     ProductId = group.Key,
+                     QuantityChange = -group.Sum(detail => detail.QuantityProduct)
+                 })
+                 .ToList();
+
+                await _productRepo.UpdateProductQuantities(productUpdates);
+
+                serviceResponse.Success = true;
+                serviceResponse.Message = "Product quantities updated successfully.";
+            }
+            catch (DbException e)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.ErrorMessages = new List<string> { e.Message };
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.ErrorMessages = new List<string> { ex.Message, ex.StackTrace };
+            }
+
+            return serviceResponse;
+        }
+
+  
+        public async Task<ServiceResponse<string>> PaymentOrder(int orderId)
+        {
+            var serviceResponse = new ServiceResponse<string>();
+            try
+            {
+                Order order = await _orderRepo.GetOrderByIdToPay(orderId);
 
                 if (order == null)
                 {
-                    return;
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "not found orderId";
                 }
-                order.Status = 2;
-                //TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"); // Múi giờ Việt Nam
-                DateTime currentTimeUtc = DateTime.UtcNow;
-                // Chuyển đổi từ múi giờ UTC sang múi giờ Việt Nam
-                order.PaymentDate = currentTimeUtc;
-                UpdateProductQuantitiesBasedOnCart(order);
-                await _orderRepo.SaveChangesAsync();
-            }catch(Exception e) {
+                else
+                {
+                    order.Status = 2;
+                    // Lấy DateTime hiện tại
+                    DateTime now = DateTime.Now;
+                    DateTime formattedDate = DateTime.ParseExact(now.ToString("f", new CultureInfo("vi-VN")), "f", new CultureInfo("vi-VN"));
+                    order.PaymentDate = formattedDate;
+                    var updateResponse = await UpdateProductQuantitiesBasedOnCart(order);
+                    if (!updateResponse.Success)
+                    {
+                        serviceResponse.Success = false;
+                        serviceResponse.Message = updateResponse.Message;
+                        serviceResponse.ErrorMessages = updateResponse.ErrorMessages;
+                        return serviceResponse;
+                    }
+                    await _orderRepo.SaveChangesAsync();
+                    //await transaction.CommitAsync();
+                    var orderEmailDto = new ShowOrderSuccessEmailDTO
+                    {
+                        OrderId = order.Id,
+                        UserName = order.User.FullName,
+                        PaymentDate = order.PaymentDate.Value,
+                        OrderItems = order.OrderDetails.Select(od => new OrderItemEmailDto
+                        {
+                            ProductName = od.Product.NameProduct,
+                            Quantity = od.QuantityProduct,
+                            Price = od.Price
+                        }).ToList()
+                    };
+                    // Send payment success email
+                    var userEmail = order.User?.Email; // Assuming the Order object has a User property with an Email
+                    if (!string.IsNullOrEmpty(userEmail))
+                    {
+                        var emailSent = await Utils.SendMail.SendOrderPaymentSuccessEmail(orderEmailDto, userEmail);
 
+                        if (emailSent)                        {
+                            serviceResponse.Success = true;
+                            serviceResponse.Message = "Payment successful and email sent.";
+                        }
+                        else
+                        {
+                            serviceResponse.Success = true;
+                            serviceResponse.Message = "Payment successful but email sending failed.";
+                        }
+                    }
+                    else
+                    {
+                        serviceResponse.Success = true;
+                        serviceResponse.Message = "Payment successful but no user email found.";
+                    }
+                }
             }
-        }
-        private async Task UpdateProductQuantitiesBasedOnCart(Order order)
-        {
-            var cartItems = await _orderRepo.GetAllOrderCartToPaid(order.Id);
-            foreach (var item in cartItems)
+            catch (DbException e)
             {
-                try
-                {
-                    Product product = await _productRepo.GetProductById(item.ProductId);
-                    product.Quantity -= item.QuantityProduct;
-                    await _productRepo.UpdateProduct(product);
-                }
-                catch (Exception e)
-                {
-
-                }
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Database error occurred.";
+                serviceResponse.ErrorMessages = new List<string> { e.Message };
             }
+            catch (Exception e)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.ErrorMessages = new List<string> { e.Message, e.StackTrace };
+            }
+            return serviceResponse;
         }
+      
     }
 }

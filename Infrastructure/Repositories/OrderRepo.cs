@@ -144,5 +144,16 @@ namespace Infrastructure.Repositories
                            .ThenInclude(pz => pz.Zodiac)
                    .ToListAsync();
         }
+        public async Task<Order> GetOrderByIdToPay(int orderId)
+        {
+            return await _dbContext.Order
+                            .Include(o => o.User)
+                            .FirstOrDefaultAsync(o => o.Id == orderId);
+        }
+
+        public async Task<ICollection<OrderDetails>> GetOrderDetailsByOrderId(int orderId)
+        {
+            return await _dbContext.OrderDetail.Where(od => od.OrderId == orderId).ToListAsync();
+        }
     }
 }

@@ -15,12 +15,12 @@ namespace ZodiacJewelryWebApI.Controllers
     public class OrderController : BaseController
     {
         private readonly IOrderService _orderService;
-        private readonly PayOS _payOS;
+        //private readonly PayOS _payOS;
 
-        public OrderController(IOrderService orderService, PayOS payOs)
+        public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
-            _payOS = payOs;
+            //_payOS = payOs;
         }
 
         [HttpPost("{userid}/{productid}")]
@@ -140,94 +140,98 @@ namespace ZodiacJewelryWebApI.Controllers
 
             return Ok(result);
         }
-
-        [HttpPost("create")]
-        public async Task<IActionResult> CreatePaymentLink(CreatePaymentLinkRequest body)
+        [Authorize(Roles = "Customer")]
+        [HttpPut]
+        public async Task<IActionResult> PaymentOrder(int orderid)
         {
-            try
+            var result = await _orderService.PaymentOrder(orderid);
+            if (!result.Success)
             {
-                var cartServiceResponse = await _orderService.GetAllOrderCustomerCart(body.userId);
-                if (!cartServiceResponse.Success || cartServiceResponse == null)
-                {
-                    if (cartServiceResponse.Message == "No order here")
-                    {
-                        return Ok(new ResponsePayment(0, "success", new { message = "No items in cart" }));
-                    }
-
-                    return Ok(new ResponsePayment(-1, "fail", cartServiceResponse.Error));
-                }
-
-                var items = cartServiceResponse.Data.Product
-                    .Select(productDTO =>
-                        new ItemData(productDTO.NameProduct,
-                            productDTO.Quantity,
-                            (int)productDTO.Price)).ToList();
-                var orderCode = (long)cartServiceResponse.Data.Product.FirstOrDefault()?.OrderId;
-                //int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));             
-
-                PaymentData paymentData = new PaymentData(orderCode, (int)cartServiceResponse.Data.PriceTotal,
-                    body.description, items, body.cancelUrl, body.returnUrl);
-
-                CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
-                if (createPayment != null)
-                {
-                    return Ok(new ResponsePayment(0, "success", createPayment));
-                }
-                else
-                {
-                    return Ok(new ResponsePayment(-1, "Failed to create payment link", createPayment));
-                }
+                return NotFound(result);
             }
-            catch (System.Exception exception)
-            {
-                Console.WriteLine(exception);
-                return Ok(new ResponsePayment(-1, "fail", null));
-            }
+
+            return Ok(result);
         }
+        //[HttpPost("create")]
+        //public async Task<IActionResult> CreatePaymentLink(CreatePaymentLinkRequest body)
+        //{
+        //    try
+        //    {
+        //        var cartServiceResponse = await _orderService.GetAllOrderCustomerCart(body.userId);
+        //        if (!cartServiceResponse.Success || cartServiceResponse == null)
+        //        {
+        //            if (cartServiceResponse.Message == "No order here")
+        //            {
+        //                return Ok(new ResponsePayment(0, "success", new { message = "No items in cart" }));
+        //            }
 
-        [HttpGet("payment/{orderId}")]
-        public async Task<IActionResult> GetOrder([FromRoute] long orderId)
-        {
-            try
-            {
-                var paymentLinkInformation = await _payOS.getPaymentLinkInformation((int)orderId);
-                return Ok(new ResponsePayment(0, "Ok", paymentLinkInformation));
-            }
-            catch (System.Exception exception)
-            {
-                Console.WriteLine(exception);
-                return Ok(new ResponsePayment(-1, "fail", null));
-            }
-        }
+        //            return Ok(new ResponsePayment(-1, "fail", cartServiceResponse.Error));
+        //        }
 
-        [HttpPut("{orderId}")]
-        public async Task<IActionResult> CancelOrder([FromRoute] long orderId)
-        {
-            try
-            {
-                PaymentLinkInformation paymentLinkInformation = await _payOS.cancelPaymentLink(orderId);                           
-                    return Ok(new ResponsePayment(0, "Ok", paymentLinkInformation));             
-            }
-            catch (System.Exception exception)
-            {
-                Console.WriteLine(exception);
-                return Ok(new ResponsePayment(-1, "fail", null));
-            }
-        }
+        //        var items = cartServiceResponse.Data.Product
+        //            .Select(productDTO =>
+        //                new ItemData(productDTO.NameProduct,
+        //                    productDTO.Quantity,
+        //                    (int)productDTO.Price)).ToList();
+        //        var orderCode = (long)cartServiceResponse.Data.Product.FirstOrDefault()?.OrderId;
+        //        //int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));             
 
-        [HttpPost("confirm-webhook")]
-        public async Task<IActionResult> ConfirmWebhook(ConfirmWebhook body)
-        {
-            try
-            {
-                await _payOS.confirmWebhook(body.webhook_url);
-                return Ok(new ResponsePayment(0, "Ok", null));
-            }
-            catch (System.Exception exception)
-            {
-                Console.WriteLine(exception);
-                return Ok(new ResponsePayment(-1, "fail", null));
-            }
-        }
+        //        PaymentData paymentData = new PaymentData(orderCode, (int)cartServiceResponse.Data.PriceTotal,
+        //            body.description, items, body.cancelUrl, body.returnUrl);
+
+        //        CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);            
+        //            return Ok(new ResponsePayment(0, "success", createPayment));                
+        //    }
+        //    catch (System.Exception exception)
+        //    {
+        //        Console.WriteLine(exception);
+        //        return Ok(new ResponsePayment(-1, "fail", null));
+        //    }
+        //}
+
+        //[HttpGet("payment/{orderId}")]
+        //public async Task<IActionResult> GetOrder([FromRoute] int orderId)
+        //{
+        //    try
+        //    {
+        //        var paymentLinkInformation = await _payOS.getPaymentLinkInformation(orderId);
+        //        return Ok(new ResponsePayment(0, "Ok", paymentLinkInformation));
+        //    }
+        //    catch (System.Exception exception)
+        //    {
+        //        Console.WriteLine(exception);
+        //        return Ok(new ResponsePayment(-1, "fail", null));
+        //    }
+        //}
+
+        //[HttpPut("{orderId}")]
+        //public async Task<IActionResult> CancelOrder([FromRoute] int orderId)
+        //{
+        //    try
+        //    {
+        //        PaymentLinkInformation paymentLinkInformation = await _payOS.cancelPaymentLink(orderId);                           
+        //            return Ok(new ResponsePayment(0, "Ok", paymentLinkInformation));             
+        //    }
+        //    catch (System.Exception exception)
+        //    {
+        //        Console.WriteLine(exception);
+        //        return Ok(new ResponsePayment(-1, "fail", null));
+        //    }
+        //}
+
+        //[HttpPost("confirm-webhook")]
+        //public async Task<IActionResult> ConfirmWebhook(ConfirmWebhook body)
+        //{
+        //    try
+        //    {
+        //        await _payOS.confirmWebhook(body.webhook_url);
+        //        return Ok(new ResponsePayment(0, "Ok", null));
+        //    }
+        //    catch (System.Exception exception)
+        //    {
+        //        Console.WriteLine(exception);
+        //        return Ok(new ResponsePayment(-1, "fail", null));
+        //    }
+        //}
     }
 }

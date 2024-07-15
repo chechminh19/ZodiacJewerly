@@ -1,6 +1,7 @@
 ﻿using Application.ServiceResponse;
 using Application.ViewModels.OrderDTO;
 using Application.ViewModels.ProductDTO;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace Application.IService
         Task<ServiceResponse<CreateOrderDTO>> GetAllOrderCustomerCart(int userId);
 
         Task<ServiceResponse<CreateOrderDTO>> GetAllOrderDetailById(int orderId);
-        Task UpdateOrderStatusToPaid(long orderCode);
+        Task<ServiceResponse<string>> UpdateProductQuantitiesBasedOnCart(Order order);
+        Task<ServiceResponse<string>> PaymentOrder(int orderId);
     }
 }

@@ -19,28 +19,28 @@ namespace ZodiacJewelryWebApI.Controllers
             _orderService = orderService;
 
         }
-        [HttpPost("payos_transfer_handler")]
-        public IActionResult payOSTransferHandler(WebhookType body)
-        {
-            try
-            {
-                WebhookData data = _payOS.verifyPaymentWebhookData(body);
+        //[HttpPost("payos_transfer_handler")]
+        //public IActionResult payOSTransferHandler(WebhookType body)
+        //{
+        //    try
+        //    {
+        //        WebhookData data = _payOS.verifyPaymentWebhookData(body);
 
-                if (data.description == "Ma giao dich thu nghiem" || data.description == "VQRIO123")
-                {
-                    long orderCode = data.orderCode;
+        //        if (data.description == "Ma giao dich thu nghiem" || data.description == "VQRIO123")
+        //        {
+        //            long orderCode = data.orderCode;
 
-                    _orderService.UpdateOrderStatusToPaid(orderCode);
-                    return Ok(new ResponsePayment(0, "Ok", null));
-                }
-                return Ok(new ResponsePayment(0, "Ok", null));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return Ok(new ResponsePayment(-1, "fail", null));
-            }
-        }
+        //            _orderService.UpdateOrderStatusToPaid(orderCode);
+        //            return Ok(new ResponsePayment(0, "Ok", null));
+        //        }
+        //        return Ok(new ResponsePayment(0, "Ok", null));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e.Message);
+        //        return Ok(new ResponsePayment(-1, "fail", null));
+        //    }
+        //}
         [HttpPost("create-payment-link")]
         public async Task<IActionResult> Checkout(CreatePaymentLinkRequest body)
         {
