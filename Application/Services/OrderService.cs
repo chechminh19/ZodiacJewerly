@@ -454,9 +454,9 @@ namespace Application.Services
                 {
                     order.Status = 2;
                     // Lấy DateTime hiện tại
-                    DateTime now = DateTime.Now;
-                    DateTime formattedDate = DateTime.ParseExact(now.ToString("f", new CultureInfo("vi-VN")), "f", new CultureInfo("vi-VN"));
-                    order.PaymentDate = formattedDate;
+                    //DateTime now = DateTime.Now;
+                    //DateTime formattedDate = DateTime.ParseExact(now.ToString("f", new CultureInfo("vi-VN")), "f", new CultureInfo("vi-VN"));
+                    order.PaymentDate = DateTime.Now;
                     var updateResponse = await UpdateProductQuantitiesBasedOnCart(order);
                     if (!updateResponse.Success)
                     {
