@@ -148,11 +148,15 @@ public class CollectionService : ICollectionService
                     {
                         var imageURl = await UploadImageCollection(createForm.ImageCollection);
 
+                        var now = DateTime.UtcNow;
+                        var localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                        var localDateTime = TimeZoneInfo.ConvertTimeFromUtc(now, localTimeZone);
+
                         var collection = new Collections
                         {
                             NameCollection = createForm.NameCollection,
                             ImageCollection = imageURl,
-                            DateOpen = DateTime.Now,
+                            DateOpen = localDateTime,
                             DateClose = createForm.DateClose,
                             Status = 1
                         };
