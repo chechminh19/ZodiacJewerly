@@ -91,6 +91,7 @@ namespace ZodiacJewelryWebApI.Controllers
         /// Retrieves all orders for a specific customer.
         /// </summary>
         [HttpGet("customer/{userid}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetAllOrderCartCustomer(int userid)
         {
             var result = await _orderService.GetAllOrderCustomerCart(userid);
