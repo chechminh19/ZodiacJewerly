@@ -413,7 +413,13 @@ namespace Application.Services
                     // Lấy DateTime hiện tại
                     //DateTime now = DateTime.Now;
                     //DateTime formattedDate = DateTime.ParseExact(now.ToString("f", new CultureInfo("vi-VN")), "f", new CultureInfo("vi-VN"));
-                    order.PaymentDate = DateTime.Now;
+                    //order.PaymentDate = DateTime.UtcNow;
+                    DateTime utcNow = DateTime.UtcNow;
+                    TimeZoneInfo gmtPlus7 = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                    DateTime gmtPlus7Now = TimeZoneInfo.ConvertTimeFromUtc(utcNow, gmtPlus7);
+                    order.PaymentDate = gmtPlus7Now;
+
+
                     var updateResponse = await UpdateProductQuantitiesBasedOnCart(order);
                     if (!updateResponse.Success)
                     {
