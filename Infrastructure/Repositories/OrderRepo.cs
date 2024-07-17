@@ -121,15 +121,21 @@ namespace Infrastructure.Repositories
         {
             var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             var endDate = startDate.AddMonths(1).AddDays(-1);
+            var completeStatus = (byte)OrderCart.Completed;
 
             return await _dbContext.OrderDetail
-                .Where(od => od.Order.PaymentDate >= startDate && od.Order.PaymentDate <= endDate)
+                .Where(od =>
+                    od.Order.PaymentDate >= startDate && od.Order.PaymentDate <= endDate &&
+                    od.Order.Status == completeStatus)
                 .SumAsync(od => od.QuantityProduct);
         }
 
         public async Task<Dictionary<string, int>> GetSalesByItemAsync()
         {
+            var completeStatus = (byte)OrderCart.Completed;
+
             var salesByItem = await _dbContext.OrderDetail
+                .Where(od => od.Order.Status == completeStatus)
                 .GroupBy(od => od.Product.NameProduct)
                 .Select(g => new { ItemName = g.Key, TotalSales = g.Sum(od => od.QuantityProduct) })
                 .ToDictionaryAsync(g => g.ItemName, g => g.TotalSales);
@@ -139,8 +145,9 @@ namespace Infrastructure.Repositories
 
         public async Task<List<SalesOverviewDTO>> GetSalesOverviewAsync(int year)
         {
+            var completeStatus = (byte)OrderCart.Completed;
             return await _dbContext.Order
-                .Where(o => o.PaymentDate.HasValue && o.PaymentDate.Value.Year == year)
+                .Where(o => o.PaymentDate.HasValue && o.PaymentDate.Value.Year == year && o.Status == completeStatus)
                 .SelectMany(o => o.OrderDetails, (o, od) => new { o.PaymentDate, od.Price })
                 .GroupBy(x => new { x.PaymentDate!.Value.Year, x.PaymentDate.Value.Month })
                 .Select(g => new SalesOverviewDTO
@@ -171,11 +178,12 @@ namespace Infrastructure.Repositories
                 .ThenInclude(pz => pz.Zodiac)
                 .ToListAsync();
         }
+
         public async Task<Order> GetOrderByIdToPay(int orderId)
         {
             return await _dbContext.Order
-                            .Include(o => o.User)
-                            .FirstOrDefaultAsync(o => o.Id == orderId);
+                .Include(o => o.User)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
         public async Task<ICollection<OrderDetails>> GetOrderDetailsByOrderId(int orderId)

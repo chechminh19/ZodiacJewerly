@@ -1,11 +1,8 @@
 ﻿using Application.IService;
-using Application.Utils.PaymentTypes;
 using Application.ViewModels.OrderDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Net.payOS.Types;
-using Net.payOS;
 
 namespace ZodiacJewelryWebApI.Controllers
 {
@@ -15,49 +12,93 @@ namespace ZodiacJewelryWebApI.Controllers
     public class OrderController : BaseController
     {
         private readonly IOrderService _orderService;
-        //private readonly PayOS _payOS;
 
         public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
-            //_payOS = payOs;
         }
 
-        [HttpPost("{userid}/{productid}")]
+        #region Order Operations
+
         [Authorize(Roles = "Customer")]
+        [HttpPost("{userid}/{productid}")]
         public async Task<IActionResult> AddProductToOrder(int userid, int productid)
         {
             var result = await _orderService.AddProductToOrderAsync(userid, productid);
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
+            if (!result.Success) return BadRequest(result);
 
             return Ok(result);
         }
+
+        [Authorize(Roles = "Customer")]
+        [HttpPost]
+        public async Task<IActionResult> AddOrder([FromBody] OrderDTO orderDTO)
+        {
+            var result = await _orderService.AddOrder(orderDTO);
+            if (!result.Success) return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpPut("update-quantity")]
+        public async Task<IActionResult> UpdateQuantity([FromBody] UpdateQuantityRequest request)
+        {
+            var result = await _orderService.UpdateOrderQuantity(request.OrderId, request.ProductId, request.Quantity);
+            if (!result.Success) return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpDelete("remove-product/{orderId}/{productId}")]
+        public async Task<IActionResult> RemoveProduct(int orderId, int productId)
+        {
+            var result = await _orderService.RemoveProductFromCart(orderId, productId);
+            if (!result.Success) return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Staff,Admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var result = await _orderService.DeleteOrder(id);
+            if (!result.Success) return NotFound(result);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpPut("{orderid}/complete-payment")]
+        public async Task<IActionResult> PaymentOrder(int orderid)
+        {
+            var result = await _orderService.PaymentOrder(orderid);
+            if (!result.Success) return NotFound(result);
+
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Order Retrieval
 
         [HttpGet("customer/{userid}")]
         public async Task<IActionResult> GetAllOrderCartCustomer(int userid)
         {
             var result = await _orderService.GetAllOrderCustomerCart(userid);
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
+            if (!result.Success) return BadRequest(result);
 
             return Ok(result);
         }
-
 
         [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet("order/{orderid}")]
         public async Task<IActionResult> GetAllOrderDetailById(int orderid)
         {
             var result = await _orderService.GetAllOrderDetailById(orderid);
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
+            if (!result.Success) return BadRequest(result);
 
             return Ok(result);
         }
@@ -68,10 +109,7 @@ namespace ZodiacJewelryWebApI.Controllers
             [FromQuery] string search = "", [FromQuery] string status = "", [FromQuery] string sort = "id")
         {
             var result = await _orderService.GetAllOrder(page, pageSize, search, status, sort);
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
+            if (!result.Success) return BadRequest(result);
 
             return Ok(result);
         }
@@ -81,158 +119,14 @@ namespace ZodiacJewelryWebApI.Controllers
         public async Task<IActionResult> GetOrderById(int id)
         {
             var result = await _orderService.GetOrderById(id);
-            if (!result.Success)
-            {
-                return NotFound(result);
-            }
+            if (!result.Success) return NotFound(result);
 
             return Ok(result);
         }
 
-        [Authorize(Roles = "Customer")]
-        [HttpPost]
-        public async Task<IActionResult> AddOrder([FromBody] OrderDTO orderDTO)
-        {
-            var result = await _orderService.AddOrder(orderDTO);
-            if (!result.Success)
-            {
-                return BadRequest(result);
-            }
+        #endregion
 
-            return Ok(result);
-        }
-
-        [HttpPut("update-quantity")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> UpdateQuantity([FromBody] UpdateQuantityRequest request)
-        {
-            var result = await _orderService.UpdateOrderQuantity(request.OrderId, request.ProductId, request.Quantity);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result);
-        }
-
-        [HttpDelete("remove-product/{orderId}/{productId}")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> RemoveProduct(int orderId, int productId)
-        {
-            var result = await _orderService.RemoveProductFromCart(orderId, productId);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result);
-        }
-
-        [Authorize(Roles = "Staff,Admin")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
-        {
-            var result = await _orderService.DeleteOrder(id);
-            if (!result.Success)
-            {
-                return NotFound(result);
-            }
-
-            return Ok(result);
-        }
-        [Authorize(Roles = "Customer")]
-        [HttpPut]
-        public async Task<IActionResult> PaymentOrder(int orderid)
-        {
-            var result = await _orderService.PaymentOrder(orderid);
-            if (!result.Success)
-            {
-                return NotFound(result);
-            }
-
-            return Ok(result);
-        }
-        //[HttpPost("create")]
-        //public async Task<IActionResult> CreatePaymentLink(CreatePaymentLinkRequest body)
-        //{
-        //    try
-        //    {
-        //        var cartServiceResponse = await _orderService.GetAllOrderCustomerCart(body.userId);
-        //        if (!cartServiceResponse.Success || cartServiceResponse == null)
-        //        {
-        //            if (cartServiceResponse.Message == "No order here")
-        //            {
-        //                return Ok(new ResponsePayment(0, "success", new { message = "No items in cart" }));
-        //            }
-
-        //            return Ok(new ResponsePayment(-1, "fail", cartServiceResponse.Error));
-        //        }
-
-        //        var items = cartServiceResponse.Data.Product
-        //            .Select(productDTO =>
-        //                new ItemData(productDTO.NameProduct,
-        //                    productDTO.Quantity,
-        //                    (int)productDTO.Price)).ToList();
-        //        var orderCode = (long)cartServiceResponse.Data.Product.FirstOrDefault()?.OrderId;
-        //        //int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));             
-
-        //        PaymentData paymentData = new PaymentData(orderCode, (int)cartServiceResponse.Data.PriceTotal,
-        //            body.description, items, body.cancelUrl, body.returnUrl);
-
-        //        CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);            
-        //            return Ok(new ResponsePayment(0, "success", createPayment));                
-        //    }
-        //    catch (System.Exception exception)
-        //    {
-        //        Console.WriteLine(exception);
-        //        return Ok(new ResponsePayment(-1, "fail", null));
-        //    }
-        //}
-
-        //[HttpGet("payment/{orderId}")]
-        //public async Task<IActionResult> GetOrder([FromRoute] int orderId)
-        //{
-        //    try
-        //    {
-        //        var paymentLinkInformation = await _payOS.getPaymentLinkInformation(orderId);
-        //        return Ok(new ResponsePayment(0, "Ok", paymentLinkInformation));
-        //    }
-        //    catch (System.Exception exception)
-        //    {
-        //        Console.WriteLine(exception);
-        //        return Ok(new ResponsePayment(-1, "fail", null));
-        //    }
-        //}
-
-        //[HttpPut("{orderId}")]
-        //public async Task<IActionResult> CancelOrder([FromRoute] int orderId)
-        //{
-        //    try
-        //    {
-        //        PaymentLinkInformation paymentLinkInformation = await _payOS.cancelPaymentLink(orderId);                           
-        //            return Ok(new ResponsePayment(0, "Ok", paymentLinkInformation));             
-        //    }
-        //    catch (System.Exception exception)
-        //    {
-        //        Console.WriteLine(exception);
-        //        return Ok(new ResponsePayment(-1, "fail", null));
-        //    }
-        //}
-
-        //[HttpPost("confirm-webhook")]
-        //public async Task<IActionResult> ConfirmWebhook(ConfirmWebhook body)
-        //{
-        //    try
-        //    {
-        //        await _payOS.confirmWebhook(body.webhook_url);
-        //        return Ok(new ResponsePayment(0, "Ok", null));
-        //    }
-        //    catch (System.Exception exception)
-        //    {
-        //        Console.WriteLine(exception);
-        //        return Ok(new ResponsePayment(-1, "fail", null));
-        //    }
-        //}       
+        #region Sales Overview
 
         [HttpGet("sales-by-item")]
         [AllowAnonymous]
@@ -240,6 +134,7 @@ namespace ZodiacJewelryWebApI.Controllers
         {
             var result = await _orderService.GetSalesByItemAsync();
             if (!result.Success) return BadRequest(result.Message);
+
             return Ok(result);
         }
 
@@ -253,11 +148,17 @@ namespace ZodiacJewelryWebApI.Controllers
             }
 
             var result = await _orderService.GetSalesOverviewAsync(year.Value);
-            if (result.Success) return Ok(result);
-            if (result.Message == "No sales data found for the specified year.")
-                return NotFound(result.Message);
+            if (!result.Success)
+            {
+                if (result.Message == "No sales data found for the specified year.")
+                    return NotFound(result.Message);
 
-            return BadRequest(result.Message);
+                return BadRequest(result.Message);
+            }
+
+            return Ok(result);
         }
+
+        #endregion
     }
 }
