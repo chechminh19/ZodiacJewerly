@@ -78,7 +78,7 @@ namespace Application.Services
             try
             {
                 var existEmail = await _unitOfWork.UserRepository.CheckEmailAddressExisted(email);
-                if (existEmail)
+                if (existEmail == false)
                 {
                     response.Success = false;
                     response.Message = "Email not found";
