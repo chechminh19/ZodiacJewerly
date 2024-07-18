@@ -160,25 +160,6 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<OrderDetails>> GetAllOrderCartToPaid(long orderID)
-        {
-            return await _dbContext.Order
-                .Where(o => o.Id == orderID && o.Status == (byte)OrderCart.Process)
-                .SelectMany(o => o.OrderDetails)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.Category)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.Material)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.Gender)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.ProductImages)
-                .Include(od => od.Product)
-                .ThenInclude(p => p.ProductZodiacs)
-                .ThenInclude(pz => pz.Zodiac)
-                .ToListAsync();
-        }
-
         public async Task<Order> GetOrderByIdToPay(int orderId)
         {
             return await _dbContext.Order
@@ -189,6 +170,12 @@ namespace Infrastructure.Repositories
         public async Task<ICollection<OrderDetails>> GetOrderDetailsByOrderId(int orderId)
         {
             return await _dbContext.OrderDetail.Where(od => od.OrderId == orderId).ToListAsync();
+        }
+
+        public async Task Delete(Order order)
+        {
+            _dbContext.Order.Remove(order);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

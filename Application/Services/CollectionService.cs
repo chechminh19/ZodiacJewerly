@@ -148,11 +148,15 @@ public class CollectionService : ICollectionService
                     {
                         var imageURl = await UploadImageCollection(createForm.ImageCollection);
 
+                        var now = DateTime.UtcNow;
+                        var localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                        var localDateTime = TimeZoneInfo.ConvertTimeFromUtc(now, localTimeZone);
+
                         var collection = new Collections
                         {
                             NameCollection = createForm.NameCollection,
                             ImageCollection = imageURl,
-                            DateOpen = DateTime.Now,
+                            DateOpen = localDateTime,
                             DateClose = createForm.DateClose,
                             Status = 1
                         };
@@ -274,23 +278,30 @@ public class CollectionService : ICollectionService
             collectionUpdate.NameCollection = updateForm.NameCollection;
             collectionUpdate.DateClose = updateForm.DateClose;
 
+            var originalDateOpen = collectionUpdate.DateOpen;
             if (updateForm.ImageCollection != null)
             {
                 var imageUrl = await UploadImageCollection(updateForm.ImageCollection);
                 collectionUpdate.ImageCollection = imageUrl;
             }
-
+            
             await _collectionRepo.Update(collectionUpdate);
-
-            result.Data = new CollectionsResDTO
+            collectionUpdate = await _collectionRepo.GetCollectionById(collectionId);
+            if (collectionUpdate != null)
             {
-                Id = collectionUpdate.Id,
-                NameCollection = collectionUpdate.NameCollection,
-                ImageCollection = collectionUpdate.ImageCollection,
-                DateOpen = collectionUpdate.DateOpen,
-                DateClose = collectionUpdate.DateClose,
-                Status = collectionUpdate.Status
-            };
+                collectionUpdate.DateOpen = originalDateOpen;
+
+                result.Data = new CollectionsResDTO
+                {
+                    Id = collectionUpdate.Id,
+                    NameCollection = collectionUpdate.NameCollection,
+                    ImageCollection = collectionUpdate.ImageCollection,
+                    DateOpen = collectionUpdate.DateOpen,
+                    DateClose = collectionUpdate.DateClose,
+                    Status = collectionUpdate.Status
+                };
+            }
+
             result.Success = true;
             result.Message = "Collection updated successfully";
         }

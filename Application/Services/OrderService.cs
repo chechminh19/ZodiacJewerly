@@ -75,30 +75,6 @@ namespace Application.Services
             return response;
         }
 
-
-        public async Task<ServiceResponse<OrderDTO>> GetOrderById(int id)
-        {
-            var serviceResponse = new ServiceResponse<OrderDTO>();
-
-            try
-            {
-                var order = await _orderRepo.GetOrderById(id);
-                {
-                    var orderDto = _mapper.Map<OrderDTO>(order);
-                    serviceResponse.Data = orderDto;
-                    serviceResponse.Success = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Message = ex.Message;
-            }
-
-            return serviceResponse;
-        }
-
-
         public async Task<ServiceResponse<int>> AddOrder(OrderDTO order)
         {
             var serviceResponse = new ServiceResponse<int>();
@@ -171,6 +147,7 @@ namespace Application.Services
             var order = await _orderRepo.GetOrderWithDetailsAsync(orderId);
             if (order == null)
             {
+                
                 response.Success = false;
                 response.Message = "Order not found.";
                 return response;
@@ -179,36 +156,27 @@ namespace Application.Services
             var orderDetail = order.OrderDetails.FirstOrDefault(od => od.ProductId == productId);
             if (orderDetail == null)
             {
+                
                 response.Success = false;
                 response.Message = "Product not found in order.";
                 return response;
             }
-
+           
             order.OrderDetails.Remove(orderDetail);
-            await _orderRepo.Update(order);
+            if (!order.OrderDetails.Any())
+            {
+                await _orderRepo.Delete(order);
+                response.Message = "Order and product removed successfully.";
+            }
+            else
+            {
+                await _orderRepo.Update(order);
+                response.Message = "Product removed successfully.";
+            }
 
             response.Data = true;
             response.Message = "Product removed successfully.";
             return response;
-        }
-
-        public async Task<ServiceResponse<string>> DeleteOrder(int id)
-        {
-            var serviceResponse = new ServiceResponse<string>();
-
-            try
-            {
-                await _orderRepo.DeleteOrder(id);
-                serviceResponse.Success = true;
-                serviceResponse.Message = "Order deleted successfully";
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "Failed to delete order: " + ex.Message;
-            }
-
-            return serviceResponse;
         }
 
         public async Task<ServiceResponse<string>> AddProductToOrderAsync(int userId, int productId)
@@ -394,7 +362,7 @@ namespace Application.Services
             return response;
         }
 
-       
+
         public async Task<ServiceResponse<string>> UpdateProductQuantitiesBasedOnCart(Order order)
         {
             var serviceResponse = new ServiceResponse<string>();
@@ -437,7 +405,7 @@ namespace Application.Services
             return serviceResponse;
         }
 
-  
+
         public async Task<ServiceResponse<string>> PaymentOrder(int orderId)
         {
             var serviceResponse = new ServiceResponse<string>();
@@ -491,7 +459,8 @@ namespace Application.Services
                     {
                         var emailSent = await Utils.SendMail.SendOrderPaymentSuccessEmail(orderEmailDto, userEmail);
 
-                        if (emailSent)                        {
+                        if (emailSent)
+                        {
                             serviceResponse.Success = true;
                             serviceResponse.Message = "Payment successful and email sent.";
                         }
@@ -566,7 +535,7 @@ namespace Application.Services
             }
 
             return response;
-        }        
-      
+        }
+
     }
 }

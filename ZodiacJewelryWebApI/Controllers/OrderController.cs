@@ -19,7 +19,9 @@ namespace ZodiacJewelryWebApI.Controllers
         }
 
         #region Order Operations
-
+        /// <summary>
+        /// Adds a product to an order for a specific user.
+        /// </summary>
         [Authorize(Roles = "Customer")]
         [HttpPost("{userid}/{productid}")]
         public async Task<IActionResult> AddProductToOrder(int userid, int productid)
@@ -30,6 +32,9 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Creates a new order.
+        /// </summary>
         [Authorize(Roles = "Customer")]
         [HttpPost]
         public async Task<IActionResult> AddOrder([FromBody] OrderDTO orderDTO)
@@ -40,6 +45,9 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Updates the quantity of a product in an order.
+        /// </summary>
         [Authorize(Roles = "Customer")]
         [HttpPut("update-quantity")]
         public async Task<IActionResult> UpdateQuantity([FromBody] UpdateQuantityRequest request)
@@ -50,6 +58,9 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Removes a product from an order.
+        /// </summary>
         [Authorize(Roles = "Customer")]
         [HttpDelete("remove-product/{orderId}/{productId}")]
         public async Task<IActionResult> RemoveProduct(int orderId, int productId)
@@ -60,16 +71,9 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Staff,Admin")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
-        {
-            var result = await _orderService.DeleteOrder(id);
-            if (!result.Success) return NotFound(result);
-
-            return Ok(result);
-        }
-
+        /// <summary>
+        /// Completes the payment for an order and sets its status to completed.
+        /// </summary>
         [Authorize(Roles = "Customer")]
         [HttpPut("{orderid}/complete-payment")]
         public async Task<IActionResult> PaymentOrder(int orderid)
@@ -83,8 +87,11 @@ namespace ZodiacJewelryWebApI.Controllers
         #endregion
 
         #region Order Retrieval
-
+        /// <summary>
+        /// Retrieves all orders for a specific customer.
+        /// </summary>
         [HttpGet("customer/{userid}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetAllOrderCartCustomer(int userid)
         {
             var result = await _orderService.GetAllOrderCustomerCart(userid);
@@ -93,6 +100,9 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Retrieves order details for a specific order ID.
+        /// </summary>
         [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet("order/{orderid}")]
         public async Task<IActionResult> GetAllOrderDetailById(int orderid)
@@ -103,6 +113,9 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Retrieves all orders 
+        /// </summary>
         [Authorize(Roles = "Staff,Admin,Customer")]
         [HttpGet]
         public async Task<IActionResult> GetAllOrders([FromQuery] int page = 1, [FromQuery] int pageSize = 5,
@@ -114,20 +127,12 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Staff,Admin,Customer")]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderById(int id)
-        {
-            var result = await _orderService.GetOrderById(id);
-            if (!result.Success) return NotFound(result);
-
-            return Ok(result);
-        }
-
         #endregion
 
         #region Sales Overview
-
+        /// <summary>
+        /// Retrieves sales data grouped by item.
+        /// </summary>
         [HttpGet("sales-by-item")]
         [AllowAnonymous]
         public async Task<IActionResult> GetSalesByItem()
@@ -138,6 +143,9 @@ namespace ZodiacJewelryWebApI.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Retrieves a sales overview for a specific year.
+        /// </summary>
         [HttpGet("sales-overview")]
         [AllowAnonymous]
         public async Task<IActionResult> GetSalesOverview([FromQuery] int? year)
