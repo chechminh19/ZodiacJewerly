@@ -147,6 +147,7 @@ namespace Application.Services
             var order = await _orderRepo.GetOrderWithDetailsAsync(orderId);
             if (order == null)
             {
+                
                 response.Success = false;
                 response.Message = "Order not found.";
                 return response;
@@ -155,13 +156,23 @@ namespace Application.Services
             var orderDetail = order.OrderDetails.FirstOrDefault(od => od.ProductId == productId);
             if (orderDetail == null)
             {
+                
                 response.Success = false;
                 response.Message = "Product not found in order.";
                 return response;
             }
-
+           
             order.OrderDetails.Remove(orderDetail);
-            await _orderRepo.Update(order);
+            if (!order.OrderDetails.Any())
+            {
+                await _orderRepo.Delete(order);
+                response.Message = "Order and product removed successfully.";
+            }
+            else
+            {
+                await _orderRepo.Update(order);
+                response.Message = "Product removed successfully.";
+            }
 
             response.Data = true;
             response.Message = "Product removed successfully.";

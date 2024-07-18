@@ -171,5 +171,11 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.OrderDetail.Where(od => od.OrderId == orderId).ToListAsync();
         }
+
+        public async Task Delete(Order order)
+        {
+            _dbContext.Order.Remove(order);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }
